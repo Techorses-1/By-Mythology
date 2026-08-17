@@ -1,0 +1,537 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&family=Poppins:wght@400;500;600;700&display=swap");
+
+// Theme Variables
+$auth-gold: #c9a84c;
+$auth-gold-light: #e8c97a;
+$auth-dark: #0d0b08;
+$auth-dark-card: #111009;
+$auth-white: #f5f0e8;
+$auth-border: rgba(#c9a84c, 0.45);
+$auth-error: #ff6b6b;
+
+.auth-page {
+    min-height: 100vh;
+    background: $auth-dark;
+    font-family: "Raleway", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+
+    @media (max-width: 1024px) {
+        padding: 20px;
+    }
+}
+
+.auth-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    min-height: 600px;
+    height: 600px;
+    background: $auth-dark-card;
+    border: 1px solid $auth-border;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+
+    @media (max-width: 1024px) {
+        flex-direction: column;
+        min-height: auto;
+    }
+}
+
+/* ==================== LEFT SIDE - IMAGE (Desktop only) ==================== */
+.auth-image {
+    flex: 1;
+    position: relative;
+    background: $auth-dark;
+
+    @media (max-width: 1024px) {
+        display: none;
+    }
+}
+
+.auth-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 650px;
+    overflow: hidden;
+
+    @media (max-width: 1024px) {
+        min-height: 300px;
+    }
+}
+
+.auth-image-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.5);
+}
+
+.auth-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+}
+
+.auth-image-content {
+    color: $auth-white;
+}
+
+.auth-image-title {
+    font-family: "Cinzel", serif;
+    font-size: 32px;
+    letter-spacing: 0.16em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    color: $auth-gold-light;
+}
+
+.auth-image-subtitle {
+    font-family: "Raleway", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba($auth-white, 0.7);
+    margin-bottom: 24px;
+}
+
+.auth-image-divider {
+    width: 60px;
+    height: 1px;
+    background: $auth-gold;
+    margin: 0 auto 24px;
+}
+
+.auth-image-text {
+    font-family: "Raleway", sans-serif;
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba($auth-white, 0.85);
+    margin-bottom: 28px;
+}
+
+.auth-image-quote {
+    font-family: "Cinzel", serif;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: $auth-gold;
+    font-style: italic;
+}
+
+/* ==================== RIGHT SIDE - FORM ==================== */
+.auth-form {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: $auth-dark-card;
+
+    @media (max-width: 1024px) {
+        padding: 40px 24px;
+    }
+
+    @media (max-width: 768px) {
+        padding: 32px 20px;
+    }
+}
+
+.auth-form-container {
+    width: 100%;
+    max-width: 420px;
+}
+
+/* Toggle Buttons */
+.auth-toggle {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid $auth-border;
+    padding-bottom: 16px;
+}
+
+.auth-toggle-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 12px 0;
+    font-family: "Cinzel", serif;
+    font-size: 16px;
+    letter-spacing: 0.16em;
+    color: rgba($auth-white, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -17px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: $auth-gold;
+        transition: width 0.3s ease;
+    }
+
+    &.active {
+        color: $auth-gold-light;
+
+        &::after {
+            width: 100%;
+        }
+    }
+
+    &:hover {
+        color: $auth-gold-light;
+    }
+}
+
+/* Header */
+.auth-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.auth-title {
+    font-family: "Cinzel", serif;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: $auth-gold-light;
+    margin-bottom: 8px;
+
+    @media (max-width: 768px) {
+        font-size: 24px;
+    }
+}
+
+.auth-subtitle {
+    font-family: "Raleway", sans-serif;
+    font-size: 14px;
+    color: rgba($auth-white, 0.6);
+    letter-spacing: 0.02em;
+}
+
+/* Form Fields */
+.auth-form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.auth-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.auth-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.auth-input-icon {
+    position: absolute;
+    left: 14px;
+    color: rgba($auth-white, 0.4);
+    font-size: 18px;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 14px 14px 14px 44px;
+    background: $auth-dark;
+    border: 1px solid $auth-border;
+    border-radius: 8px;
+    font-family: "Raleway", sans-serif;
+    font-size: 14px;
+    color: $auth-white;
+    transition: all 0.3s ease;
+
+    &::placeholder {
+        color: rgba($auth-white, 0.3);
+    }
+
+    &:focus {
+        outline: none;
+        border-color: $auth-gold;
+        box-shadow: 0 0 0 2px rgba($auth-gold, 0.1);
+    }
+
+    &--error {
+        border-color: $auth-error;
+    }
+}
+
+.auth-password-toggle {
+    position: absolute;
+    right: 14px;
+    background: transparent;
+    border: none;
+    color: rgba($auth-white, 0.4);
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        color: $auth-gold;
+    }
+}
+
+.auth-error {
+    font-family: "Raleway", sans-serif;
+    font-size: 12px;
+    color: $auth-error;
+    margin-left: 12px;
+}
+
+/* Submit Button */
+.auth-submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    border: 1px solid $auth-gold;
+    border-radius: 8px;
+    font-family: "Cinzel", serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: $auth-gold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 8px;
+
+    &:hover:not(:disabled) {
+        background: $auth-gold;
+        color: $auth-dark;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+/* Footer */
+.auth-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-forgot-link {
+    background: transparent;
+    border: none;
+    font-family: "Raleway", sans-serif;
+    font-size: 13px;
+    color: rgba($auth-white, 0.5);
+    cursor: pointer;
+    transition: color 0.3s ease;
+
+    &:hover {
+        color: $auth-gold;
+    }
+}
+
+/* ==================== FORGOT PASSWORD MODAL ==================== */
+.auth-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+}
+
+.auth-modal-content {
+    position: relative;
+    background: $auth-dark-card;
+    border: 1px solid $auth-border;
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 450px;
+    width: 90%;
+    z-index: 1001;
+    animation: modalSlideIn 0.3s ease;
+
+    @media (max-width: 768px) {
+        padding: 24px;
+    }
+}
+
+.auth-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    color: rgba($auth-white, 0.5);
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        color: $auth-gold;
+        transform: rotate(90deg);
+    }
+}
+
+.auth-modal-title {
+    font-family: "Cinzel", serif;
+    font-size: 22px;
+    color: $auth-gold-light;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.auth-modal-step {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.auth-modal-desc {
+    font-family: "Raleway", sans-serif;
+    font-size: 13px;
+    color: rgba($auth-white, 0.7);
+    text-align: center;
+    line-height: 1.6;
+}
+
+.auth-modal-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.auth-modal-input-icon {
+    position: absolute;
+    left: 14px;
+    color: rgba($auth-white, 0.4);
+    font-size: 16px;
+}
+
+.auth-modal-input {
+    width: 100%;
+    padding: 12px 14px 12px 44px;
+    background: $auth-dark;
+    border: 1px solid $auth-border;
+    border-radius: 8px;
+    font-family: "Raleway", sans-serif;
+    font-size: 14px;
+    color: $auth-white;
+
+    &:focus {
+        outline: none;
+        border-color: $auth-gold;
+    }
+
+    &-otp {
+        text-align: center;
+        letter-spacing: 4px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+}
+
+.auth-modal-btn {
+    padding: 12px;
+    background: transparent;
+    border: 1px solid $auth-gold;
+    border-radius: 8px;
+    font-family: "Cinzel", serif;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    color: $auth-gold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+        background: $auth-gold;
+        color: $auth-dark;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.auth-modal-otp-actions {
+    text-align: center;
+}
+
+.auth-modal-timer {
+    font-family: "Raleway", sans-serif;
+    font-size: 12px;
+    color: rgba($auth-white, 0.5);
+}
+
+.auth-modal-resend {
+    background: transparent;
+    border: none;
+    font-family: "Raleway", sans-serif;
+    font-size: 12px;
+    color: $auth-gold;
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover {
+        color: $auth-gold-light;
+    }
+}
+
+.auth-modal-back {
+    background: transparent;
+    border: none;
+    font-family: "Raleway", sans-serif;
+    font-size: 12px;
+    color: rgba($auth-white, 0.5);
+    cursor: pointer;
+    margin-top: 8px;
+
+    &:hover {
+        color: $auth-gold;
+    }
+}
+
+/* Animations */
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

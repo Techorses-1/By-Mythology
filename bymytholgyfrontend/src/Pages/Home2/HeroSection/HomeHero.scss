@@ -1,0 +1,582 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&display=swap");
+
+// ─── Variables ────────────────────────────────────────────────────────────────
+$home-hero-gold: #c9a84c;
+$home-hero-gold-light: #e8c97a;
+$home-hero-gold-dim: #a07830;
+$home-hero-white: #f5f0e8;
+$home-hero-dark: #0d0b08;
+
+// ─── Keyframes ────────────────────────────────────────────────────────────────
+@keyframes home-hero-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(32px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes home-hero-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes home-hero-scroll-wheel {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    80% {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 0;
+    }
+}
+
+@keyframes home-hero-line-grow {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 40px;
+    }
+}
+
+// ─── Root ─────────────────────────────────────────────────────────────────────
+.home-hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 620px;
+    max-height: 1080px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    font-family: "Raleway", sans-serif;
+    color: $home-hero-white;
+
+    // ── Background ──────────────────────────────────────────────────────────────
+    &__bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+    }
+
+    &__bg-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center right;
+        display: block;
+    }
+
+    // Dark overall overlay
+    &__overlay {
+        position: absolute;
+        inset: 0;
+    }
+
+    // Stronger dark gradient on the left so text is readable
+    &__overlay-left {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right,
+                rgba($home-hero-dark, 0.96) 0%,
+                rgba($home-hero-dark, 0.88) 30%,
+                rgba($home-hero-dark, 0.55) 55%,
+                rgba($home-hero-dark, 0.10) 75%,
+                transparent 100%);
+    }
+
+    // ── Inner wrapper ────────────────────────────────────────────────────────────
+    &__inner {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 1400px;
+        margin: 50px auto 0;
+        padding: 0 80px;
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+
+    // ── Content block ─────────────────────────────────────────────────────────
+    &__content {
+        max-width: 560px;
+        width: 100%;
+
+        .home-hero__eyebrow-wrapper {
+            opacity: 0;
+            transform: translateY(28px);
+        }
+
+        &--visible {
+            .home-hero__eyebrow-wrapper {
+                animation: home-hero-fade-up 0.7s ease forwards;
+                animation-delay: 0.1s;
+            }
+
+            .home-hero__eyebrow-ornament {
+                animation: home-hero-fade-up 0.6s ease forwards;
+                animation-delay: 0.18s;
+            }
+
+            .home-hero__heading-line--1 {
+                animation: home-hero-fade-up 0.7s ease forwards;
+                animation-delay: 0.25s;
+            }
+
+            .home-hero__heading-line--2 {
+                animation: home-hero-fade-up 0.7s ease forwards;
+                animation-delay: 0.38s;
+            }
+
+            .home-hero__heading-line--3 {
+                animation: home-hero-fade-up 0.7s ease forwards;
+                animation-delay: 0.50s;
+            }
+
+            .home-hero__heading-sub {
+                animation: home-hero-fade-up 0.7s ease forwards;
+                animation-delay: 0.62s;
+            }
+
+            .home-hero__desc {
+                animation: home-hero-fade-up 0.65s ease forwards;
+                animation-delay: 0.75s;
+            }
+
+            .home-hero__ctas {
+                animation: home-hero-fade-up 0.65s ease forwards;
+                animation-delay: 0.90s;
+            }
+        }
+    }
+
+    // ── Eyebrow Wrapper & Underline Ornament ────────────────────────────────────
+    &__eyebrow-wrapper {
+        margin-bottom: 22px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    &__eyebrow {
+        font-family: "Cinzel", serif;
+        font-size: 10px;
+        font-weight: 400;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: $home-hero-gold;
+        margin: 0 0 16px 0;
+    }
+
+    &__eyebrow-ornament {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        opacity: 0;
+    }
+
+    // HomeHero.scss
+    &__eyebrow-ornament-line {
+        display: block;
+        width: 50px;
+        height: 1px;
+        background: linear-gradient(to right, transparent, $home-hero-gold, transparent); // ← this
+    }
+
+    &__eyebrow-ornament-diamond {
+        width: 12px;
+        height: 6px;
+        flex-shrink: 0;
+        fill: $home-hero-gold;
+    }
+
+    // ── Heading ──────────────────────────────────────────────────────────────
+    &__heading {
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 700;
+        line-height: 1.0;
+        margin: 0 0 12px 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__heading-line {
+        display: block;
+        font-size: 80px;
+        color: $home-hero-gold-light;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        line-height: 1.0;
+        opacity: 0;
+        transform: translateY(28px);
+    }
+
+    &__heading-sub {
+        display: block;
+        font-family: "Cinzel", serif;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: $home-hero-gold;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        opacity: 0;
+        transform: translateY(28px);
+    }
+
+    // ── Description ──────────────────────────────────────────────────────────
+    &__desc {
+        font-size: clamp(13px, 1.1vw, 15px);
+        font-weight: 300;
+        line-height: 1.85;
+        color: rgba($home-hero-white, 0.78);
+        margin-bottom: 40px;
+        max-width: 420px;
+        letter-spacing: 0.02em;
+        opacity: 0;
+        transform: translateY(28px);
+    }
+
+    // ── CTAs ─────────────────────────────────────────────────────────────────
+    &__ctas {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+        opacity: 0;
+        transform: translateY(28px);
+    }
+
+    &__btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        font-family: "Cinzel", serif;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 260px;
+        height: 48px;
+
+        &--primary {
+            background: $home-hero-gold;
+            color: $home-hero-dark;
+            border: 1px solid $home-hero-gold;
+
+            &:hover {
+                background: transparent;
+                color: $home-hero-gold;
+                border: 1px solid $home-hero-gold;
+
+                .home-hero__btn-arrow {
+                    transform: translateX(4px);
+                }
+            }
+        }
+
+        &--outline {
+            border: 1px solid $home-hero-gold;
+            color: $home-hero-gold;
+            background: transparent;
+
+            &:hover {
+                background: $home-hero-gold;
+                color: $home-hero-dark;
+
+                .home-hero__btn-arrow {
+                    transform: translateX(4px);
+                }
+            }
+        }
+
+        &--icon {
+            color: rgba($home-hero-white, 0.70);
+            background: transparent;
+            border: none;
+
+            &:hover {
+                color: $home-hero-gold;
+
+                .home-hero__btn-circle {
+                    border-color: $home-hero-gold;
+                    background: rgba($home-hero-gold, 0.12);
+                }
+            }
+        }
+    }
+
+    &__btn-arrow {
+        display: inline-block;
+        transition: transform 0.3s ease;
+        font-size: 13px;
+    }
+
+    &__btn-circle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid rgba($home-hero-white, 0.4);
+        transition: all 0.3s ease;
+
+        svg {
+            width: 16px;
+            height: 16px;
+        }
+    }
+
+    // ── Scroll Indicator ─────────────────────────────────────────────────────
+    &__scroll {
+        position: absolute;
+        bottom: 40px;
+        right: 60px;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        animation: home-hero-fade-in 1s ease 1.4s both;
+    }
+
+    &__scroll-label {
+        font-family: "Cinzel", serif;
+        font-size: 8px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba($home-hero-white, 0.8);
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+    }
+
+    &__scroll-mouse {
+        width: 22px;
+        height: 36px;
+        border: 1px solid rgba($home-hero-white, 0.35);
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        padding-top: 6px;
+    }
+
+    &__scroll-wheel {
+        width: 3px;
+        height: 7px;
+        background: $home-hero-gold;
+        border-radius: 2px;
+        animation: home-hero-scroll-wheel 1.8s ease-in-out infinite;
+    }
+
+    // ─── Tablet (769px – 1024px) ───────────────────────────────────────────────
+    @media (max-width: 1024px) and (min-width: 769px) {
+        height: 70vh;
+        min-height: 500px;
+        max-height: none;
+
+        &__inner {
+            padding: 0 48px;
+        }
+
+        &__content {
+            max-width: 480px;
+        }
+
+        &__heading-line {
+            font-size: clamp(42px, 5vw, 60px);
+        }
+
+        &__heading-sub {
+            font-size: 12px;
+        }
+
+        &__desc {
+            font-size: 12px;
+            margin-bottom: 35px;
+        }
+
+        &__btn {
+            width: 240px;
+            height: 46px;
+            font-size: 9px;
+        }
+
+        &__scroll {
+            right: 36px;
+            bottom: 32px;
+        }
+    }
+
+    // ─── Mobile (≤ 768px) ─────────────────────────────────────────────────────
+    @media (max-width: 768px) {
+        height: 60vh;
+        min-height: auto;
+        max-height: none;
+
+        &__bg-img {
+            object-position: 65% center;
+        }
+
+        &__overlay-left {
+            background: linear-gradient(to bottom,
+                    rgba($home-hero-dark, 0.30) 0%,
+                    rgba($home-hero-dark, 0.75) 40%,
+                    rgba($home-hero-dark, 0.96) 70%,
+                    rgba($home-hero-dark, 0.98) 100%);
+        }
+
+        &__inner {
+            padding: 0 24px;
+            align-items: center;
+            padding-top: 80px;
+            padding-bottom: 40px;
+            margin-top: 0;
+            height: 100%;
+        }
+
+        &__content {
+            max-width: 100%;
+            margin-top: 0;
+        }
+
+        &__heading-line {
+            font-size: clamp(28px, 6vw, 38px);
+        }
+
+        &__heading-sub {
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            margin-top: 6px;
+            margin-bottom: 12px;
+        }
+
+        &__eyebrow {
+            font-size: 8px;
+            margin-bottom: 8px;
+        }
+
+        &__eyebrow-ornament-line {
+            width: 30px;
+        }
+
+        &__eyebrow-ornament-diamond {
+            width: 8px;
+            height: 4px;
+        }
+
+        &__desc {
+            font-size: 11px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            max-width: 100%;
+        }
+
+        &__ctas {
+            gap: 10px;
+            width: 100%;
+        }
+
+        &__btn {
+            width: 100%;
+            max-width: 260px;
+            height: 42px;
+            font-size: 8px;
+            justify-content: center;
+        }
+
+        &__btn--outline {
+            width: 100%;
+            max-width: 260px;
+            justify-content: center;
+        }
+
+        &__scroll {
+            right: 15px;
+            bottom: 15px;
+
+            &-label {
+                display: none;
+            }
+        }
+
+        &__scroll-mouse {
+            width: 18px;
+            height: 28px;
+        }
+    }
+
+    // ─── Small Mobile (≤ 480px) ───────────────────────────────────────────────
+    @media (max-width: 480px) {
+        height: 60vh;
+
+        &__inner {
+            padding: 0 18px;
+            padding-top: 50px;
+            padding-bottom: 30px;
+        }
+
+        &__heading-line {
+            font-size: clamp(24px, 5vw, 32px);
+        }
+
+        &__heading-sub {
+            font-size: 8px;
+            letter-spacing: 0.12em;
+        }
+
+        &__eyebrow {
+            font-size: 7px;
+        }
+
+        &__eyebrow-ornament-line {
+            width: 25px;
+        }
+
+        &__desc {
+            font-size: 10px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        &__btn {
+            height: 38px;
+            font-size: 7.5px;
+            max-width: 240px;
+        }
+
+        &__btn--outline {
+            max-width: 240px;
+        }
+
+        &__scroll {
+            right: 12px;
+            bottom: 12px;
+        }
+    }
+}

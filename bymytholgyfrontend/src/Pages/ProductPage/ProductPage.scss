@@ -1,0 +1,1210 @@
+// ProductPage.scss - FULLY FIXED IMAGE GALLERY
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500;600&family=Poppins:wght@400;500;600;700&display=swap");
+
+// VARIABLES
+$gold: #c9a84c;
+$gold-light: #e8c97a;
+$gold-dark: #a07e2e;
+$dark-bg: #0a0a0a;
+$dark-card: #111111;
+$dark-surface: #161616;
+$text-primary: #f5f0e8;
+$text-secondary: rgba(245, 240, 232, 0.7);
+$text-muted: rgba(245, 240, 232, 0.5);
+$border-color: rgba(201, 168, 76, 0.3);
+$border-gold: rgba(201, 168, 76, 0.6);
+$success: #4caf50;
+$warning: #ff9800;
+$error: #ff6b6b;
+$transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 14px;
+$radius-xl: 20px;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin responsive($breakpoint) {
+  @if $breakpoint ==tablet {
+    @media (max-width: 1024px) {
+      @content;
+    }
+  }
+
+  @if $breakpoint ==mobile {
+    @media (max-width: 768px) {
+      @content;
+    }
+  }
+
+  @if $breakpoint ==small-mobile {
+    @media (max-width: 480px) {
+      @content;
+    }
+  }
+}
+
+// GLOBAL RESET
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+// BASE STYLES
+.product-page {
+  background: $dark-bg;
+  min-height: 100vh;
+  padding: 0 24px;
+  font-family: "Raleway", sans-serif;
+  color: $text-primary;
+  overflow-x: hidden;
+
+  @include responsive(mobile) {
+    padding: 0 16px;
+  }
+}
+
+// BACK BUTTON
+.product-page-back-button {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto 10px;
+  padding-top: 80px;
+
+  @include responsive(tablet) {
+    padding-top: 70px;
+  }
+
+  @include responsive(mobile) {
+    padding-top: 60px;
+  }
+}
+
+.styled-back-button {
+  background: transparent;
+  border: 1px solid $border-color;
+  color: $gold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 10px 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: $transition;
+  border-radius: $radius-md;
+  font-family: "Cinzel", serif;
+
+  &:hover {
+    background: rgba($gold, 0.1);
+    border-color: $gold;
+    transform: translateX(-2px);
+  }
+}
+
+// MAIN CONTAINER - 40% LEFT | 60% RIGHT on desktop
+.product-main-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 40% 60%;
+  gap: 50px;
+  padding: 20px 0 60px;
+  align-items: start;
+
+  @include responsive(tablet) {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  @include responsive(mobile) {
+    gap: 30px;
+    padding-bottom: 40px;
+  }
+}
+
+// LEFT COLUMN - Content
+.product-left-column {
+  @include flex-column;
+  gap: 20px;
+
+  @include responsive(tablet) {
+    order: 2;
+  }
+}
+
+// RIGHT COLUMN - Image
+.product-right-column {
+  @include flex-column;
+  gap: 20px;
+  width: 100%;
+  overflow: visible;
+
+  @include responsive(tablet) {
+    order: 1;
+  }
+}
+
+// Product name row
+.product-name-row {
+  @include flex-between;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.product-title {
+  font-family: "Cinzel", serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: $gold-light;
+  margin: 0;
+  letter-spacing: 0.02em;
+  word-break: break-word;
+
+  @include responsive(mobile) {
+    font-size: 1.6rem;
+  }
+}
+
+.wishlist-icon-btn {
+  background: transparent;
+  border: 1px solid $border-color;
+  border-radius: 50%;
+  width: 46px;
+  height: 46px;
+  @include flex-center;
+  cursor: pointer;
+  color: $text-secondary;
+  font-size: 1.2rem;
+  transition: $transition;
+  flex-shrink: 0;
+
+  &:hover {
+    border-color: $gold;
+    color: $gold;
+  }
+
+  &.active {
+    color: $error;
+    border-color: $error;
+  }
+}
+
+// Short Description
+.short-description {
+  .description-text {
+    font-family: "Raleway", sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: $text-secondary;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .ellipsis-indicator {
+    font-size: 0.8rem;
+    color: $gold;
+    margin-top: 4px;
+    display: inline-block;
+  }
+}
+
+// Price
+.price-section {
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+
+    .current-price {
+      font-family: "Poppins", sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: $gold;
+
+      @include responsive(mobile) {
+        font-size: 1.5rem;
+      }
+    }
+
+    .original-price {
+      font-family: "Raleway", sans-serif;
+      font-size: 1rem;
+      color: $text-muted;
+      text-decoration: line-through;
+    }
+
+    .discount-percent {
+      background: $error;
+      color: $dark-bg;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-family: "Poppins", sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+  }
+}
+
+// Stock
+.stock-status {
+  font-family: "Raleway", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: -8px;
+
+  &.in-stock {
+    color: $success;
+  }
+
+  &.low-stock {
+    color: $warning;
+  }
+
+  &.out-of-stock {
+    color: $error;
+  }
+}
+
+// Reviews
+.reviews-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+
+  .stars-container {
+    display: flex;
+    gap: 4px;
+
+    .star {
+      font-size: 1rem;
+      color: $text-muted;
+
+      &.filled {
+        color: $warning;
+      }
+    }
+  }
+
+  .reviews-count {
+    font-family: "Raleway", sans-serif;
+    font-size: 0.85rem;
+    color: $text-secondary;
+  }
+}
+
+// Fragrance selection
+.fragrance-selection-section {
+  h3 {
+    font-family: "Cinzel", serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $gold-light;
+    margin-bottom: 12px;
+    letter-spacing: 0.03em;
+  }
+
+  .fragrance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+
+    @include responsive(small-mobile) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .fragrance-box {
+      padding: 12px;
+      text-align: center;
+      background: transparent;
+      border: 1px solid $border-color;
+      border-radius: $radius-md;
+      cursor: pointer;
+      transition: $transition;
+
+      .fragrance-name {
+        font-family: "Raleway", sans-serif;
+        font-size: 0.85rem;
+        color: $text-secondary;
+      }
+
+      &:hover:not(.out-of-stock):not(.selected) {
+        border-color: $gold;
+
+        .fragrance-name {
+          color: $gold-light;
+        }
+      }
+
+      &.selected {
+        background: $gold;
+        border-color: $gold;
+
+        .fragrance-name {
+          color: $dark-bg;
+          font-weight: 600;
+        }
+      }
+
+      &.out-of-stock {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+// Quantity
+.quantity-section {
+  h3 {
+    font-family: "Cinzel", serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $gold-light;
+    margin-bottom: 12px;
+    letter-spacing: 0.03em;
+  }
+
+  .quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    .quantity-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid $border-color;
+      background: transparent;
+      color: $gold;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      @include flex-center;
+      transition: $transition;
+
+      &:hover:not(:disabled) {
+        background: rgba($gold, 0.1);
+        border-color: $gold;
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+    }
+
+    .quantity-input {
+      width: 65px;
+      height: 40px;
+      border: 1px solid $border-color;
+      background: $dark-surface;
+      color: $text-primary;
+      text-align: center;
+      font-family: "Poppins", sans-serif;
+      font-size: 1rem;
+      border-radius: $radius-md;
+      -moz-appearance: textfield;
+
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $gold;
+      }
+    }
+
+    .total-price {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-left: auto;
+
+      .total-label {
+        font-family: "Raleway", sans-serif;
+        font-size: 0.8rem;
+        color: $text-muted;
+      }
+
+      .total-amount {
+        font-family: "Poppins", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: $gold;
+      }
+    }
+  }
+}
+
+// Action buttons
+.action-buttons-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 8px;
+
+  button {
+    padding: 14px 20px;
+    border-radius: $radius-md;
+    font-family: "Cinzel", serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: $transition;
+    border: none;
+
+    &.add-to-cart-btn {
+      background: transparent;
+      border: 1px solid $gold;
+      color: $gold;
+
+      &:hover:not(.disabled) {
+        background: $gold;
+        color: $dark-bg;
+      }
+    }
+
+    &.buy-now-btn {
+      background: $gold;
+      color: $dark-bg;
+
+      &:hover:not(.disabled) {
+        background: $gold-light;
+      }
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ===== FIXED IMAGE GALLERY =====
+.main-image-container {
+  width: 95%;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  background: $dark-surface;
+  border: 1px solid $border-color;
+  position: relative;
+
+
+  @include responsive(mobile) {
+    width: 100%;
+  }
+
+  .product-main-swiper {
+    width: 100%;
+    height: 500px;
+
+    @include responsive(tablet) {
+      height: 450px;
+    }
+
+    @include responsive(mobile) {
+      height: 380px;
+    }
+
+    .swiper-wrapper {
+      width: 100%;
+      height: 100% !important;
+    }
+
+    .swiper-slide {
+      width: 100% !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      overflow: hidden;
+    }
+
+    .swiper-image-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $dark-surface;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+      }
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev {
+      display: none;
+    }
+  }
+
+  .custom-swiper-nav {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 12px;
+    z-index: 20;
+
+    .custom-nav-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba($dark-bg, 0.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid $border-color;
+      color: $gold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: $transition;
+
+      &:hover {
+        background: $gold;
+        color: $dark-bg;
+        border-color: $gold;
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+.no-image-placeholder {
+  height: 500px;
+  @include flex-center;
+  @include flex-column;
+  background: $dark-surface;
+  border: 1px solid $border-color;
+  border-radius: $radius-xl;
+  color: $text-muted;
+}
+
+// Thumbnails - Fixed for mobile (no cut-off)
+.thumbnail-strip-horizontal {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+
+  // Hide scrollbar but keep functionality (optional)
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba($gold, 0.1);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $gold;
+    border-radius: 4px;
+  }
+
+  .product-thumbs-swiper {
+    width: 100%;
+    overflow: visible !important; // Important to prevent clipping
+
+    .swiper-wrapper {
+      display: flex;
+      flex-wrap: nowrap;
+      width: max-content; // Allow wrapper to expand beyond container
+    }
+
+    .swiper-slide {
+      width: 80px !important;
+      flex-shrink: 0;
+      margin-right: 12px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      .thumb-item {
+        width: 80px;
+        height: 80px;
+        border-radius: $radius-md;
+        overflow: hidden;
+        border: 2px solid transparent;
+        transition: $transition;
+        background: $dark-surface;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+      }
+
+      &.swiper-slide-thumb-active .thumb-item {
+        border-color: $gold;
+      }
+    }
+  }
+}
+
+// Extra margin/padding for mobile to ensure thumbnails aren't cut at edges
+@include responsive(mobile) {
+  .thumbnail-strip-horizontal {
+    padding: 0 4px; // small padding to prevent edge cut-off
+
+    .product-thumbs-swiper {
+      .swiper-slide {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+// PREMIUM DETAILS SECTION
+.premium-details-section {
+  max-width: 1400px;
+  margin: 20px auto;
+  padding: 0;
+
+  .details-grid {
+    display: grid;
+    grid-template-columns: 0.7fr 1fr 1fr 1.3fr;
+    gap: 0;
+    background: $dark-card;
+    border: 1px solid $border-color;
+    border-radius: $radius-xl;
+    overflow: hidden;
+
+    @include responsive(tablet) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include responsive(mobile) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .details-col {
+    padding: 32px 24px;
+    border-right: 1px solid $border-color;
+    transition: $transition;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    @include responsive(tablet) {
+      &:nth-child(2) {
+        border-right: none;
+      }
+
+      &:nth-child(4) {
+        border-right: none;
+      }
+    }
+
+    @include responsive(mobile) {
+      border-right: none;
+      border-bottom: 1px solid $border-color;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .col-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid $border-gold;
+
+    .gold-accent {
+      width: 4px;
+      height: 24px;
+      background: $gold;
+      border-radius: 2px;
+    }
+
+    h3 {
+      font-family: "Cinzel", serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: $gold-light;
+      margin: 0;
+      letter-spacing: 0.05em;
+    }
+  }
+}
+
+// Fragrance column
+.fragrance-col {
+  .fragrance-sidebar-list {
+    @include flex-column;
+    gap: 8px;
+
+    .sidebar-fragrance-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: transparent;
+      border-left: 3px solid transparent;
+      border-radius: $radius-sm;
+      cursor: pointer;
+      transition: $transition;
+      font-family: "Raleway", sans-serif;
+      font-size: 0.9rem;
+      color: $text-secondary;
+
+      &:hover:not(.out-of-stock) {
+        background: rgba($gold, 0.08);
+        color: $gold-light;
+      }
+
+      &.selected {
+        background: linear-gradient(90deg, rgba($gold, 0.15) 0%, transparent 100%);
+        border-left-color: $gold;
+        color: $gold-light;
+        font-weight: 500;
+
+        .selected-gold-dot {
+          width: 8px;
+          height: 8px;
+          background: $gold;
+          border-radius: 50%;
+        }
+      }
+
+      &.out-of-stock {
+        opacity: 0.4;
+        cursor: not-allowed;
+        text-decoration: line-through;
+      }
+
+      .fragrance-name-sidebar {
+        flex: 1;
+      }
+    }
+  }
+}
+
+// Notes column
+.notes-col {
+  .notes-content {
+    @include flex-column;
+    gap: 24px;
+  }
+
+  .note-group {
+    @include flex-column;
+    gap: 10px;
+
+    .note-category {
+      font-family: "Cinzel", serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: $gold;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .note-bubbles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+
+      .note-bubble {
+        padding: 5px 12px;
+        background: rgba($gold, 0.1);
+        border: 1px solid $border-color;
+        border-radius: 30px;
+        font-family: "Raleway", sans-serif;
+        font-size: 0.75rem;
+        color: $text-secondary;
+        transition: $transition;
+
+        &:hover {
+          border-color: $gold;
+          color: $gold-light;
+        }
+      }
+    }
+  }
+
+  .notes-placeholder {
+    font-family: "Raleway", sans-serif;
+    font-size: 0.85rem;
+    color: $text-muted;
+    font-style: italic;
+    text-align: center;
+    padding: 40px 0;
+  }
+}
+
+// Description column
+.description-col {
+  .full-description {
+    p {
+      font-family: "Raleway", sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: $text-secondary;
+      margin-bottom: 16px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.image-col {
+  // Remove padding so image can touch edges
+  padding: 0 !important;
+  
+  // Hide the entire col-header (including the "Fragrance Preview" title and gold accent)
+  .col-header {
+    display: none;
+  }
+  
+  .premium-image-container {
+    width: 100%;
+    height: 100%;          // Take full height of the column
+    min-height: 300px; 
+    height: 420px ;    // Ensure a decent height (adjust as needed)
+    @include flex-center;
+    background: $dark-surface;
+    border-radius: 0;      // Remove border-radius to align with column edges
+    overflow: hidden;
+    
+    @include responsive(tablet) {
+      min-height: 350px;
+    }
+    
+    .premium-product-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;   // Image covers entire container
+      transition: transform 0.5s ease;
+      
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+// LOADING & ERROR
+.loading-container {
+  @include flex-center;
+  min-height: 70vh;
+
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 2px solid rgba($gold, 0.2);
+    border-top: 2px solid $gold;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+.error-container {
+  text-align: center;
+  padding: 80px 20px;
+
+  h2 {
+    font-family: "Cinzel", serif;
+    color: $error;
+    margin-bottom: 20px;
+  }
+
+  button {
+    background: transparent;
+    border: 1px solid $gold;
+    color: $gold;
+    padding: 10px 24px;
+    cursor: pointer;
+    font-family: "Cinzel", serif;
+    transition: $transition;
+
+    &:hover {
+      background: $gold;
+      color: $dark-bg;
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// REVIEWS MODAL
+.premium-reviews-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  @include flex-center;
+  padding: 20px;
+
+  .modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .modal-container {
+    background: $dark-card;
+    border: 1px solid $border-gold;
+    border-radius: $radius-xl;
+    width: 100%;
+    max-width: 1000px;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    z-index: 2001;
+    @include flex-column;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba($gold, 0.1);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $gold;
+      border-radius: 3px;
+    }
+  }
+
+  .modal-header {
+    @include flex-between;
+    padding: 20px 28px;
+    border-bottom: 1px solid $border-color;
+    position: sticky;
+    top: 0;
+    background: $dark-card;
+    z-index: 10;
+
+    .modal-title-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      h2 {
+        font-family: "Cinzel", serif;
+        font-size: 1.3rem;
+        color: $gold-light;
+        margin: 0;
+      }
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: 1px solid $border-color;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      @include flex-center;
+      cursor: pointer;
+      color: $text-secondary;
+      transition: $transition;
+
+      &:hover {
+        border-color: $gold;
+        color: $gold;
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .modal-body {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    overflow: hidden;
+
+    @include responsive(mobile) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .reviews-stats-sidebar {
+    padding: 24px;
+    border-right: 1px solid $border-color;
+    overflow-y: auto;
+
+    .overall-rating-box {
+      text-align: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid $border-color;
+      margin-bottom: 20px;
+
+      .overall-rating-score {
+        font-family: "Poppins", sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: $gold;
+      }
+    }
+
+    .rating-distribution-chart {
+      h4 {
+        font-family: "Cinzel", serif;
+        font-size: 0.85rem;
+        color: $gold-light;
+        margin-bottom: 16px;
+      }
+
+      .distribution-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+
+        .star-label {
+          font-family: "Raleway", sans-serif;
+          font-size: 0.8rem;
+          color: $text-secondary;
+          width: 45px;
+        }
+
+        .distribution-bar-container {
+          flex: 1;
+          height: 6px;
+          background: rgba($text-primary, 0.1);
+          border-radius: 3px;
+          overflow: hidden;
+
+          .distribution-bar-fill {
+            height: 100%;
+            background: $gold;
+            border-radius: 3px;
+          }
+        }
+      }
+    }
+  }
+
+  .reviews-list-container {
+    overflow-y: auto;
+    padding: 24px;
+
+    .reviews-list {
+      .review-card {
+        padding: 16px 0;
+        border-bottom: 1px solid $border-color;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .review-header {
+          margin-bottom: 12px;
+
+          .reviewer-name {
+            font-family: "Cinzel", serif;
+            font-size: 0.9rem;
+            color: $gold-light;
+            margin-bottom: 6px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// FORCE SWIPER TO FILL CONTAINER WITHOUT CUTOFF
+.main-image-container {
+  .product-main-swiper {
+    // Ensure swiper container takes full width
+    width: 100%;
+    overflow: hidden;
+
+    .swiper-wrapper {
+      width: 100%;
+    }
+
+    .swiper-slide {
+      width: 100% !important;
+      flex-shrink: 0 !important;
+      // Remove any default transform or margin
+      transform: translate3d(0, 0, 0) !important;
+
+      .swiper-image-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          max-width: 100%;
+          max-height: 100%;
+          width: auto;
+          height: auto;
+          object-fit: contain;
+          // Prevent any overflow by keeping within parent
+          display: block;
+          margin: 0 auto;
+        }
+      }
+    }
+  }
+}

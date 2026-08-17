@@ -1,0 +1,537 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&display=swap");
+
+// ─── Variables ──────────────────────────────────────────────────────────────
+$nav-gold: #c9a84c;
+$nav-gold-light: #e8c97a;
+$nav-dark: #0d0b08;
+$nav-white: #f5f0e8;
+$nav-border: rgba(#c9a84c, 0.18);
+$nav-height: 82px;
+$nav-height-mob: 66px;
+
+// ─── Keyframes ──────────────────────────────────────────────────────────────
+@keyframes navbar-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes navbar-menu-open {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ─── Root ───────────────────────────────────────────────────────────────────
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: $nav-height;
+
+  // Fully transparent — page bg shows through
+  background: transparent;
+
+  // Smooth transition when scrolled class is added
+  transition: background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+
+  // After scroll: very slight dark tint + blur so links stay readable
+  &--scrolled {
+    background: rgba($nav-dark, 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid $nav-border;
+  }
+
+  // ── Inner layout ──────────────────────────────────────────────────────────
+  &__inner {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 100px;
+    gap: 40px;
+  }
+
+  // ── Logo ──────────────────────────────────────────────────────────────────
+  &__logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+    gap: 12px;
+  }
+
+  &__logo-img {
+    height: 150px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  // Fallback placeholder if no image src passed
+  &__logo-placeholder {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+
+  &__logo-name {
+    font-family: "Cinzel", serif;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: $nav-gold-light;
+    text-transform: uppercase;
+  }
+
+  &__logo-sub {
+    font-family: "Cinzel", serif;
+    font-size: 8px;
+    letter-spacing: 0.24em;
+    color: rgba($nav-gold, 0.75);
+    text-transform: uppercase;
+  }
+
+  // ── Nav Links (desktop) ──────────────────────────────────────────────────
+  &__links {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  &__link {
+    font-family: "Cinzel", serif;
+    font-size: 12.5px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba($nav-white, 0.80);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 4px;
+    transition: color 0.3s ease;
+
+    // Underline bar
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: $nav-gold;
+      transition: width 0.3s ease;
+    }
+
+    &:hover {
+      color: $nav-gold-light;
+
+      &::after {
+        width: 100%;
+      }
+    }
+
+    // Active state — gold color + full underline
+    &--active {
+      color: $nav-gold;
+
+      &::after {
+        width: 100%;
+        background: $nav-gold;
+      }
+    }
+  }
+
+  // ── Right Actions ─────────────────────────────────────────────────────────
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-shrink: 0;
+  }
+
+  &__action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: rgba($nav-white, 0.80);
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.3s ease;
+    position: relative;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      color: $nav-gold;
+    }
+  }
+
+  &__cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -6px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: $nav-gold;
+    color: $nav-dark;
+    font-family: "Raleway", sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  // ── Hamburger (hidden on desktop) ─────────────────────────────────────────
+  &__hamburger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid $nav-border;
+    color: $nav-gold;
+    cursor: pointer;
+    padding: 6px;
+    width: 38px;
+    height: 38px;
+    transition: border-color 0.3s ease, color 0.3s ease;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      border-color: $nav-gold;
+      color: $nav-gold-light;
+    }
+  }
+
+  // ── Mobile Menu (dropdown) ────────────────────────────────────────────────
+  &__mobile-menu {
+    display: none;
+    flex-direction: column;
+    background: rgba($nav-dark, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid $nav-border;
+    border-bottom: 1px solid $nav-border;
+    padding: 32px 32px 28px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+
+    &--open {
+      max-height: 520px;
+      opacity: 1;
+      pointer-events: all;
+      animation: navbar-menu-open 0.35s ease forwards;
+    }
+  }
+
+  &__mobile-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__mobile-item {
+    border-bottom: 1px solid rgba($nav-gold, 0.08);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__mobile-link {
+    display: block;
+    font-family: "Cinzel", serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba($nav-white, 0.75);
+    text-decoration: none;
+    padding: 14px 0;
+    transition: color 0.3s ease, padding-left 0.3s ease;
+
+    &:hover {
+      color: $nav-gold;
+      padding-left: 8px;
+    }
+
+    &--active {
+      color: $nav-gold;
+    }
+  }
+
+  &__mobile-ornament {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 22px 0;
+  }
+
+  &__mobile-ornament-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba($nav-gold, 0.4), transparent);
+  }
+
+  &__mobile-ornament-diamond {
+    width: 14px;
+    height: 7px;
+    flex-shrink: 0;
+  }
+
+  &__mobile-actions {
+    display: flex;
+    gap: 16px;
+  }
+
+  &__mobile-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Cinzel", serif;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba($nav-white, 0.60);
+    background: transparent;
+    border: 1px solid $nav-border;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: color 0.3s ease, border-color 0.3s ease;
+
+    svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    &:hover {
+      color: $nav-gold;
+      border-color: rgba($nav-gold, 0.5);
+    }
+  }
+
+  // ── Backdrop ──────────────────────────────────────────────────────────────
+  // (rendered as sibling, styled here for reference)
+
+  // ─── Tablet (769px – 1024px) ─────────────────────────────────────────────
+  @media (max-width: 1024px) and (min-width: 769px) {
+    &__inner {
+      padding: 0 32px;
+      gap: 24px;
+    }
+
+    &__links {
+      gap: 22px;
+    }
+
+    &__link {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+
+    &__logo-img {
+      height: 46px;
+    }
+  }
+
+  // ─── Mobile (≤ 768px) ────────────────────────────────────────────────────
+  @media (max-width: 768px) {
+    height: $nav-height-mob;
+
+    &__inner {
+      padding: 0 20px;
+      gap: 0;
+      justify-content: space-between;
+    }
+
+    // Hide desktop nav links
+    &__links {
+      display: none;
+    }
+
+    // Show hamburger
+    &__hamburger {
+      display: inline-flex;
+    }
+
+    // Hide desktop search/cart on mobile (they appear in mobile menu)
+    &__action-btn {
+      display: none;
+
+      // But keep cart if you want it always visible — uncomment:
+      // &--cart { display: inline-flex; }
+    }
+
+    // Show mobile menu as block
+    &__mobile-menu {
+      display: flex;
+    }
+
+    &__logo-img {
+      height: 90px;
+    }
+
+    &__logo-name {
+      font-size: 15px;
+    }
+
+    &__logo-sub {
+      font-size: 7px;
+    }
+  }
+
+  // ─── Small Mobile (≤ 380px) ──────────────────────────────────────────────
+  @media (max-width: 380px) {
+    &__inner {
+      padding: 0 14px;
+    }
+
+    &__logo-img {
+      height: 36px;
+    }
+  }
+}
+
+// ─── Backdrop (sibling to navbar, outside header) ───────────────────────────
+.navbar__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba($nav-dark, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  animation: navbar-slide-down 0.25s ease forwards;
+}
+
+// ─── Page offset helper ──────────────────────────────────────────────────────
+// Add this class to the first section UNDER the navbar if it's NOT the hero
+// (hero sections should go full height since navbar is transparent over them)
+.navbar-offset {
+  padding-top: $nav-height;
+
+  @media (max-width: 768px) {
+    padding-top: $nav-height-mob;
+  }
+}
+
+// Add to your existing SCSS file - Wishlist badge styles
+
+.navbar__wishlist-badge {
+  position: absolute;
+  top: -5px;
+  right: -6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: $nav-gold;
+  color: $nav-dark;
+  font-family: "Raleway", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+// Add to your existing SCSS file
+
+// User/Profile button
+.navbar__action-btn--user {
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// Mobile action icons container - single line, icons only
+.navbar__mobile-actions-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 20px;
+  padding: 16px 0 8px;
+  border-top: 1px solid $nav-border;
+}
+
+.navbar__mobile-icon-btn {
+  position: relative;
+  background: transparent;
+  border: none;
+  color: rgba($nav-white, 0.7);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  transition: color 0.3s ease;
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  &:hover {
+    color: $nav-gold;
+  }
+}
+
+.navbar__mobile-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: $nav-gold;
+  color: $nav-dark;
+  font-family: "Raleway", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+// Hide the old mobile action buttons (with text)
+.navbar__mobile-actions {
+  display: none;
+}

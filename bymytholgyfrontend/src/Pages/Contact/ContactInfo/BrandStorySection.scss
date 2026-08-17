@@ -1,0 +1,413 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Raleway:wght@300;400;500;600&display=swap');
+
+// Variables
+$gold: #c9a84c;
+$gold-light: #e8c97a;
+$gold-dark: #a07e2e;
+$dark-bg: #050505;
+$dark-card: #0a0a0a;
+$border-color: rgba(201, 168, 76, 0.3);
+$border-gold: rgba(201, 168, 76, 0.6);
+$transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+@mixin responsive($breakpoint) {
+    @if $breakpoint ==tablet {
+        @media (max-width: 1024px) {
+            @content;
+        }
+    }
+
+    @if $breakpoint ==mobile {
+        @media (max-width: 768px) {
+            @content;
+        }
+    }
+
+    @if $breakpoint ==small-mobile {
+        @media (max-width: 480px) {
+            @content;
+        }
+    }
+}
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// Brand Story Section
+.brand-story-section {
+    background: $dark-bg;
+    padding: 0px 24px 20px;
+    font-family: 'Raleway', sans-serif;
+
+    @include responsive(mobile) {
+        padding: 60px 16px;
+    }
+}
+
+.brand-story-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+
+// Three Column Grid
+.three-column-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+
+    @include responsive(tablet) {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}
+
+// Luxury Card Base Styles
+.luxury-card {
+    background: $dark-card;
+    border: 1px solid $border-gold;
+    transition: $transition;
+    overflow: hidden;
+
+    &:hover {
+        border-color: $gold;
+        box-shadow: 0 0 20px rgba(201, 168, 76, 0.1);
+    }
+}
+
+// Ornament Styles
+.section-ornament {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-ornament-line {
+    display: block;
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, $gold, transparent);
+}
+
+.section-ornament-diamond {
+    width: 12px;
+    height: 6px;
+    fill: $gold;
+}
+
+// COLUMN 1 - Promise Column
+.promise-column {
+    padding: 40px 32px;
+    display: flex;
+    flex-direction: column;
+
+    @include responsive(tablet) {
+        padding: 36px 28px;
+    }
+
+    @include responsive(mobile) {
+        padding: 32px 24px;
+    }
+}
+
+.promise-header {
+    margin-bottom: 32px;
+    text-align: center;
+
+    .promise-subtitle {
+        font-family: 'Cinzel', serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: $gold-light;
+        letter-spacing: 0.1em;
+        margin: 0 0 16px 0;
+        text-transform: uppercase;
+
+        @include responsive(mobile) {
+            font-size: 1rem;
+        }
+    }
+
+    .section-ornament {
+        justify-content: center;
+    }
+}
+
+.promise-items {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+}
+
+.promise-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    jus
+
+    .promise-icon {
+        flex-shrink: 0;
+        width: 52px;
+        height: 52px;
+        background: rgba(201, 168, 76, 0.1);
+        border: 1px solid $border-color;
+        border-radius: 50%;
+        @include flex-center;
+        color: $gold;
+        font-size: 1.5rem;
+        transition: $transition;
+
+        &:hover {
+            background: $gold;
+            color: $dark-bg;
+            border-color: $gold;
+            transform: scale(1.05);
+        }
+    }
+
+    .promise-content {
+        flex: 1;
+        
+
+        h4 {
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: $gold-light;
+            letter-spacing: 0.08em;
+            margin: 0 0 8px 0;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-size: 0.85rem;
+            color: rgba(245, 240, 232, 0.7);
+            line-height: 1.5;
+            margin: 0;
+        }
+    }
+}
+
+// COLUMN 2 - Image Column
+.image-column {
+    padding: 0;
+    display: flex;
+    align-items: stretch;
+    border: none !important;
+}
+
+.image-container {
+    width: 100%;
+    height: 100%;
+    min-height: 450px;
+    overflow: hidden;
+
+    @include responsive(tablet) {
+        min-height: 300px !important;
+    }
+
+    @include responsive(mobile) {
+        min-height: 350px;
+    }
+
+    .sacred-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+
+        // &:hover {
+        //     transform: scale(1.03);
+        // }
+    }
+}
+
+// COLUMN 3 - Story Column
+.story-column {
+    padding: 40px 32px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    @include responsive(tablet) {
+        padding: 36px 28px;
+    }
+
+    @include responsive(mobile) {
+        padding: 32px 24px;
+    }
+}
+
+.story-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .story-title {
+        font-family: 'Cinzel', serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: $gold-light;
+        letter-spacing: 0.1em;
+        margin: 0 0 16px 0;
+        text-transform: uppercase;
+
+        @include responsive(mobile) {
+            font-size: 1rem;
+        }
+    }
+
+    .story-ornament {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 28px;
+
+        .section-ornament-line {
+            width: 40px;
+        }
+    }
+
+    .story-text {
+        max-width: 85%;
+        margin: 0 auto 32px;
+
+        p {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: rgba(245, 240, 232, 0.8);
+            margin-bottom: 16px;
+            text-align: center;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        @include responsive(mobile) {
+            max-width: 95%;
+        }
+    }
+
+    .lotus-icon {
+        margin: 24px 0 28px;
+        color: $gold;
+        font-size: 2.5rem;
+        opacity: 0.8;
+        transition: $transition;
+
+        &:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+    }
+
+    .virtues {
+        display: flex;
+        gap: 24px;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        span {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: $gold;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            position: relative;
+
+            &:not(:last-child)::after {
+                content: '•';
+                position: absolute;
+                right: -16px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: $gold;
+                font-size: 0.6rem;
+            }
+        }
+
+        @include responsive(mobile) {
+            gap: 20px;
+
+            span:not(:last-child)::after {
+                right: -12px;
+            }
+        }
+    }
+}
+
+// Tablet Specific Adjustments
+@include responsive(tablet) {
+    .three-column-grid {
+        gap: 28px;
+    }
+
+    .promise-column,
+    .story-column {
+        padding: 32px 28px;
+    }
+
+    .image-container {
+        min-height: 380px;
+    }
+
+    .promise-items {
+        gap: 28px;
+    }
+}
+
+// Mobile Specific Adjustments
+@include responsive(mobile) {
+    .brand-story-section {
+        padding: 50px 16px;
+    }
+
+    .main-section-header {
+        margin-bottom: 36px;
+    }
+
+    .promise-column,
+    .story-column {
+        padding: 28px 20px;
+    }
+
+    .promise-header {
+        margin-bottom: 24px;
+    }
+
+    .promise-item {
+        gap: 16px;
+
+        .promise-icon {
+            width: 44px;
+            height: 44px;
+            font-size: 1.2rem;
+        }
+
+        .promise-content h4 {
+            font-size: 0.75rem;
+        }
+    }
+
+    .story-content {
+        .story-text {
+            max-width: 100%;
+        }
+
+        .virtues {
+            gap: 16px;
+
+            span {
+                font-size: 0.7rem;
+            }
+        }
+    }
+}

@@ -1,0 +1,1285 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {
+    FiPackage,
+    FiClock,
+    FiCheckCircle,
+    FiXCircle,
+    FiTruck,
+    FiShoppingBag,
+    FiTag,
+    FiStar,
+    FiEdit2,
+    FiTrash2,
+    FiEye,
+    FiMapPin,
+    FiCreditCard,
+    FiCalendar,
+    FiUser,
+    FiRefreshCw,
+    FiFilter,
+    FiChevronLeft,
+    FiChevronRight,
+    FiShoppingCart,
+    FiAlertCircle,
+    FiArrowLeft
+} from 'react-icons/fi';
+import { MdLocalShipping, MdOutlineRateReview } from 'react-icons/md';
+import { RiCouponLine } from 'react-icons/ri';
+import './UserOrders.scss';
+import LoginModal from "../../../Components/Login/LoginModel/LoginModal";
+
+const UserOrders = () => {
+    const navigate = useNavigate();
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [selectedReview, setSelectedReview] = useState(null);
+    const [showOrderDetails, setShowOrderDetails] = useState(false);
+    const [showReviewModal, setShowReviewModal] = useState(false);
+    const [isUpdatingReview, setIsUpdatingReview] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    // Confirmation Modal States
+    const [showCancelConfirmModal, setShowCancelConfirmModal] = useState(false);
+    const [orderToCancel, setOrderToCancel] = useState(null);
+    const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+    const [reviewToDelete, setReviewToDelete] = useState(null);
+
+    const [reviewData, setReviewData] = useState({
+        rating: 0,
+        reviewText: '',
+        hoverRating: 0
+    });
+    const [submittingReview, setSubmittingReview] = useState(false);
+    const [stats, setStats] = useState({
+        totalOrders: 0,
+        pendingOrders: 0,
+        deliveredOrders: 0,
+        cancelledOrders: 0,
+        totalSpent: 0,
+        averageOrderValue: 0
+    });
+    const [filters, setFilters] = useState({
+        status: 'all',
+        page: 1,
+        limit: 10
+    });
+
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    const userName = localStorage.getItem('userName') || 'User';
+
+    // Status configurations
+    const statusConfig = {
+        'pending': {
+            color: '#FF9800',
+            icon: <FiClock />,
+            bgColor: 'rgba(255, 152, 0, 0.15)'
+        },
+        'processing': {
+            color: '#2196F3',
+            icon: <FiRefreshCw />,
+            bgColor: 'rgba(33, 150, 243, 0.15)'
+        },
+        'shipped': {
+            color: '#673AB7',
+            icon: <FiTruck />,
+            bgColor: 'rgba(103, 58, 183, 0.15)'
+        },
+        'delivered': {
+            color: '#4CAF50',
+            icon: <FiCheckCircle />,
+            bgColor: 'rgba(76, 175, 80, 0.15)'
+        },
+        'cancelled': {
+            color: '#F44336',
+            icon: <FiXCircle />,
+            bgColor: 'rgba(244, 67, 54, 0.15)'
+        },
+        'returned': {
+            color: '#795548',
+            icon: <FiArrowLeft />,
+            bgColor: 'rgba(121, 85, 72, 0.15)'
+        }
+    };
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+
+        if (!token || !userId) {
+            setShowLoginModal(true);
+            setIsAuthenticated(false);
+            setLoading(false);
+        } else {
+            setIsAuthenticated(true);
+            fetchUserOrders();
+            fetchOrderStats();
+        }
+    }, []);
+
+    const fetchUserOrders = async () => {
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+
+        if (!token || !userId) {
+            setShowLoginModal(true);
+            setIsAuthenticated(false);
+            return;
+        }
+
+        try {
+            setLoading(true);
+            setError(null);
+
+            const queryParams = new URLSearchParams({
+                page: filters.page,
+                limit: filters.limit,
+                status: filters.status
+            }).toString();
+
+            const response = await axios.get(
+                `${import.meta.env.VITE_API_URL}/orders/user/${userId}?${queryParams}`,
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
+            if (response.data.success) {
+                const ordersData = response.data.orders || [];
+                setOrders(ordersData);
+
+                const summary = response.data.summary || {};
+                setStats(prev => ({
+                    ...prev,
+                    totalOrders: summary.totalOrders || response.data.pagination?.total || 0,
+                    pendingOrders: summary.pendingOrders || 0,
+                    deliveredOrders: summary.deliveredOrders || 0,
+                    cancelledOrders: summary.cancelledOrders || 0
+                }));
+
+                if (ordersData.length > 0) {
+                    await checkReviewsForOrders(ordersData);
+                }
+            } else {
+                setOrders([]);
+                setStats({
+                    totalOrders: 0,
+                    pendingOrders: 0,
+                    deliveredOrders: 0,
+                    cancelledOrders: 0,
+                    totalSpent: 0,
+                    averageOrderValue: 0
+                });
+            }
+        } catch (error) {
+            console.error('❌ Error fetching orders:', error);
+            setError('Failed to load orders. Please try again.');
+            setOrders([]);
+            toast.error('Failed to load orders');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchOrderStats = async () => {
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_API_URL}/orders/stats/${userId}`,
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
+            if (response.data.success) {
+                const statsData = response.data.stats || {};
+                setStats(prev => ({
+                    ...prev,
+                    totalSpent: statsData.totalSpent || 0,
+                    averageOrderValue: statsData.averageOrderValue || 0
+                }));
+            }
+        } catch (error) {
+            console.error('Error fetching stats:', error);
+        }
+    };
+
+    const checkReviewsForOrders = async (ordersData = orders) => {
+        try {
+            const deliveredOrders = ordersData.filter(order => order.orderStatus === 'delivered');
+
+            const checkRequests = [];
+            deliveredOrders.forEach(order => {
+                order.items.forEach(item => {
+                    checkRequests.push({
+                        orderId: order.orderId,
+                        productId: item.productId,
+                        colorId: item.colorId
+                    });
+                });
+            });
+
+            if (checkRequests.length > 0) {
+                const response = await axios.post(
+                    `${import.meta.env.VITE_API_URL}/reviews/check-multiple`,
+                    {
+                        checks: checkRequests,
+                        userId: userId
+                    },
+                    {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }
+                );
+
+                if (response.data.success) {
+                    setOrders(prevOrders =>
+                        prevOrders.map(order => {
+                            const updatedItems = order.items.map(item => {
+                                const checkResult = response.data.results.find(
+                                    r => r.orderId === order.orderId &&
+                                        r.productId === item.productId &&
+                                        r.colorId === item.colorId
+                                );
+
+                                if (checkResult && checkResult.hasReviewed) {
+                                    return {
+                                        ...item,
+                                        hasReviewed: true,
+                                        reviewId: checkResult.reviewId || checkResult._id,
+                                        userRating: checkResult.rating || 0,
+                                        userReviewText: checkResult.reviewText || ""
+                                    };
+                                } else {
+                                    return {
+                                        ...item,
+                                        hasReviewed: false,
+                                        reviewId: null,
+                                        userRating: 0,
+                                        userReviewText: ""
+                                    };
+                                }
+                            });
+                            return { ...order, items: updatedItems };
+                        })
+                    );
+                }
+            }
+        } catch (error) {
+            console.error('Error checking review status:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            fetchUserOrders();
+            fetchOrderStats();
+        }
+    }, [filters.page, filters.status, isAuthenticated]);
+
+    const handleStatusFilter = (status) => {
+        setFilters(prev => ({
+            ...prev,
+            status,
+            page: 1
+        }));
+    };
+
+    const handleViewOrderDetails = (order) => {
+        setSelectedOrder(order);
+        setShowOrderDetails(true);
+    };
+
+    // Show cancel confirmation modal
+    const handleCancelOrderClick = (orderId) => {
+        setOrderToCancel(orderId);
+        setShowCancelConfirmModal(true);
+    };
+
+    // Execute cancel order after confirmation
+    const executeCancelOrder = async () => {
+        if (!orderToCancel) return;
+
+        try {
+            const response = await axios.put(
+                `${import.meta.env.VITE_API_URL}/orders/${orderToCancel}/cancel`,
+                { reason: "Changed my mind" },
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
+            if (response.data.success) {
+                toast.success('Order cancelled successfully!');
+                fetchUserOrders();
+                fetchOrderStats();
+            }
+        } catch (error) {
+            console.error('❌ Error cancelling order:', error);
+            toast.error(error.response?.data?.message || 'Failed to cancel order');
+        } finally {
+            setShowCancelConfirmModal(false);
+            setOrderToCancel(null);
+        }
+    };
+
+    const handleTrackOrder = (order) => {
+        toast.info(`Tracking order ${order.orderId}. Status: ${order.orderStatus}`);
+    };
+
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('en-IN', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+    };
+
+    const formatTime = (dateString) => {
+        return new Date(dateString).toLocaleTimeString('en-IN', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
+
+    const getDeliveryDate = (orderDate) => {
+        const date = new Date(orderDate);
+        date.setDate(date.getDate() + 5);
+        return date.toLocaleDateString('en-IN', {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'short'
+        });
+    };
+
+    const getCurrentStatusStep = (orderStatus) => {
+        const statusOrder = ['pending', 'processing', 'shipped', 'delivered'];
+        return statusOrder.indexOf(orderStatus) + 1;
+    };
+
+    // Review handlers
+    const handleOpenReviewModal = (order, product) => {
+        setSelectedOrder(order);
+        setSelectedProduct(product);
+        setSelectedReview(null);
+        setIsUpdatingReview(false);
+        setReviewData({
+            rating: 0,
+            reviewText: '',
+            hoverRating: 0
+        });
+        setShowReviewModal(true);
+    };
+
+    const handleOpenUpdateReviewModal = (order, product) => {
+        setSelectedOrder(order);
+        setSelectedProduct(product);
+        setSelectedReview({
+            reviewId: product.reviewId,
+            rating: product.userRating,
+            reviewText: product.userReviewText || ''
+        });
+        setIsUpdatingReview(true);
+        setReviewData({
+            rating: product.userRating || 0,
+            reviewText: product.userReviewText || '',
+            hoverRating: product.userRating || 0
+        });
+        setShowReviewModal(true);
+    };
+
+    const handleStarHover = (rating) => {
+        setReviewData(prev => ({ ...prev, hoverRating: rating }));
+    };
+
+    const handleStarClick = (rating) => {
+        setReviewData(prev => ({ ...prev, rating }));
+    };
+
+    const handleSubmitReview = async () => {
+        if (!reviewData.rating) {
+            toast.warning('Please select a star rating');
+            return;
+        }
+
+        if (!selectedOrder || !selectedProduct) {
+            toast.error('Invalid review data');
+            return;
+        }
+
+        try {
+            setSubmittingReview(true);
+
+            if (isUpdatingReview && selectedReview) {
+                const updatePayload = {
+                    userId,
+                    rating: reviewData.rating,
+                    reviewText: reviewData.reviewText.trim()
+                };
+
+                const response = await axios.put(
+                    `${import.meta.env.VITE_API_URL}/reviews/update/${selectedReview.reviewId}`,
+                    updatePayload,
+                    {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }
+                );
+
+                if (response.data.success) {
+                    toast.success('Review updated successfully!');
+                    setShowReviewModal(false);
+                    fetchUserOrders();
+                }
+            } else {
+                const reviewPayload = {
+                    userId,
+                    userName,
+                    orderId: selectedOrder.orderId,
+                    productId: selectedProduct.productId,
+                    productName: selectedProduct.productName,
+                    colorId: selectedProduct.colorId,
+                    colorName: selectedProduct.colorName,
+                    fragrance: selectedProduct.fragrance || "",
+                    modelId: selectedProduct.modelId || "",
+                    modelName: selectedProduct.modelName || "Default",
+                    size: selectedProduct.size || "",
+                    rating: reviewData.rating,
+                    reviewText: reviewData.reviewText.trim()
+                };
+
+                const response = await axios.post(
+                    `${import.meta.env.VITE_API_URL}/reviews/submit`,
+                    reviewPayload,
+                    {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }
+                );
+
+                if (response.data.success) {
+                    toast.success('Review submitted successfully!');
+                    setShowReviewModal(false);
+                    fetchUserOrders();
+                }
+            }
+        } catch (error) {
+            console.error('❌ Error submitting review:', error);
+            toast.error(error.response?.data?.message || `Failed to ${isUpdatingReview ? 'update' : 'submit'} review`);
+        } finally {
+            setSubmittingReview(false);
+        }
+    };
+
+    // Show delete confirmation modal
+    const handleDeleteReviewClick = (reviewId, order, product) => {
+        setReviewToDelete({ reviewId, order, product });
+        setShowDeleteConfirmModal(true);
+    };
+
+    // Execute delete review after confirmation
+    const executeDeleteReview = async () => {
+        if (!reviewToDelete) return;
+
+        const { reviewId, order, product } = reviewToDelete;
+
+        try {
+            const response = await axios.delete(
+                `${import.meta.env.VITE_API_URL}/reviews/${reviewId}`,
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                    data: { userId }
+                }
+            );
+
+            if (response.data.success) {
+                toast.success('Review deleted successfully!');
+                fetchUserOrders();
+            }
+        } catch (error) {
+            console.error('❌ Error deleting review:', error);
+            toast.error(error.response?.data?.message || 'Failed to delete review');
+        } finally {
+            setShowDeleteConfirmModal(false);
+            setReviewToDelete(null);
+        }
+    };
+
+    // Custom Confirmation Modal Component
+    const renderCustomConfirmModal = () => (
+        <div className="custom-confirm-modal">
+            <div className="modal-overlay" onClick={() => {
+                setShowCancelConfirmModal(false);
+                setShowDeleteConfirmModal(false);
+                setOrderToCancel(null);
+                setReviewToDelete(null);
+            }}></div>
+            <div className="modal-content">
+                <div className="modal-icon">
+                    <FiAlertCircle />
+                </div>
+                <h3>{showCancelConfirmModal ? 'Cancel Order' : 'Delete Review'}</h3>
+                <p>
+                    {showCancelConfirmModal
+                        ? 'Are you sure you want to cancel this order? This action cannot be undone.'
+                        : 'Are you sure you want to delete this review? This action cannot be undone.'}
+                </p>
+                <div className="modal-actions">
+                    <button className="cancel-btn" onClick={() => {
+                        setShowCancelConfirmModal(false);
+                        setShowDeleteConfirmModal(false);
+                        setOrderToCancel(null);
+                        setReviewToDelete(null);
+                    }}>
+                        Cancel
+                    </button>
+                    <button className="confirm-btn" onClick={showCancelConfirmModal ? executeCancelOrder : executeDeleteReview}>
+                        {showCancelConfirmModal ? 'Cancel Order' : 'Delete'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+
+    const renderStars = () => {
+        const stars = [];
+        const displayRating = reviewData.hoverRating || reviewData.rating;
+
+        for (let i = 1; i <= 5; i++) {
+            stars.push(
+                <button
+                    key={i}
+                    type="button"
+                    className={`star-btn ${i <= displayRating ? 'active' : ''}`}
+                    onClick={() => handleStarClick(i)}
+                    onMouseEnter={() => handleStarHover(i)}
+                    onMouseLeave={() => handleStarHover(0)}
+                    disabled={submittingReview}
+                >
+                    <FiStar className="star-icon" />
+                </button>
+            );
+        }
+        return stars;
+    };
+
+    // Render Order Card
+    const renderOrderCard = (order) => {
+        const status = statusConfig[order.orderStatus] || statusConfig.pending;
+
+        return (
+            <div key={order._id} className="order-card">
+                <div className="order-header">
+                    <div className="order-meta">
+                        <div className="order-id-section">
+                            <h3 className="order-id">
+                                <FiPackage className="order-icon" /> Order #{order.orderId}
+                            </h3>
+                            <div className="order-date">
+                                <FiCalendar className="date-icon" />
+                                {formatDate(order.createdAt)} at {formatTime(order.createdAt)}
+                            </div>
+                        </div>
+                        <div className="order-status-tag" style={{
+                            backgroundColor: status.bgColor,
+                            color: status.color,
+                            borderColor: status.color
+                        }}>
+                            {status.icon}
+                            <span className="status-text">{order.orderStatus.toUpperCase()}</span>
+                        </div>
+                    </div>
+
+                    <div className="order-summary">
+                        <div className="order-total">
+                            <span className="total-label">Total Amount</span>
+                            <span className="total-amount">₹{order.pricing.total.toLocaleString()}</span>
+                        </div>
+                        {order.checkoutMode === 'buy-now' && (
+                            <div className="order-mode">
+                                <RiCouponLine className="mode-icon" />
+                                <span>Buy Now</span>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className="order-items-grid">
+                    {order.items.slice(0, 4).map((item, index) => (
+                        <div key={index} className="order-item-grid">
+                            <div className="item-image-grid">
+                                {item.productImage ? (
+                                    <img
+                                        src={item.productImage}
+                                        alt={item.productName}
+                                        className="product-image"
+                                    />
+                                ) : (
+                                    <div className="image-placeholder">
+                                        {item.productName.charAt(0)}
+                                    </div>
+                                )}
+                            </div>
+                            <div className="item-info-grid">
+                                <h4 className="item-name-grid">{item.productName}</h4>
+                                <div className="item-variants-grid">
+                                    {item.fragrance && item.fragrance !== "Default" && (
+                                        <span className="variant-tag">
+                                            <FiTag className="variant-icon" />
+                                            {item.fragrance}
+                                        </span>
+                                    )}
+                                    {item.modelName !== "Default" && (
+                                        <span className="variant-tag">
+                                            <FiShoppingBag className="variant-icon" />
+                                            {item.modelName}
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="item-footer-grid">
+                                    <div className="item-quantity-price">
+                                        <span className="quantity">Qty: {item.quantity}</span>
+                                        <span className="price">₹{item.totalPrice.toLocaleString()}</span>
+                                    </div>
+
+                                    {order.orderStatus === 'delivered' && (
+                                        <div className="item-review-grid">
+                                            {item.hasReviewed ? (
+                                                <div className="reviewed-grid">
+                                                    <span className="rating-badge">
+                                                        <FiStar className="star-icon" />
+                                                        {item.userRating}/5
+                                                    </span>
+                                                    <div className="review-actions-grid">
+                                                        <button
+                                                            className="action-btn edit-btn"
+                                                            onClick={() => handleOpenUpdateReviewModal(order, item)}
+                                                            title="Edit Review"
+                                                        >
+                                                            <FiEdit2 />
+                                                        </button>
+                                                        <button
+                                                            className="action-btn delete-btn"
+                                                            onClick={() => handleDeleteReviewClick(item.reviewId, order, item)}
+                                                            title="Delete Review"
+                                                        >
+                                                            <FiTrash2 />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <button
+                                                    className="write-review-btn"
+                                                    onClick={() => handleOpenReviewModal(order, item)}
+                                                    title="Write Review"
+                                                >
+                                                    <MdOutlineRateReview className="review-icon" />
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {order.items.length > 4 && (
+                        <div className="more-items">
+                            + {order.items.length - 4} more item{order.items.length - 4 > 1 ? 's' : ''}
+                        </div>
+                    )}
+                </div>
+
+                <div className="order-footer">
+                    <div className="delivery-info">
+                        <div className="info-item">
+                            <FiMapPin className="info-icon" />
+                            <span>Delivery to: {order.deliveryAddress.city}</span>
+                        </div>
+                        <div className="info-item">
+                            <FiTruck className="info-icon" />
+                            <span>Est. delivery: {getDeliveryDate(order.createdAt)}</span>
+                        </div>
+                    </div>
+
+                    <div className="order-actions">
+                        <button
+                            className="btn primary-btn view-details"
+                            onClick={() => handleViewOrderDetails(order)}
+                        >
+                            <FiEye />
+                            View Details
+                        </button>
+
+                        {(order.orderStatus === 'pending' || order.orderStatus === 'processing') ? (
+                            <button
+                                className="btn danger-btn cancel-order"
+                                onClick={() => handleCancelOrderClick(order.orderId)}
+                            >
+                                <FiXCircle />
+                                Cancel Order
+                            </button>
+                        ) : order.orderStatus === 'shipped' ? (
+                            <button
+                                className="btn secondary-btn track-order"
+                                onClick={() => handleTrackOrder(order)}
+                            >
+                                <FiTruck />
+                                Track Order
+                            </button>
+                        ) : null}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    // Render Order Details Modal
+    const renderOrderDetails = () => (
+        <div className="order-details-modal">
+            <div className="modal-overlay" onClick={() => setShowOrderDetails(false)}></div>
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h2>
+                        <FiPackage className="header-icon" />
+                        Order Details - #{selectedOrder.orderId}
+                    </h2>
+                    <button
+                        className="close-btn"
+                        onClick={() => setShowOrderDetails(false)}
+                    >
+                        ✕
+                    </button>
+                </div>
+
+                <div className="modal-body">
+                    <div className="details-section">
+                        <h3 className="section-title">
+                            <FiClock className="section-icon" />
+                            Order Status
+                        </h3>
+                        <div className="status-timeline">
+                            {['pending', 'processing', 'shipped', 'delivered'].map((status, index) => {
+                                const config = statusConfig[status];
+                                const currentStep = getCurrentStatusStep(selectedOrder.orderStatus);
+                                const isActive = currentStep >= (index + 1);
+                                const isCurrent = selectedOrder.orderStatus === status;
+
+                                let stepClass = 'pending-step';
+                                if (isCurrent) stepClass = 'current-step';
+                                else if (isActive) stepClass = 'active-step';
+
+                                return (
+                                    <div key={status} className="timeline-step">
+                                        <div className={`step-icon ${stepClass}`}>
+                                            {config.icon}
+                                        </div>
+                                        <div className="step-info">
+                                            <span className="step-title">{status.toUpperCase()}</span>
+                                            {isCurrent && (
+                                                <span className="current-indicator">Current Status</span>
+                                            )}
+                                            {selectedOrder.timeline?.[`${status}At`] && (
+                                                <span className="step-date">
+                                                    {formatDate(selectedOrder.timeline[`${status}At`])}
+                                                </span>
+                                            )}
+                                        </div>
+                                        {index < 3 && (
+                                            <div className={`step-connector ${isActive ? 'filled-connector' : ''}`}></div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    <div className="details-section">
+                        <h3 className="section-title">
+                            <FiShoppingBag className="section-icon" />
+                            Order Items
+                        </h3>
+                        <div className="order-items-list">
+                            {selectedOrder.items.map((item, index) => (
+                                <div key={index} className="order-item-detail">
+                                    <div className="item-header-detail">
+                                        <div className="item-image-detail">
+                                            {item.productImage ? (
+                                                <img
+                                                    src={item.productImage}
+                                                    alt={item.productName}
+                                                    className="product-image-detail"
+                                                />
+                                            ) : (
+                                                <div className="image-placeholder-detail">
+                                                    {item.productName.charAt(0)}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="item-content-detail">
+                                            <div className="item-header">
+                                                <h4>{item.productName}</h4>
+                                                <span className="item-price">₹{item.totalPrice.toLocaleString()}</span>
+                                            </div>
+                                            <div className="item-details">
+                                                <div className="variants">
+                                                    {item.fragrance && item.fragrance !== "Default" && (
+                                                        <span className="variant">{item.fragrance}</span>
+                                                    )}
+                                                    {item.modelName !== "Default" && (
+                                                        <span className="variant">{item.modelName}</span>
+                                                    )}
+                                                    {item.size && <span className="variant">Size: {item.size}</span>}
+                                                </div>
+                                                <div className="item-meta">
+                                                    <span>Quantity: {item.quantity}</span>
+                                                    <span>Price: ₹{item.offerPrice?.toLocaleString() || item.finalPrice?.toLocaleString()}</span>
+                                                    {item.offerPercentage > 0 && (
+                                                        <span className="discount">Saved: ₹{item.savedAmount?.toLocaleString()}</span>
+                                                    )}
+                                                </div>
+                                                {selectedOrder.orderStatus === 'delivered' && (
+                                                    <div className="review-section">
+                                                        {item.hasReviewed ? (
+                                                            <div className="reviewed-item">
+                                                                <div className="review-rating">
+                                                                    <FiStar className="star-filled" />
+                                                                    <span>{item.userRating}/5</span>
+                                                                </div>
+                                                                <div className="review-actions">
+                                                                    <button
+                                                                        className="small-btn edit-btn"
+                                                                        onClick={() => {
+                                                                            setShowOrderDetails(false);
+                                                                            setTimeout(() => handleOpenUpdateReviewModal(selectedOrder, item), 300);
+                                                                        }}
+                                                                    >
+                                                                        <FiEdit2 /> Edit
+                                                                    </button>
+                                                                    <button
+                                                                        className="small-btn delete-btn"
+                                                                        onClick={() => handleDeleteReviewClick(item.reviewId, selectedOrder, item)}
+                                                                    >
+                                                                        <FiTrash2 /> Delete
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <button
+                                                                className="primary-btn small-btn"
+                                                                onClick={() => {
+                                                                    setShowOrderDetails(false);
+                                                                    setTimeout(() => handleOpenReviewModal(selectedOrder, item), 300);
+                                                                }}
+                                                            >
+                                                                <MdOutlineRateReview /> Write Review
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="details-grid">
+                        <div className="details-section">
+                            <h3 className="section-title">
+                                <FiMapPin className="section-icon" />
+                                Delivery Address
+                            </h3>
+                            <div className="address-card">
+                                <div className="address-header">
+                                    <h4>{selectedOrder.deliveryAddress.fullName}</h4>
+                                    {selectedOrder.deliveryAddress.isDefault && (
+                                        <span className="default-badge">Default</span>
+                                    )}
+                                </div>
+                                <p className="address-contact">
+                                    <FiUser /> {selectedOrder.deliveryAddress.mobile}
+                                </p>
+                                <div className="address-lines">
+                                    <p>{selectedOrder.deliveryAddress.addressLine1}</p>
+                                    {selectedOrder.deliveryAddress.addressLine2 && <p>{selectedOrder.deliveryAddress.addressLine2}</p>}
+                                    <p>{selectedOrder.deliveryAddress.city}, {selectedOrder.deliveryAddress.state} - {selectedOrder.deliveryAddress.pincode}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="details-section">
+                            <h3 className="section-title">
+                                <FiCreditCard className="section-icon" />
+                                Payment Details
+                            </h3>
+                            <div className="payment-card">
+                                <div className="payment-method">
+                                    <div className="method-icon">
+                                        {selectedOrder.payment.method === 'cod' ? '💵' : '💳'}
+                                    </div>
+                                    <div className="method-info">
+                                        <span className="method-name">
+                                            {selectedOrder.payment.method === 'cod' ? 'Cash on Delivery' : 'Card Payment'}
+                                        </span>
+                                        <span className="method-status">
+                                            Status: <span className={`status-${selectedOrder.payment.status}`}>
+                                                {selectedOrder.payment.status}
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="details-section">
+                        <h3 className="section-title">Order Summary</h3>
+                        <div className="order-summary-details">
+                            <div className="summary-row original">
+                                <span>Original Price</span>
+                                <span className="strikethrough">₹{selectedOrder.pricing.subtotal.toLocaleString()}</span>
+                            </div>
+
+                            {selectedOrder.pricing.totalSavings > 0 && (
+                                <div className="summary-row discount">
+                                    <span>Total Savings</span>
+                                    <span className="savings">-₹{selectedOrder.pricing.totalSavings.toLocaleString()}</span>
+                                </div>
+                            )}
+
+                            <div className="summary-row">
+                                <span>Items Total ({selectedOrder.items.reduce((sum, item) => sum + item.quantity, 0)} items)</span>
+                                <span>₹{(selectedOrder.pricing.subtotal - selectedOrder.pricing.totalSavings).toLocaleString()}</span>
+                            </div>
+
+                            <div className="summary-row">
+                                <span>Shipping</span>
+                                <span className={selectedOrder.pricing.shipping === 0 ? 'free' : ''}>
+                                    {selectedOrder.pricing.shipping === 0 ? 'FREE' : `₹${selectedOrder.pricing.shipping}`}
+                                </span>
+                            </div>
+
+                            <div className="summary-row">
+                                <span>Tax (GST)</span>
+                                <span>₹{selectedOrder.pricing.tax.toLocaleString()}</span>
+                            </div>
+
+                            <div className="summary-row total">
+                                <span>Total Amount</span>
+                                <span className="total-amount">₹{selectedOrder.pricing.total.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    // Render Review Modal
+    const renderReviewModal = () => (
+        <div className="review-modal">
+            <div className="modal-overlay" onClick={() => !submittingReview && setShowReviewModal(false)}></div>
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h2>
+                        <MdOutlineRateReview className="header-icon" />
+                        {isUpdatingReview ? 'Update Review' : 'Write a Review'}
+                    </h2>
+                    <button
+                        className="close-btn"
+                        onClick={() => !submittingReview && setShowReviewModal(false)}
+                        disabled={submittingReview}
+                    >
+                        ✕
+                    </button>
+                </div>
+
+                <div className="modal-body">
+                    <div className="product-info">
+                        <h3>{selectedProduct?.productName}</h3>
+                        <div className="product-meta">
+                            <span>Order #{selectedOrder?.orderId}</span>
+                            {selectedProduct?.fragrance && selectedProduct.fragrance !== "Default" && (
+                                <span>Fragrance: {selectedProduct.fragrance}</span>
+                            )}
+                            <span>Delivered on {formatDate(selectedOrder?.createdAt)}</span>
+                        </div>
+                    </div>
+
+                    <div className="review-form">
+                        <div className="rating-section">
+                            <label>Your Rating *</label>
+                            <div className="star-rating">
+                                <div className="stars-container">
+                                    {renderStars()}
+                                </div>
+                                <span className="rating-text">
+                                    {reviewData.rating > 0 ? `${reviewData.rating} star${reviewData.rating > 1 ? 's' : ''}` : 'Select rating'}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="review-text-section">
+                            <label>Your Review {isUpdatingReview ? '(Update)' : '(Optional)'}</label>
+                            <textarea
+                                className="review-textarea"
+                                placeholder="Share your experience with this product..."
+                                value={reviewData.reviewText}
+                                onChange={(e) => setReviewData(prev => ({ ...prev, reviewText: e.target.value }))}
+                                rows={4}
+                                maxLength={500}
+                                disabled={submittingReview}
+                            />
+                            <div className="char-count">
+                                {reviewData.reviewText.length}/500 characters
+                            </div>
+                        </div>
+
+                        <div className="review-note">
+                            <p><FiCheckCircle className="note-icon" /> This is a verified purchase</p>
+                            <p><FiStar className="note-icon" /> Your review helps other shoppers</p>
+                        </div>
+                    </div>
+
+                    <div className="modal-actions">
+                        <button
+                            className="btn secondary-btn"
+                            onClick={() => !submittingReview && setShowReviewModal(false)}
+                            disabled={submittingReview}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="btn primary-btn"
+                            onClick={handleSubmitReview}
+                            disabled={submittingReview || reviewData.rating === 0}
+                        >
+                            {submittingReview ? (
+                                <>
+                                    <FiRefreshCw className="spinner" />
+                                    {isUpdatingReview ? 'Updating...' : 'Submitting...'}
+                                </>
+                            ) : (
+                                isUpdatingReview ? 'Update Review' : 'Submit Review'
+                            )}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    // Render Empty State
+    const renderEmptyState = () => (
+        <div className="empty-state">
+            <div className="empty-icon">
+                <FiShoppingCart />
+            </div>
+            <h2>No Orders Yet</h2>
+            <p>You haven't placed any orders. Start exploring our collection!</p>
+            <button
+                className="btn primary-btn shop-now"
+                onClick={() => navigate('/products')}
+            >
+                <FiShoppingBag />
+                Start Shopping
+            </button>
+        </div>
+    );
+
+    // Render Loading State
+    const renderLoading = () => (
+        <div className="loading-state">
+            <div className="spinner"></div>
+            <p>Loading your orders...</p>
+        </div>
+    );
+
+    // Render Error State
+    const renderError = () => (
+        <div className="error-state">
+            <div className="error-icon">
+                <FiAlertCircle />
+            </div>
+            <h2>Unable to Load Orders</h2>
+            <p>{error}</p>
+            <button
+                className="btn primary-btn retry-btn"
+                onClick={fetchUserOrders}
+            >
+                <FiRefreshCw />
+                Try Again
+            </button>
+        </div>
+    );
+
+    if (!isAuthenticated && showLoginModal) {
+        return (
+            <div className="user-orders">
+                <ToastContainer position="top-right" theme="dark" />
+                <LoginModal
+                    onClose={() => {
+                        setShowLoginModal(false);
+                        const token = localStorage.getItem('token');
+                        const userId = localStorage.getItem('userId');
+                        if (token && userId) {
+                            setIsAuthenticated(true);
+                            fetchUserOrders();
+                            fetchOrderStats();
+                        } else {
+                            navigate('/');
+                        }
+                    }}
+                    showRegisterLink={true}
+                />
+            </div>
+        );
+    }
+
+    return (
+        <div className="user-orders">
+            <ToastContainer position="top-right" theme="dark" />
+
+            {/* Custom Confirmation Modal */}
+            {(showCancelConfirmModal || showDeleteConfirmModal) && renderCustomConfirmModal()}
+
+            {/* Header */}
+            <div className="orders-header">
+                <h1>
+                    <FiPackage className="header-icon" />
+                    My Orders
+                </h1>
+                <div className="stats-grid">
+                    <div className="stat-card">
+                        <div className="stat-value">{stats.totalOrders || 0}</div>
+                        <div className="stat-label">Total Orders</div>
+                    </div>
+                    <div className="stat-card">
+                        <div className="stat-value">{stats.pendingOrders || 0}</div>
+                        <div className="stat-label">Pending</div>
+                    </div>
+                    <div className="stat-card">
+                        <div className="stat-value">{stats.deliveredOrders || 0}</div>
+                        <div className="stat-label">Delivered</div>
+                    </div>
+                    <div className="stat-card">
+                        <div className="stat-value">₹{stats.totalSpent?.toLocaleString() || '0'}</div>
+                        <div className="stat-label">Total Spent</div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Status Filters */}
+            <div className="filters-section">
+                <div className="section-title">
+                    <FiFilter className="section-icon" />
+                    Filter Orders
+                </div>
+                <div className="filter-buttons">
+                    <button
+                        className={`filter-btn ${filters.status === 'all' ? 'active' : ''}`}
+                        onClick={() => handleStatusFilter('all')}
+                    >
+                        All
+                    </button>
+                    <button
+                        className={`filter-btn ${filters.status === 'pending' ? 'active' : ''}`}
+                        onClick={() => handleStatusFilter('pending')}
+                    >
+                        <FiClock /> Pending
+                    </button>
+                    <button
+                        className={`filter-btn ${filters.status === 'processing' ? 'active' : ''}`}
+                        onClick={() => handleStatusFilter('processing')}
+                    >
+                        <FiRefreshCw /> Processing
+                    </button>
+                    <button
+                        className={`filter-btn ${filters.status === 'shipped' ? 'active' : ''}`}
+                        onClick={() => handleStatusFilter('shipped')}
+                    >
+                        <FiTruck /> Shipped
+                    </button>
+                    <button
+                        className={`filter-btn ${filters.status === 'delivered' ? 'active' : ''}`}
+                        onClick={() => handleStatusFilter('delivered')}
+                    >
+                        <FiCheckCircle /> Delivered
+                    </button>
+                    <button
+                        className={`filter-btn ${filters.status === 'cancelled' ? 'active' : ''}`}
+                        onClick={() => handleStatusFilter('cancelled')}
+                    >
+                        <FiXCircle /> Cancelled
+                    </button>
+                </div>
+            </div>
+
+            {/* Orders List */}
+            <div className="orders-container">
+                {loading ? renderLoading() :
+                    error ? renderError() :
+                        orders.length === 0 ? renderEmptyState() : (
+                            <>
+                                <div className="orders-grid">
+                                    {orders.map(renderOrderCard)}
+                                </div>
+
+                                {stats.totalOrders > filters.limit && (
+                                    <div className="pagination">
+                                        <button
+                                            className="pagination-btn"
+                                            disabled={filters.page === 1}
+                                            onClick={() => setFilters(prev => ({ ...prev, page: prev.page - 1 }))}
+                                        >
+                                            <FiChevronLeft />
+                                            Previous
+                                        </button>
+                                        <span className="page-info">
+                                            Page {filters.page} of {Math.ceil(stats.totalOrders / filters.limit)}
+                                        </span>
+                                        <button
+                                            className="pagination-btn"
+                                            disabled={filters.page >= Math.ceil(stats.totalOrders / filters.limit)}
+                                            onClick={() => setFilters(prev => ({ ...prev, page: prev.page + 1 }))}
+                                        >
+                                            Next
+                                            <FiChevronRight />
+                                        </button>
+                                    </div>
+                                )}
+                            </>
+                        )}
+            </div>
+
+            {/* Modals */}
+            {showOrderDetails && selectedOrder && renderOrderDetails()}
+            {showReviewModal && selectedProduct && renderReviewModal()}
+
+            {showLoginModal && (
+                <LoginModal
+                    onClose={() => {
+                        setShowLoginModal(false);
+                        const token = localStorage.getItem('token');
+                        const userId = localStorage.getItem('userId');
+                        if (token && userId) {
+                            setIsAuthenticated(true);
+                            fetchUserOrders();
+                            fetchOrderStats();
+                        } else {
+                            navigate('/');
+                        }
+                    }}
+                    showRegisterLink={true}
+                />
+            )}
+        </div>
+    );
+};
+
+export default UserOrders;

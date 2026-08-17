@@ -1,0 +1,342 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@300;400;500;600&display=swap");
+
+/* ======================================== */
+/* VARIABLES */
+/* ======================================== */
+
+$sp-bg: #050505;
+$sp-bg-2: #090909;
+$sp-gold: #c9a84c;
+$sp-gold-light: #e8c97a;
+$sp-text: #f5f0e8;
+$sp-border: rgba(#c9a84c, 0.18);
+
+/* ======================================== */
+/* KEYFRAMES */
+/* ======================================== */
+
+@keyframes sp-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ======================================== */
+/* ROOT */
+/* ======================================== */
+
+.sacred-promise-section {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr 0.9fr;
+    align-items: stretch;
+    background: $sp-bg;
+    border-top: 1px solid $sp-border;
+    border-bottom: 1px solid $sp-border;
+    overflow: hidden;
+    position: relative;
+    min-height: 45vh;
+
+    background-image:
+        radial-gradient(circle at top left, rgba(#c9a84c, 0.05), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(#c9a84c, 0.04), transparent 40%);
+
+    // Scroll trigger
+    .sacred-promise-image,
+    .sacred-promise-content,
+    .sacred-promise-points {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    &.sacred-promise--visible {
+        .sacred-promise-image {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0s;
+        }
+
+        .sacred-promise-content {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.15s;
+        }
+
+        .sacred-promise-points {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.3s;
+        }
+    }
+
+    /* ======================================== */
+    /* IMAGE */
+    /* ======================================== */
+
+    .sacred-promise-image {
+        width: 100%;
+        height: 380px;
+        position: relative;
+        overflow: hidden;
+        align-self: center;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.7);
+            transition: transform 0.6s ease;
+        }
+
+        &:hover img {
+            transform: scale(1.05);
+        }
+    }
+
+    /* ======================================== */
+    /* CONTENT */
+    /* ======================================== */
+
+    .sacred-promise-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 50px 40px;
+
+        .sacred-promise-small-title {
+            color: $sp-gold;
+            font-family: "Cinzel", serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.22em;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            color: $sp-gold-light;
+            font-family: "Cormorant Garamond", serif;
+            font-size: 2.2rem;
+            line-height: 1.25;
+            font-weight: 700;
+            margin-bottom: 18px;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .sacred-promise-ornament {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .sacred-promise-ornament-line {
+            display: block;
+        width: 60px;
+        height: 1px;
+        background: linear-gradient(to right, transparent, $sp-gold, transparent); // ← this
+    }
+
+        .sacred-promise-ornament-diamond {
+            width: 12px;
+            height: 6px;
+            flex-shrink: 0;
+            fill: $sp-gold;
+        }
+
+        p {
+            color: rgba($sp-text, 0.8);
+            font-family: "Raleway", sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            font-weight: 300;
+            max-width: 480px;
+            letter-spacing: 0.02em;
+        }
+    }
+
+    /* ======================================== */
+    /* POINTS */
+    /* ======================================== */
+
+    .sacred-promise-points {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 28px;
+        padding: 50px 35px;
+        border-left: 1px solid $sp-border;
+
+        .sacred-promise-point {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+
+            .sacred-promise-icon {
+                color: $sp-gold;
+                flex-shrink: 0;
+
+                svg {
+                    width: 28px;
+                    height: 28px;
+                }
+            }
+
+            p {
+                color: rgba($sp-text, 0.75);
+                font-family: "Raleway", sans-serif;
+                font-size: 0.88rem;
+                line-height: 1.45;
+                font-weight: 400;
+                letter-spacing: 0.02em;
+            }
+        }
+    }
+}
+
+/* ======================================== */
+/* TABLET (769px - 1024px) */
+/* ======================================== */
+
+@media (max-width: 1024px) {
+    .sacred-promise-section {
+        grid-template-columns: 1fr;
+        min-height: auto;
+
+        .sacred-promise-content {
+            order: 1;
+            padding: 50px 40px;
+            text-align: center;
+
+            h2 {
+                font-size: 2.2rem;
+            }
+
+            .sacred-promise-ornament {
+                justify-content: center;
+            }
+
+            p {
+                max-width: 100%;
+                margin: 0 auto;
+            }
+        }
+
+        .sacred-promise-image {
+            order: 2;
+            width: 80%;
+            height: 350px;
+            margin: 0 auto;
+        }
+
+        .sacred-promise-points {
+            order: 3;
+            border-left: none;
+            border-top: 1px solid $sp-border;
+            padding: 40px 30px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px;
+        }
+    }
+}
+
+/* ======================================== */
+/* MOBILE (≤ 768px) */
+/* ======================================== */
+
+@media (max-width: 768px) {
+    .sacred-promise-section {
+        .sacred-promise-content {
+            padding: 40px 24px;
+
+            .sacred-promise-small-title {
+                font-size: 0.7rem;
+                letter-spacing: 0.18em;
+                margin-bottom: 12px;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+                line-height: 1.3;
+                margin-bottom: 16px;
+            }
+
+            .sacred-promise-ornament-line {
+                width: 40px;
+            }
+
+            p {
+                font-size: 0.85rem;
+                line-height: 1.7;
+            }
+        }
+
+        .sacred-promise-image {
+            height: 280px;
+        }
+
+        .sacred-promise-points {
+            grid-template-columns: 1fr;
+            padding: 32px 24px;
+            gap: 22px;
+
+            .sacred-promise-point {
+                gap: 14px;
+
+                .sacred-promise-icon svg {
+                    width: 28px;
+                    height: 28px;
+                }
+
+                p {
+                    font-size: 0.85rem;
+                    line-height: 1.5;
+                }
+            }
+        }
+    }
+}
+
+/* ======================================== */
+/* SMALL MOBILE (≤ 480px) */
+/* ======================================== */
+
+@media (max-width: 480px) {
+    .sacred-promise-section {
+        .sacred-promise-content {
+            padding: 32px 20px;
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 0.8rem;
+            }
+        }
+
+        .sacred-promise-image {
+            height: 220px;
+        }
+
+        .sacred-promise-points {
+            padding: 28px 20px;
+            gap: 18px;
+
+            .sacred-promise-point p {
+                font-size: 0.8rem;
+            }
+        }
+    }
+}

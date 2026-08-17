@@ -1,0 +1,1197 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&family=Poppins:wght@400;500;600;700&display=swap");
+
+// ===== VARIABLES (Dark Theme) =====
+$profile-gold: #c9a84c;
+$profile-gold-light: #e8c97a;
+$profile-dark: #0d0b08;
+$profile-dark-card: #111009;
+$profile-white: #f5f0e8;
+$profile-border: rgba(#c9a84c, 0.45);
+$profile-success: #4caf50;
+$profile-error: #ff6b6b;
+$profile-warning: #f39c12;
+$profile-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$profile-radius-sm: 6px;
+$profile-radius-md: 10px;
+$profile-radius-lg: 14px;
+$profile-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+$profile-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+$profile-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ===== BASE STYLES =====
+.profile-container {
+  max-width: 1400px;
+  margin: 50px auto 0;
+  padding: 40px 24px;
+  min-height: 80vh;
+  font-family: "Raleway", sans-serif;
+  background: $profile-dark;
+  box-sizing: border-box;
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+// ===== HEADER =====
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid $profile-border;
+
+  .header-content {
+    .page-title {
+      font-family: "Cinzel", serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: $profile-gold-light;
+      margin: 0 0 8px 0;
+      letter-spacing: 0.02em;
+    }
+
+    .page-subtitle {
+      font-family: "Raleway", sans-serif;
+      font-size: 14px;
+      color: rgba($profile-white, 0.6);
+      margin: 0;
+    }
+  }
+}
+
+// ===== ALERTS =====
+.alert {
+  padding: 16px 20px;
+  border-radius: $profile-radius-md;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: slideIn 0.4s ease;
+  border-left: 4px solid transparent;
+
+  .alert-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  span {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  &.success {
+    background: rgba($profile-success, 0.15);
+    color: $profile-success;
+    border-left-color: $profile-success;
+  }
+
+  &.error {
+    background: rgba($profile-error, 0.15);
+    color: $profile-error;
+    border-left-color: $profile-error;
+  }
+
+  .alert-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    @include flex-center;
+    color: inherit;
+    opacity: 0.7;
+    transition: $profile-transition;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// ===== LOGIN PROMPT =====
+.login-prompt {
+  text-align: center;
+  padding: 80px 40px;
+  background: $profile-dark-card;
+  border: 1px solid $profile-border;
+  border-radius: $profile-radius-lg;
+  margin-top: 40px;
+  box-shadow: $profile-shadow-lg;
+
+  h2 {
+    font-family: "Cinzel", serif;
+    color: $profile-gold-light;
+    margin-bottom: 16px;
+    font-size: 28px;
+  }
+
+  p {
+    color: rgba($profile-white, 0.6);
+    margin-bottom: 32px;
+    font-size: 15px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .auth-btn {
+    padding: 14px 36px;
+    background: transparent;
+    border: 1px solid $profile-gold;
+    color: $profile-gold;
+    border-radius: $profile-radius-md;
+    cursor: pointer;
+    font-family: "Cinzel", serif;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    transition: $profile-transition;
+
+    &:hover {
+      background: $profile-gold;
+      color: $profile-dark;
+    }
+  }
+}
+
+// ===== LOADING =====
+.loading-container {
+  text-align: center;
+  padding: 80px 20px;
+
+  .spinner {
+    border: 2px solid rgba($profile-gold, 0.2);
+    border-top: 2px solid $profile-gold;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 24px;
+  }
+
+  p {
+    color: rgba($profile-white, 0.6);
+    font-size: 15px;
+    font-family: "Raleway", sans-serif;
+  }
+}
+
+// ===== PROFILE CONTENT LAYOUT =====
+.profile-content {
+  display: flex;
+  gap: 32px;
+  min-height: 600px;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    gap: 24px;
+  }
+}
+
+// ===== SIDEBAR =====
+.profile-sidebar {
+  width: 300px;
+  flex-shrink: 0;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
+
+  .sidebar-user {
+    background: $profile-dark-card;
+    border: 1px solid $profile-border;
+    padding: 24px;
+    border-radius: $profile-radius-lg;
+    box-shadow: $profile-shadow-lg;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: $profile-transition;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $profile-shadow-md;
+    }
+
+    .user-avatar {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, $profile-gold 0%, $profile-gold-light 100%);
+      color: $profile-dark;
+      border-radius: 50%;
+      @include flex-center;
+      font-family: "Cinzel", serif;
+      font-size: 24px;
+      font-weight: 600;
+      box-shadow: $profile-shadow-sm;
+      flex-shrink: 0;
+    }
+
+    .user-info {
+      flex: 1;
+      min-width: 0;
+
+      .user-name {
+        font-family: "Cinzel", serif;
+        font-size: 16px;
+        color: $profile-gold-light;
+        margin: 0 0 6px 0;
+        @include text-ellipsis;
+      }
+
+      .user-email {
+        font-family: "Raleway", sans-serif;
+        font-size: 12px;
+        color: rgba($profile-white, 0.6);
+        margin: 0;
+        @include text-ellipsis;
+      }
+    }
+  }
+
+  .sidebar-nav {
+    background: $profile-dark-card;
+    border: 1px solid $profile-border;
+    border-radius: $profile-radius-lg;
+    box-shadow: $profile-shadow-lg;
+    overflow: hidden;
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      padding: 16px 20px;
+      text-align: left;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: "Raleway", sans-serif;
+      font-size: 14px;
+      color: rgba($profile-white, 0.7);
+      border-bottom: 1px solid rgba($profile-gold, 0.08);
+      transition: $profile-transition;
+      position: relative;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover:not(.active):not(.logout-nav-btn) {
+        background: rgba($profile-gold, 0.08);
+        color: $profile-gold-light;
+        transform: translateX(4px);
+
+        .nav-icon {
+          transform: scale(1.05);
+        }
+      }
+
+      &.active {
+        background: rgba($profile-gold, 0.15);
+        color: $profile-gold-light;
+        border-left: 3px solid $profile-gold;
+      }
+
+      // Special style for logout button
+      &.logout-nav-btn {
+        margin-top: 8px;
+        border-top: 1px solid rgba($profile-gold, 0.15);
+        color: $profile-error;
+
+        &:hover {
+          background: rgba($profile-error, 0.1);
+          color: $profile-error;
+          transform: translateX(4px);
+        }
+
+        .nav-icon {
+          color: $profile-error;
+        }
+      }
+
+      .nav-icon {
+        font-size: 18px;
+        color: $profile-gold;
+        transition: $profile-transition;
+        width: 24px;
+        text-align: center;
+      }
+
+      .nav-text {
+        flex: 1;
+        font-family: "Raleway", sans-serif;
+        font-weight: 400;
+      }
+
+      .nav-badge {
+        background: $profile-gold;
+        color: $profile-dark;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        min-width: 24px;
+        text-align: center;
+      }
+    }
+  }
+}
+
+// ===== MAIN CONTENT =====
+.profile-main {
+  flex: 1;
+  background: $profile-dark-card;
+  border: 1px solid $profile-border;
+  border-radius: $profile-radius-lg;
+  box-shadow: $profile-shadow-lg;
+  padding: 36px;
+
+  @media (max-width: 768px) {
+    padding: 24px;
+  }
+
+  .section-header {
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .header-content {
+      flex: 1;
+    }
+
+    .section-title {
+      font-family: "Cinzel", serif;
+      font-size: 22px;
+      color: $profile-gold-light;
+      margin: 0 0 8px 0;
+      letter-spacing: 0.02em;
+    }
+
+    .section-subtitle {
+      font-family: "Raleway", sans-serif;
+      font-size: 13px;
+      color: rgba($profile-white, 0.6);
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+}
+
+// ===== FORMS =====
+.profile-form,
+.password-form {
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 36px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .form-group {
+    position: relative;
+
+    .form-label {
+      display: block;
+      margin-bottom: 10px;
+      margin-top: 10px;
+      color: $profile-gold-light;
+      font-family: "Raleway", sans-serif;
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+
+      .required {
+        color: $profile-error;
+        margin-left: 4px;
+      }
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid $profile-border;
+      border-radius: $profile-radius-md;
+      font-family: "Raleway", sans-serif;
+      font-size: 14px;
+      color: $profile-white;
+      background: $profile-dark;
+      transition: $profile-transition;
+      box-shadow: $profile-shadow-sm;
+
+      &::placeholder {
+        color: rgba($profile-white, 0.4);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $profile-gold;
+        box-shadow: 0 0 0 2px rgba($profile-gold, 0.1);
+      }
+
+      &:disabled {
+        background: rgba($profile-white, 0.05);
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+    }
+
+    .select-wrapper {
+      position: relative;
+
+      .form-select {
+        appearance: none;
+        padding-right: 48px;
+      }
+
+      .select-arrow {
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $profile-gold;
+        pointer-events: none;
+        font-size: 18px;
+      }
+    }
+
+    .form-help {
+      display: block;
+      margin-top: 8px;
+      color: rgba($profile-white, 0.5);
+      font-size: 11px;
+      font-family: "Raleway", sans-serif;
+    }
+  }
+}
+
+// ===== PASSWORD REQUIREMENTS =====
+.password-requirements {
+  background: rgba($profile-gold, 0.05);
+  padding: 20px;
+  border-radius: $profile-radius-md;
+  margin: 28px 0 36px;
+  border-left: 3px solid $profile-gold;
+
+  .requirements-title {
+    font-family: "Cinzel", serif;
+    font-weight: 600;
+    color: $profile-gold-light;
+    margin: 0 0 12px 0;
+    font-size: 14px;
+  }
+
+  .requirements-list {
+    margin: 0;
+    padding-left: 20px;
+    color: rgba($profile-white, 0.7);
+    font-size: 12px;
+    line-height: 1.8;
+    font-family: "Raleway", sans-serif;
+
+    li {
+      margin-bottom: 6px;
+    }
+  }
+}
+
+// ===== FORM ACTIONS =====
+.form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid $profile-border;
+
+  .primary-btn,
+  .secondary-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: $profile-radius-md;
+    cursor: pointer;
+    font-family: "Cinzel", serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    transition: $profile-transition;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .primary-btn {
+    background: transparent;
+    border: 1px solid $profile-gold;
+    color: $profile-gold;
+
+    &:hover:not(:disabled) {
+      background: $profile-gold;
+      color: $profile-dark;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .spinner-btn {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba($profile-gold, 0.3);
+      border-top: 2px solid $profile-gold;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+  }
+
+  .secondary-btn {
+    background: transparent;
+    color: rgba($profile-white, 0.6);
+    border: 1px solid $profile-border;
+
+    &:hover:not(:disabled) {
+      background: rgba($profile-gold, 0.08);
+      color: $profile-gold-light;
+      border-color: $profile-gold;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ===== ADDRESSES TAB =====
+.addresses-tab {
+  .add-address-btn {
+    @extend .primary-btn;
+    padding: 10px 20px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    .btn-icon {
+      font-size: 16px;
+    }
+  }
+
+  .add-first-btn {
+    @extend .primary-btn;
+    padding: 12px 32px;
+    font-size: 13px;
+    margin-top: 16px;
+  }
+}
+
+// ===== ADDRESS GRID =====
+.addresses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 24px;
+  margin: 24px 0 36px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ===== ADDRESS CARD =====
+.address-card {
+  background: $profile-dark;
+  border: 1px solid $profile-border;
+  border-radius: $profile-radius-lg;
+  transition: $profile-transition;
+  height: 100%;
+  box-shadow: $profile-shadow-sm;
+  overflow: hidden;
+  position: relative;
+
+  &.default {
+    border-color: $profile-gold;
+    border-width: 2px;
+    box-shadow: 0 4px 16px rgba($profile-gold, 0.15);
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: $profile-gold;
+    }
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $profile-shadow-lg;
+    border-color: rgba($profile-gold, 0.6);
+  }
+
+  .address-card-inner {
+    padding: 20px;
+  }
+
+  .address-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $profile-border;
+
+    .address-type {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .type-icon-wrapper {
+        width: 40px;
+        height: 40px;
+        background: rgba($profile-gold, 0.1);
+        border-radius: $profile-radius-md;
+        @include flex-center;
+
+        .icon {
+          font-size: 18px;
+          color: $profile-gold;
+        }
+      }
+
+      .type-info {
+        .type-text {
+          display: block;
+          font-family: "Cinzel", serif;
+          font-size: 14px;
+          color: $profile-gold-light;
+          text-transform: capitalize;
+          margin-bottom: 4px;
+        }
+
+        .default-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          background: rgba($profile-gold, 0.15);
+          color: $profile-gold;
+          padding: 2px 8px;
+          border-radius: 12px;
+          font-size: 10px;
+          font-weight: 600;
+
+          .star-icon {
+            font-size: 9px;
+          }
+        }
+      }
+    }
+
+    .address-actions {
+      display: flex;
+      gap: 8px;
+
+      .action-btn {
+        padding: 6px 12px;
+        border: none;
+        border-radius: $profile-radius-sm;
+        cursor: pointer;
+        font-family: "Raleway", sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        transition: $profile-transition;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        .btn-icon {
+          font-size: 11px;
+        }
+
+        &.edit {
+          background: rgba($profile-gold, 0.1);
+          color: $profile-gold;
+
+          &:hover {
+            background: rgba($profile-gold, 0.2);
+            transform: translateY(-1px);
+          }
+        }
+
+        &.delete {
+          background: rgba($profile-error, 0.1);
+          color: $profile-error;
+
+          &:hover {
+            background: rgba($profile-error, 0.2);
+            transform: translateY(-1px);
+          }
+        }
+      }
+    }
+  }
+
+  .address-body {
+    .address-name {
+      font-family: "Cinzel", serif;
+      font-size: 15px;
+      color: $profile-gold-light;
+      margin: 0 0 8px 0;
+    }
+
+    .address-contact {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: rgba($profile-white, 0.6);
+      font-size: 12px;
+      margin: 0 0 16px 0;
+      font-family: "Raleway", sans-serif;
+
+      .contact-icon {
+        font-size: 12px;
+      }
+
+      .separator {
+        color: rgba($profile-white, 0.3);
+      }
+    }
+
+    .address-details {
+      color: rgba($profile-white, 0.7);
+      font-size: 12px;
+      line-height: 1.6;
+      font-family: "Raleway", sans-serif;
+      margin-bottom: 12px;
+
+      p {
+        margin: 0 0 4px 0;
+      }
+
+      .landmark {
+        color: $profile-gold;
+      }
+    }
+
+    .address-instructions {
+      margin-top: 12px;
+      padding: 10px;
+      background: rgba($profile-warning, 0.1);
+      border-radius: $profile-radius-md;
+      border-left: 2px solid $profile-warning;
+
+      p {
+        margin: 0;
+        font-size: 11px;
+        color: rgba($profile-white, 0.7);
+        font-family: "Raleway", sans-serif;
+      }
+    }
+
+    .set-default-btn {
+      @include flex-center;
+      gap: 6px;
+      margin-top: 16px;
+      padding: 8px 16px;
+      background: rgba($profile-gold, 0.1);
+      color: $profile-gold;
+      border: none;
+      border-radius: $profile-radius-md;
+      cursor: pointer;
+      font-family: "Cinzel", serif;
+      font-size: 11px;
+      font-weight: 500;
+      transition: $profile-transition;
+      width: 100%;
+
+      .star-icon {
+        font-size: 11px;
+      }
+
+      &:hover {
+        background: rgba($profile-gold, 0.2);
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+// ===== NO ADDRESSES STATE =====
+.no-addresses {
+  text-align: center;
+  padding: 60px 20px;
+  margin: 40px 0;
+
+  .empty-state {
+    max-width: 400px;
+    margin: 0 auto;
+
+    .empty-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba($profile-gold, 0.1);
+      border-radius: 50%;
+      @include flex-center;
+      margin: 0 auto 24px;
+      font-size: 36px;
+      color: $profile-gold;
+    }
+
+    h3 {
+      font-family: "Cinzel", serif;
+      color: $profile-gold-light;
+      margin: 0 0 12px 0;
+      font-size: 18px;
+    }
+
+    p {
+      color: rgba($profile-white, 0.6);
+      margin: 0 0 28px 0;
+      font-size: 14px;
+      line-height: 1.6;
+      font-family: "Raleway", sans-serif;
+    }
+  }
+}
+
+// ===== ADDRESSES STATS =====
+.addresses-stats {
+  display: flex;
+  gap: 32px;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid $profile-border;
+  flex-wrap: wrap;
+
+  .stat-item {
+    .stat-label {
+      font-family: "Raleway", sans-serif;
+      color: rgba($profile-white, 0.6);
+      font-size: 13px;
+      margin-right: 8px;
+    }
+
+    .stat-value {
+      font-family: "Cinzel", serif;
+      color: $profile-gold-light;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+}
+
+// ===== TOAST CUSTOM STYLES =====
+.toast-icon {
+  &.success {
+    color: $profile-success;
+  }
+
+  &.error {
+    color: $profile-error;
+  }
+}
+
+// ===== ANIMATIONS =====
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ===== RESPONSIVE ADJUSTMENTS =====
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 24px 16px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .address-card {
+    .address-header {
+      flex-direction: column;
+      gap: 12px;
+
+      .address-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+  }
+
+  .addresses-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+
+    .primary-btn,
+    .secondary-btn {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 20px 12px;
+  }
+
+  .profile-main {
+    padding: 20px;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+
+  .address-card .address-card-inner {
+    padding: 16px;
+  }
+}
+
+
+// ===== CONFIRMATION MODAL =====
+.confirmation-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.confirmation-modal-content {
+  background: $profile-dark-card;
+  border: 1px solid $profile-border;
+  border-radius: $profile-radius-lg;
+  padding: 32px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  animation: slideUp 0.3s ease;
+  box-shadow: $profile-shadow-lg;
+}
+
+.confirmation-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: rgba($profile-white, 0.5);
+  cursor: pointer;
+  font-size: 18px;
+  transition: $profile-transition;
+
+  &:hover {
+    color: $profile-gold;
+    transform: rotate(90deg);
+  }
+}
+
+.confirmation-modal-icon {
+  width: 64px;
+  height: 64px;
+  background: rgba($profile-error, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+
+  svg {
+    font-size: 32px;
+    color: $profile-error;
+  }
+}
+
+.confirmation-modal-title {
+  font-family: "Cinzel", serif;
+  font-size: 20px;
+  color: $profile-gold-light;
+  margin: 0 0 12px 0;
+  letter-spacing: 0.02em;
+}
+
+.confirmation-modal-message {
+  font-family: "Raleway", sans-serif;
+  font-size: 14px;
+  color: rgba($profile-white, 0.7);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.confirmation-modal-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.confirmation-modal-btn {
+  padding: 10px 24px;
+  border-radius: $profile-radius-md;
+  font-family: "Cinzel", serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: $profile-transition;
+  border: none;
+
+  &.cancel {
+    background: transparent;
+    border: 1px solid $profile-border;
+    color: rgba($profile-white, 0.6);
+
+    &:hover {
+      background: rgba($profile-gold, 0.1);
+      color: $profile-gold-light;
+      border-color: $profile-gold;
+    }
+  }
+
+  &.confirm {
+    background: rgba($profile-error, 0.15);
+    border: 1px solid $profile-error;
+    color: $profile-error;
+
+    &:hover {
+      background: rgba($profile-error, 0.25);
+    }
+  }
+}
+
+
+
+// ===== BUTTON STYLES (Manual, no @extend) =====
+.add-address-btn {
+  background: transparent;
+  border: 1px solid $profile-gold;
+  color: $profile-gold;
+  padding: 10px 20px;
+  font-size: 12px;
+  font-family: "Cinzel", serif;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  border-radius: $profile-radius-md;
+  cursor: pointer;
+  transition: $profile-transition;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover:not(:disabled) {
+    background: $profile-gold;
+    color: $profile-dark;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .btn-icon {
+    font-size: 16px;
+  }
+}
+
+.add-first-btn {
+  background: transparent;
+  border: 1px solid $profile-gold;
+  color: $profile-gold;
+  padding: 12px 32px;
+  font-size: 13px;
+  font-family: "Cinzel", serif;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  border-radius: $profile-radius-md;
+  cursor: pointer;
+  transition: $profile-transition;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+
+  &:hover:not(:disabled) {
+    background: $profile-gold;
+    color: $profile-dark;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

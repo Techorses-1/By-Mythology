@@ -1,0 +1,71 @@
+.mp__spacer {
+  height: 20vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.mp__main {
+  position: relative;
+  height: 300vh;
+}
+
+.mp__container {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.initial {
+    left: 60%;
+    top: 5%;
+  }
+
+  &.second {
+    left: 10%;
+    top: 25%;
+  }
+
+  &.third {
+    right: 10%;
+    top: 45%;
+  }
+
+  &.fourth {
+    left: 20%;
+    top: 65%;
+  }
+
+  &.fifth {
+    left: 60%;
+    top: 80%;
+  }
+
+  &.sixth {
+    left: 15%;
+    top: 95%;
+  }
+}
+
+.mp__marker {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.mp__box {
+  width: 100px;
+  height: 100px;
+  z-index: 10;
+  border-radius: 10px;
+  background-image: url("https://assets.codepen.io/16327/flair-26.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: transparent;
+}

@@ -1,0 +1,432 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&display=swap");
+
+// ─── Variables ──────────────────────────────────────────────────────────────
+$ft-gold: #c9a84c;
+$ft-gold-light: #e8c97a;
+$ft-dark: #0d0b08;
+$ft-dark-2: #111009;
+$ft-white: #f5f0e8;
+$ft-border: rgba(#c9a84c, 0.18);
+$ft-muted: rgba(#c9a84c, 0.55);
+
+// ─── Root ───────────────────────────────────────────────────────────────────
+.site-footer {
+    background: $ft-dark-2;
+    border-top: 1px solid $ft-border;
+    font-family: "Raleway", sans-serif;
+
+    background-image: radial-gradient(ellipse at 50% 0%,
+            rgba(#c9a84c, 0.04) 0%,
+            transparent 65%);
+
+    // ── Inner grid ────────────────────────────────────────────────────────────
+    &__inner {
+        display: grid;
+        grid-template-columns: 240px 180px 180px 1fr; // Different widths for each column
+        gap: 40px 32px;
+        max-width: 1150px; // Changed from 1300px to 1150px
+        margin: 0 auto;
+        padding: 40px 40px 30px;
+        align-items: start;
+    }
+
+    // ── Brand col ─────────────────────────────────────────────────────────────
+    &__brand {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__logo-link {
+        display: inline-block;
+        text-decoration: none;
+    }
+
+    &__logo-img {
+        height: 65px;
+        width: auto;
+        object-fit: contain;
+        display: block;
+    }
+
+    &__tagline {
+        font-size: 11px;
+        font-weight: 300;
+        line-height: 1.7;
+        color: rgba($ft-white, 0.45);
+        margin: 0;
+        font-style: italic;
+        letter-spacing: 0.02em;
+    }
+
+    // ── Nav columns ───────────────────────────────────────────────────────────
+    &__col {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    &__col-heading {
+        font-family: "Cinzel", serif;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: $ft-gold;
+        margin: 0 0 8px 0;
+    }
+
+    &__col-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    &__col-link {
+        font-size: 12px;
+        font-weight: 300;
+        letter-spacing: 0.04em;
+        color: rgba($ft-white, 0.50);
+        text-decoration: none;
+        transition: color 0.3s ease, padding-left 0.3s ease;
+        display: inline-block;
+
+        &:hover {
+            color: $ft-gold;
+            padding-left: 5px;
+        }
+    }
+
+    // ── Newsletter Column (wider) ─────────────────────────────────────────────
+    &__newsletter {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 320px;
+        margin-left: auto;
+    }
+
+    &__newsletter-text {
+        font-size: 11px;
+        font-weight: 300;
+        line-height: 1.6;
+        color: rgba($ft-white, 0.45);
+        margin: 0;
+    }
+
+    &__newsletter-form {
+        width: 100%;
+    }
+
+    &__newsletter-wrapper {
+        display: flex;
+        align-items: center;
+        border: 1px solid $ft-border;
+        transition: border-color 0.3s ease;
+        width: 100%;
+
+        &:hover,
+        &:focus-within {
+            border-color: $ft-gold;
+
+
+            .site-footer__newsletter-btn {
+                border-left-color: $ft-gold;
+            }
+        }
+    }
+
+    &__newsletter-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        padding: 10px 12px;
+        font-family: "Raleway", sans-serif;
+        font-size: 12px;
+        font-weight: 300;
+        color: $ft-white;
+        outline: none;
+        width: 100%;
+
+        &::placeholder {
+            color: rgba($ft-white, 0.35);
+        }
+
+        &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    }
+
+    &__newsletter-btn {
+        background: transparent;
+        border: none;
+        border-left: 1px solid $ft-border;
+        color: $ft-gold;
+        cursor: pointer;
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+
+        svg {
+            font-size: 14px;
+        }
+
+        &:hover:not(:disabled) {
+            background: $ft-gold;
+            color: $ft-dark-2;
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            border-top: 2px solid $ft-gold;
+            border-radius: 50%;
+            animation: footerSpin 0.8s linear infinite;
+            display: inline-block;
+        }
+    }
+
+    // ── Social (inside newsletter column) ─────────────────────────────────────
+    &__social {
+        margin-top: 12px;
+    }
+
+    &__social-heading {
+        font-family: "Cinzel", serif;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: $ft-gold;
+        margin: 0 0 12px 0;
+    }
+
+    &__social-icons {
+        display: flex;
+        gap: 12px;
+    }
+
+    &__social-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border: 1px solid $ft-border;
+        border-radius: 50%;
+        color: $ft-muted;
+        text-decoration: none;
+        transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+
+        svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        &:hover {
+            color: $ft-gold;
+            border-color: rgba($ft-gold, 0.6);
+            background: rgba($ft-gold, 0.08);
+        }
+    }
+
+    // ── Bottom bar ────────────────────────────────────────────────────────────
+    &__bottom {
+        border-top: 1px solid $ft-border;
+        padding: 16px 40px;
+        max-width: 1150px;
+        margin: 0 auto;
+    }
+
+    &__bottom-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    &__copy {
+        font-size: 10px;
+        font-weight: 300;
+        letter-spacing: 0.08em;
+        color: rgba($ft-white, 0.28);
+        margin: 0;
+    }
+
+    &__credit {
+        font-size: 10px;
+        font-weight: 300;
+        letter-spacing: 0.08em;
+        color: rgba($ft-white, 0.28);
+        margin: 0;
+    }
+
+    &__credit-link {
+        color: $ft-gold;
+        text-decoration: none;
+        margin-left: 4px;
+        transition: color 0.3s ease;
+
+        &:hover {
+            color: $ft-gold-light;
+            text-decoration: underline;
+        }
+    }
+
+    // ─── Tablet (769px – 1024px) ──────────────────────────────────────────────
+    @media (max-width: 1024px) and (min-width: 769px) {
+        &__inner {
+            grid-template-columns: 200px 160px 160px 1fr;
+            gap: 28px 20px;
+            padding: 40px 32px 30px;
+        }
+
+        &__logo-img {
+            height: 50px;
+        }
+
+        &__col-heading {
+            font-size: 9px;
+        }
+
+        &__col-link {
+            font-size: 11px;
+        }
+
+        &__tagline {
+            font-size: 10px;
+        }
+
+        &__newsletter {
+            max-width: 280px;
+        }
+
+        &__bottom {
+            padding: 14px 32px;
+        }
+    }
+
+    // ─── Mobile (≤ 768px) ─────────────────────────────────────────────────────
+    @media (max-width: 768px) {
+        &__inner {
+            grid-template-columns: 1fr;
+            gap: 32px;
+            padding: 44px 24px 36px;
+            text-align: center;
+            justify-items: center;
+        }
+
+        &__brand {
+            align-items: center;
+        }
+
+        &__logo-img {
+            height: 56px;
+        }
+
+        &__tagline {
+            text-align: center;
+        }
+
+        &__col {
+            align-items: center;
+            width: 100%;
+            border-top: 1px solid rgba($ft-gold, 0.08);
+            padding-top: 24px;
+        }
+
+        &__col-list {
+            align-items: center;
+        }
+
+        &__col-link:hover {
+            padding-left: 0;
+        }
+
+        &__newsletter {
+            align-items: center;
+            width: 100%;
+            border-top: 1px solid rgba($ft-gold, 0.08);
+            padding-top: 24px;
+            max-width: 100%;
+            margin-left: 0;
+        }
+
+        &__newsletter-wrapper {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto; // Centered horizontally
+        }
+
+        &__newsletter-input {
+            text-align: left;
+        }
+
+        &__social {
+            align-items: center;
+            width: 100%;
+        }
+
+        &__social-icons {
+            justify-content: center;
+        }
+
+        &__bottom {
+            padding: 16px 20px;
+        }
+
+        &__bottom-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 8px;
+        }
+
+        &__copy {
+            font-size: 9px;
+        }
+
+        &__credit {
+            font-size: 9px;
+        }
+    }
+
+    // ─── Small Mobile (≤ 380px) ───────────────────────────────────────────────
+    @media (max-width: 380px) {
+        &__inner {
+            padding: 36px 16px 28px;
+            gap: 24px;
+        }
+
+        &__logo-img {
+            height: 48px;
+        }
+
+        &__newsletter-wrapper {
+            max-width: 100%;
+        }
+    }
+}
+
+@keyframes footerSpin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

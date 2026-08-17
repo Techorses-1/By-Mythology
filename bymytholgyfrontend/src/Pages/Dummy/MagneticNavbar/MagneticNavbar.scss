@@ -1,0 +1,136 @@
+.mnav {
+    width: 100%;
+    max-width: 100%;
+    height: 70px;
+    background: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    &__logo {
+        font-family: serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        letter-spacing: -0.5px;
+        flex-shrink: 0;
+
+        span {
+            font-style: italic;
+        }
+    }
+
+    &__zone {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        cursor: pointer;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 999;
+    }
+
+    &__btn {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1.5px solid rgba(0, 0, 0, 0.15);
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        will-change: transform;
+        padding: 0;
+        position: relative;
+        z-index: 999;
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+    }
+}
+
+// overlay
+.mnav__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    padding: 1rem;
+    pointer-events: none;
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.mnav__bg {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+}
+
+// panels
+.mnav__panel {
+    width: 60%;
+    border-radius: 10px;
+    border: 2px solid;
+    position: relative;
+    z-index: 3;
+    pointer-events: auto;
+    margin-left: auto;
+
+    &--top {
+        flex: 1;
+        background: #fff;
+        color: #0e100f;
+        border-color: #0e100f;
+        display: flex;
+        flex-direction: column;
+        padding: 28px;
+        overflow-y: auto;
+        max-height: 60vh;
+    }
+
+   
+}
+
+.mnav__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.mnav__navitem {
+    overflow: hidden;
+}
+
+.mnav__navlink {
+    display: block;
+    text-decoration: none;
+    color: #0e100f;
+    padding: 10px 0;
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+}
+
+.mnav__login {
+    margin-top: auto;
+    padding-top: 20px;
+    font-size: 0.82rem;
+    color: #7c7c6f;
+}
+

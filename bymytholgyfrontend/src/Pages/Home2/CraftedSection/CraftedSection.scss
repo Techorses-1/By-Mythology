@@ -1,0 +1,433 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&display=swap");
+
+// ─── Variables ──────────────────────────────────────────────────────────────
+$crafted-gold: #c9a84c;
+$crafted-gold-light: #e8c97a;
+$crafted-gold-dim: rgba(#c9a84c, 0.35);
+$crafted-dark: #0d0b08;
+$crafted-dark-card: #111009;
+$crafted-white: #f5f0e8;
+$crafted-border: rgba(#c9a84c, 0.45);
+
+// ─── Keyframes ──────────────────────────────────────────────────────────────
+@keyframes crafted-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes crafted-icon-pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+// ─── Root ───────────────────────────────────────────────────────────────────
+.crafted-section {
+    width: 100%;
+    min-height: auto;
+    display: flex;
+    background: $crafted-dark;
+    overflow: hidden;
+    border-top: 1px solid $crafted-border;
+    border-bottom: 1px solid $crafted-border;
+
+    // Scroll trigger visibility
+    .crafted-left,
+    .crafted-right {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    &--visible {
+        .crafted-left {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0s;
+        }
+
+        .crafted-right {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.2s;
+        }
+    }
+
+    /* ================= LEFT ================= */
+    .crafted-left {
+        width: 45%;
+        position: relative;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 600px;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.55);
+            transform: scale(1.03);
+            transition: transform 0.5s ease;
+        }
+
+        &:hover img {
+            transform: scale(1.08);
+        }
+
+        &-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right,
+                    rgba($crafted-dark, 0.2),
+                    rgba($crafted-dark, 0.6));
+        }
+    }
+
+    /* ================= RIGHT ================= */
+    .crafted-right {
+        width: 55%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 30px 70px 20px;
+        background: radial-gradient(circle at top left,
+                rgba($crafted-gold, 0.08),
+                transparent 40%);
+
+        .crafted-header {
+            margin-bottom: 16px;
+        }
+
+        .crafted-small-title {
+            font-family: "Cinzel", serif;
+            color: $crafted-gold;
+            font-size: 0.85rem;
+            letter-spacing: 0.22em;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        .crafted-ornament {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        // CraftedSection.scss
+        .crafted-ornament-line {
+            display: block;
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, $crafted-gold, transparent); // ← this
+        }
+
+        .crafted-ornament-diamond {
+            width: 14px;
+            height: 7px;
+            flex-shrink: 0;
+        }
+
+        h2 {
+            font-family: "Cormorant Garamond", serif;
+            color: $crafted-gold-light;
+            font-size: 3.4rem;
+            line-height: 1.2;
+            font-weight: 700;
+            margin-bottom: 28px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        p {
+            font-family: "Raleway", sans-serif;
+            color: rgba($crafted-white, 0.8);
+            font-size: 1rem;
+            line-height: 1.8;
+            font-weight: 300;
+            max-width: 700px;
+            margin-bottom: 50px;
+            letter-spacing: 0.02em;
+        }
+
+        /* FEATURES */
+        .crafted-features {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+
+            .crafted-feature {
+                position: relative;
+                text-align: center;
+                padding: 0 16px;
+                transition: transform 0.3s ease;
+
+                &:hover {
+                    transform: translateY(-5px);
+                }
+
+                &:not(:last-child)::after {
+                    content: "";
+                    position: absolute;
+                    top: 10px;
+                    right: 0;
+                    width: 1px;
+                    height: 80px;
+                    background: $crafted-border;
+                }
+
+                .crafted-icon {
+                    color: $crafted-gold;
+                    margin-bottom: 18px;
+                    transition: all 0.3s ease;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    svg {
+                        width: 40px;
+                        height: 40px;
+                        stroke-width: 1.2;
+                        transition: all 0.3s ease;
+                    }
+                }
+
+                &:hover .crafted-icon {
+                    color: $crafted-gold-light;
+                    transform: scale(1.05);
+
+                    svg {
+                        filter: drop-shadow(0 0 8px rgba($crafted-gold, 0.4));
+                    }
+                }
+
+                h4 {
+                    font-family: "Cinzel", serif;
+                    color: $crafted-gold;
+                    font-size: 0.70rem;
+                    line-height: 1.6;
+                    letter-spacing: 0.1em;
+                    font-weight: 500;
+                    text-transform: uppercase;
+                }
+            }
+        }
+    }
+}
+
+/* ======================================= */
+/* ============ TABLET VIEW (769px - 1024px) ============== */
+/* ======================================= */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .crafted-section {
+        flex-direction: column;
+
+        .crafted-left {
+            width: 85%;
+            height: 380px;
+            margin: 0 auto;
+            order: 2; // IMAGE in 2nd position
+
+            img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+            }
+        }
+
+        .crafted-right {
+            width: 90%;
+            padding: 40px 40px; // Proper spacing on sides
+            order: 1; // Heading first
+            text-align: center;
+
+            .crafted-header {
+                text-align: center;
+            }
+
+            .crafted-ornament {
+                justify-content: center;
+            }
+
+            h2 {
+                font-size: 2.5rem;
+            }
+
+            p {
+                font-size: 0.95rem;
+                line-height: 1.7;
+                max-width: 80%;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: 40px;
+            }
+
+            .crafted-features {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 30px 20px;
+                margin-top: 20px;
+
+                .crafted-feature {
+                    padding: 0 8px;
+
+                    &::after {
+                        display: none;
+                    }
+
+                    .crafted-icon svg {
+                        width: 34px;
+                        height: 34px;
+                    }
+
+                    h4 {
+                        font-size: 0.68rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* ======================================= */
+/* ============ MOBILE VIEW (≤ 768px) ============== */
+/* ======================================= */
+@media (max-width: 768px) {
+    .crafted-section {
+        flex-direction: column;
+
+        .crafted-left {
+            width: 85%;
+            height: 280px;
+            margin: 0 auto;
+            order: 2; // IMAGE in 2nd position
+
+            img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+            }
+        }
+
+        .crafted-right {
+            width: 100%;
+            padding: 40px 24px;
+            order: 1; // Heading first
+            text-align: center;
+
+            .crafted-header {
+                text-align: center;
+            }
+
+            .crafted-small-title {
+                font-size: 0.7rem;
+                letter-spacing: 0.18em;
+            }
+
+            .crafted-ornament {
+                justify-content: center;
+            }
+
+            .crafted-ornament-line {
+                width: 40px;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+                line-height: 1.3;
+                margin-bottom: 20px;
+            }
+
+            p {
+                font-size: 0.85rem;
+                line-height: 1.7;
+                margin-bottom: 30px;
+                max-width: 100%;
+            }
+
+            .crafted-features {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 28px 20px;
+                margin-top: 20px;
+
+                .crafted-feature {
+                    padding: 0;
+
+                    &::after {
+                        display: none;
+                    }
+
+                    .crafted-icon {
+                        margin-bottom: 12px;
+
+                        svg {
+                            width: 32px;
+                            height: 32px;
+                        }
+                    }
+
+                    h4 {
+                        font-size: 0.68rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* ======================================= */
+/* ============ SMALL MOBILE (≤ 480px) ============== */
+/* ======================================= */
+@media (max-width: 480px) {
+    .crafted-section {
+        .crafted-left {
+            height: 240px;
+            width: 90%;
+        }
+
+        .crafted-right {
+            padding: 32px 20px;
+            width: 90%;
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 0.8rem;
+                margin-bottom: 25px;
+            }
+
+            .crafted-features {
+                gap: 22px 16px;
+
+                .crafted-feature {
+                    .crafted-icon svg {
+                        width: 28px;
+                        height: 28px;
+                    }
+
+                    h4 {
+                        font-size: 0.62rem;
+                    }
+                }
+            }
+        }
+    }
+}

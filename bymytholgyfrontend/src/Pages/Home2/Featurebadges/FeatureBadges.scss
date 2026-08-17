@@ -1,0 +1,273 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&display=swap");
+
+// ─── Variables ──────────────────────────────────────────────────────────────
+$fb-gold: #c9a84c;
+$fb-gold-light: #e8c97a;
+$fb-dark: #0d0b08;
+$fb-dark-2: #131009;
+$fb-border: rgba(#c9a84c, 0.22);
+$fb-white: #f5f0e8;
+
+// ─── Root ───────────────────────────────────────────────────────────────────
+.feature-badges {
+  background: $fb-dark-2;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(#c9a84c, 0.03) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 50%, rgba(#c9a84c, 0.03) 0%, transparent 60%);
+  border-top: 1px solid $fb-border;
+  border-bottom: 1px solid $fb-border;
+  padding: 28px 60px;
+  font-family: "Raleway", sans-serif;
+
+  // ── Inner row (Desktop & Tablet) ─────────────────────────────────────────────
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  // ── Single badge ──────────────────────────────────────────────────────────
+  &__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 16px;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      .feature-badges__icon svg {
+        transform: translateY(-3px) scale(1.08);
+        color: $fb-gold-light;
+      }
+
+      .feature-badges__label {
+        color: $fb-gold-light;
+      }
+    }
+  }
+
+  // ── Icon ──────────────────────────────────────────────────────────────────
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $fb-gold;
+
+    svg {
+      width: 34px;
+      height: 34px;
+      transition: transform 0.35s ease, color 0.35s ease;
+    }
+  }
+
+  // ── Label ─────────────────────────────────────────────────────────────────
+  &__label {
+    font-family: "Cinzel", serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $fb-gold;
+    text-align: center;
+    margin: 0;
+    line-height: 1.65;
+    transition: color 0.35s ease;
+  }
+
+  // ── Vertical divider ──────────────────────────────────────────────────────
+  &__divider {
+    display: block;
+    width: 1px;
+    height: 52px;
+    background: linear-gradient(to bottom,
+        transparent,
+        rgba(#c9a84c, 0.4),
+        transparent);
+    flex-shrink: 0;
+  }
+
+  // ── Mobile Marquee (Hidden on Desktop & Tablet) ──────────────────────────────
+  &__marquee {
+    display: none;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  &__marquee-track {
+    display: flex;
+    gap: 24px;
+    white-space: nowrap;
+    will-change: transform;
+  }
+
+  &__marquee-item {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px;
+    min-width: 160px;
+    flex-shrink: 0;
+
+    &:hover {
+      .feature-badges__marquee-icon svg {
+        transform: translateY(-3px) scale(1.08);
+        color: $fb-gold-light;
+      }
+
+      .feature-badges__marquee-label {
+        color: $fb-gold-light;
+      }
+    }
+  }
+
+  &__marquee-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $fb-gold;
+
+    svg {
+      width: 34px;
+      height: 34px;
+      transition: transform 0.35s ease, color 0.35s ease;
+    }
+  }
+
+  &__marquee-label {
+    font-family: "Cinzel", serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $fb-gold;
+    text-align: center;
+    margin: 0;
+    line-height: 1.65;
+    transition: color 0.35s ease;
+  }
+
+  // ─── Tablet (769px – 1024px) - NO CHANGES ─────────────────────────────────────
+  @media (max-width: 1024px) and (min-width: 769px) {
+    padding: 24px 28px;
+
+    &__item {
+      gap: 8px;
+      padding: 8px 10px;
+    }
+
+    &__icon svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    &__label {
+      font-size: 8.5px;
+      letter-spacing: 0.14em;
+    }
+
+    &__divider {
+      height: 42px;
+    }
+  }
+
+  // ─── Mobile (≤ 768px) - TRUE INFINITE MARQUEE ────────────────────────────────
+  @media (max-width: 768px) {
+    padding: 20px 0;
+
+    // Hide desktop/tablet view
+    &__inner {
+      display: none;
+    }
+
+    // Show marquee
+    &__marquee {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    &__marquee-track {
+      display: flex;
+      gap: 24px;
+      white-space: nowrap;
+      will-change: transform;
+      width: max-content;
+    }
+
+    &__marquee-item {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 20px;
+      min-width: 140px;
+      flex-shrink: 0;
+
+      &:hover {
+        .feature-badges__marquee-icon svg {
+          transform: translateY(-3px) scale(1.08);
+          color: $fb-gold-light;
+        }
+
+        .feature-badges__marquee-label {
+          color: $fb-gold-light;
+        }
+      }
+    }
+
+    &__marquee-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $fb-gold;
+
+      svg {
+        width: 28px;
+        height: 28px;
+        transition: transform 0.35s ease, color 0.35s ease;
+      }
+    }
+
+    &__marquee-label {
+      font-family: "Cinzel", serif;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: $fb-gold;
+      text-align: center;
+      margin: 0;
+      line-height: 1.6;
+      transition: color 0.35s ease;
+    }
+  }
+
+  // ─── Small Mobile (≤ 480px) ──────────────────────────────────────────────
+  @media (max-width: 480px) {
+    &__marquee-item {
+      min-width: 120px;
+      padding: 0 15px;
+    }
+
+    &__marquee-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    &__marquee-label {
+      font-size: 8px;
+      letter-spacing: 0.12em;
+    }
+  }
+}

@@ -1,0 +1,564 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&family=Poppins:wght@400;500;600;700&display=swap");
+
+// ===== VARIABLES (Dark Theme) =====
+$nf-gold: #c9a84c;
+$nf-gold-light: #e8c97a;
+$nf-dark: #0d0b08;
+$nf-dark-card: #111009;
+$nf-white: #f5f0e8;
+$nf-border: rgba(#c9a84c, 0.45);
+$nf-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+// ===== BASE STYLES =====
+.not-found-page {
+  min-height: 100vh;
+  background: $nf-dark;
+  position: relative;
+  overflow: hidden;
+  font-family: "Raleway", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+// ===== BACKGROUND CIRCLES =====
+.bg-circles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  .circle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba($nf-gold, 0.03) 0%, transparent 70%);
+
+    &.circle-1 {
+      width: 400px;
+      height: 400px;
+      top: -100px;
+      right: -100px;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    &.circle-2 {
+      width: 600px;
+      height: 600px;
+      bottom: -200px;
+      left: -200px;
+      animation: float 25s ease-in-out infinite reverse;
+    }
+
+    &.circle-3 {
+      width: 300px;
+      height: 300px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba($nf-gold, 0.05) 0%, transparent 70%);
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    &.circle-4 {
+      width: 200px;
+      height: 200px;
+      bottom: 20%;
+      right: 15%;
+      animation: float 15s ease-in-out infinite;
+    }
+  }
+}
+
+// ===== FLOATING ELEMENTS =====
+.floating-element {
+  position: absolute;
+  font-size: 24px;
+  pointer-events: none;
+  z-index: 1;
+  animation: float 6s ease-in-out infinite;
+  opacity: 0.6;
+
+  &.element-1 {
+    top: 15%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+
+  &.element-2 {
+    bottom: 20%;
+    right: 12%;
+    animation-delay: 1s;
+  }
+}
+
+// ===== MAIN CONTAINER =====
+.not-found-container {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+// ===== ERROR GRAPHIC =====
+.error-graphic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+// ===== CANDLE ANIMATION =====
+.candle-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.candle {
+  position: relative;
+  cursor: pointer;
+
+  &:hover .candle-body {
+    transform: scale(1.05);
+  }
+}
+
+.candle-body {
+  width: 60px;
+  height: 100px;
+  background: linear-gradient(135deg, #f5e6d3 0%, #e8d5b7 100%);
+  border-radius: 8px;
+  position: relative;
+  transition: transform 0.3s ease;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+
+  .wax {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 12px;
+    background: linear-gradient(135deg, #f5e6d3 0%, #e8d5b7 100%);
+    border-radius: 4px;
+  }
+
+  .wick {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 14px;
+    background: #333;
+  }
+
+  .flame {
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 24px;
+    background: radial-gradient(ellipse at 30% 30%, #ffd700, #ff8c00);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.6);
+    animation: flicker 0.8s ease-in-out infinite alternate;
+    transform-origin: center bottom;
+  }
+
+  .glow {
+    position: absolute;
+    top: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle, rgba(255, 140, 0, 0.3), transparent);
+    border-radius: 50%;
+    animation: glowPulse 1.5s ease-in-out infinite alternate;
+  }
+}
+
+.candle-base {
+  width: 80px;
+  height: 12px;
+  background: linear-gradient(135deg, #c9a84c 0%, #b8923a 100%);
+  border-radius: 4px;
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+// ===== SMOKE EFFECT =====
+.smoke {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+
+  .smoke-particle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: rgba(200, 200, 200, 0.3);
+    border-radius: 50%;
+    filter: blur(8px);
+    animation: smoke 3s ease-out infinite;
+
+    &.p1 {
+      left: -10px;
+      animation-delay: 0s;
+    }
+
+    &.p2 {
+      left: 5px;
+      animation-delay: 0.5s;
+    }
+
+    &.p3 {
+      left: 20px;
+      animation-delay: 1s;
+    }
+  }
+}
+
+// ===== NUMBERS CONTAINER =====
+.numbers-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+
+  .number {
+    font-family: "Cinzel", serif;
+    font-size: 80px;
+    font-weight: 700;
+    text-shadow: 0 0 20px rgba($nf-gold, 0.3);
+
+    &.number-4,
+    &.number-4-2 {
+      color: $nf-gold-light;
+      animation: glowText 2s ease-in-out infinite;
+    }
+
+    &.number-0 {
+      color: $nf-gold;
+      animation: glowText 2s ease-in-out infinite 0.5s;
+    }
+  }
+}
+
+// ===== ERROR MESSAGE =====
+.error-message {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.error-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+
+  .error-icon {
+    font-size: 32px;
+    color: $nf-gold;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  .error-title {
+    font-family: "Cinzel", serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: $nf-gold-light;
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+}
+
+.error-subtitle {
+  font-family: "Cinzel", serif;
+  font-size: 18px;
+  color: rgba($nf-white, 0.8);
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+
+.error-description {
+  font-family: "Raleway", sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba($nf-white, 0.6);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+// ===== ACTION BUTTONS =====
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-family: "Cinzel", serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: $nf-transition;
+    border: 1px solid;
+
+    &.back-btn {
+      background: transparent;
+      border-color: $nf-border;
+      color: rgba($nf-white, 0.8);
+
+      &:hover {
+        background: rgba($nf-gold, 0.1);
+        border-color: $nf-gold;
+        color: $nf-gold-light;
+        transform: translateY(-2px);
+      }
+    }
+
+    &.home-btn {
+      background: transparent;
+      border-color: $nf-gold;
+      color: $nf-gold;
+
+      &:hover {
+        background: $nf-gold;
+        color: $nf-dark;
+        transform: translateY(-2px);
+      }
+    }
+
+    svg {
+      font-size: 18px;
+    }
+  }
+}
+
+// ===== FOOTER =====
+.not-found-footer {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid $nf-border;
+  margin-top: 20px;
+
+  .footer-text {
+    font-family: "Raleway", sans-serif;
+    font-size: 12px;
+    color: rgba($nf-white, 0.4);
+    letter-spacing: 0.02em;
+  }
+}
+
+// ===== ANIMATIONS =====
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.3;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.5;
+  }
+}
+
+@keyframes flicker {
+  0% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: translateX(-50%) scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes glowPulse {
+  0% {
+    opacity: 0.5;
+    transform: translateX(-50%) scale(1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.3);
+  }
+}
+
+@keyframes smoke {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: translateY(-60px) scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes glowText {
+
+  0%,
+  100% {
+    text-shadow: 0 0 20px rgba($nf-gold, 0.3);
+  }
+
+  50% {
+    text-shadow: 0 0 40px rgba($nf-gold, 0.6);
+  }
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// ===== RESPONSIVE =====
+@media (max-width: 768px) {
+  .not-found-container {
+    padding: 30px 16px;
+  }
+
+  .candle-body {
+    width: 50px;
+    height: 85px;
+
+    .flame {
+      width: 14px;
+      height: 20px;
+      top: -24px;
+    }
+
+    .glow {
+      width: 40px;
+      height: 40px;
+      top: -38px;
+    }
+  }
+
+  .candle-base {
+    width: 70px;
+  }
+
+  .numbers-container .number {
+    font-size: 60px;
+  }
+
+  .error-header .error-title {
+    font-size: 24px;
+  }
+
+  .error-subtitle {
+    font-size: 16px;
+  }
+
+  .action-buttons {
+    gap: 15px;
+
+    .action-btn {
+      padding: 10px 20px;
+      font-size: 12px;
+    }
+  }
+
+  .floating-element {
+    font-size: 20px;
+
+    &.element-1 {
+      top: 10%;
+      left: 5%;
+    }
+
+    &.element-2 {
+      bottom: 15%;
+      right: 8%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .numbers-container .number {
+    font-size: 48px;
+  }
+
+  .candle-body {
+    width: 45px;
+    height: 75px;
+
+    .flame {
+      width: 12px;
+      height: 18px;
+      top: -22px;
+    }
+  }
+
+  .candle-base {
+    width: 60px;
+  }
+
+  .error-header {
+    flex-direction: column;
+    gap: 8px;
+
+    .error-icon {
+      font-size: 28px;
+    }
+
+    .error-title {
+      font-size: 20px;
+    }
+  }
+
+  .action-buttons {
+    flex-direction: column;
+
+    .action-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

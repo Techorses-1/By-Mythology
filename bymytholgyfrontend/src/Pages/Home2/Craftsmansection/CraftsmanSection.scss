@@ -1,0 +1,466 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&display=swap");
+
+// ─── Variables ──────────────────────────────────────────────────────────────
+$cr-gold: #c9a84c;
+$cr-gold-light: #e8c97a;
+$cr-dark: #0d0b08;
+$cr-dark-2: #111009;
+$cr-white: #f5f0e8;
+$cr-border: rgba(#c9a84c, 0.22);
+$cr-gap: 5px;
+
+// ─── Keyframes ──────────────────────────────────────────────────────────────
+@keyframes cr-fade-left {
+    from {
+        opacity: 0;
+        transform: translateX(-28px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes cr-fade-right {
+    from {
+        opacity: 0;
+        transform: translateX(28px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes cr-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// ─── Root ───────────────────────────────────────────────────────────────────
+.craftsman {
+    background: $cr-dark;
+    font-family: "Raleway", sans-serif;
+    color: $cr-white;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+
+    // ── Body: left text + right image grid (30% / 70%) ─────────────────────────
+    &__body {
+        display: grid;
+        grid-template-columns: 34% 66%;
+        width: 100%;
+        box-sizing: border-box;
+        align-items: stretch;
+    }
+
+    // ── Left panel (30%) ───────────────────────────────────────────────────────
+    &__left {
+        padding: 60px 44px 60px 56px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        box-sizing: border-box;
+        opacity: 0;
+        transform: translateX(-28px);
+        transition: none;
+        flex-shrink: 0;
+    }
+
+    &__heading {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(28px, 2.8vw, 44px);
+        font-weight: 700;
+        line-height: 1.1;
+        color: $cr-gold-light;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin: 0 0 20px 0;
+    }
+
+    &__ornament {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 22px;
+    }
+
+    &__ornament-line {
+           display: block;
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(to right, transparent,  $cr-gold, transparent); // ← this
+}
+
+    &__ornament-diamond {
+        width: 13px;
+        height: 7px;
+        flex-shrink: 0;
+    }
+
+    &__desc {
+        font-size: 13px;
+        font-weight: 300;
+        line-height: 1.9;
+        color: rgba($cr-white, 0.65);
+        margin: 0 0 32px 0;
+        letter-spacing: 0.02em;
+    }
+
+    &__cta {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        padding: 12px 26px;
+        border: 1px solid rgba($cr-gold, 0.55);
+        font-family: "Cinzel", serif;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: $cr-gold;
+        text-decoration: none;
+        transition: background 0.3s ease, color 0.3s ease;
+
+        &:hover {
+            background: $cr-gold;
+            color: $cr-dark;
+        }
+    }
+
+    // ── Right: Image Grid (70%) with spacing on ALL sides ───────────────────────
+    &__grid {
+        display: grid;
+        grid-template-columns: 2fr 3fr 2fr;
+        grid-template-rows: 260px 260px;
+        grid-template-areas:
+            "img1 img2 img3"
+            "img4 img4 img5";
+        gap: $cr-gap;
+        width: calc(100% - 40px);
+        height: calc(100% - 40px);
+        margin: 20px;
+        min-width: 0;
+        box-sizing: border-box;
+        opacity: 0;
+        transform: translateX(28px);
+        transition: none;
+    }
+
+    &__grid-item {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+
+        &--img1 {
+            grid-area: img1;
+        }
+
+        &--img2 {
+            grid-area: img2;
+        }
+
+        &--img3 {
+            grid-area: img3;
+        }
+
+        &--img4 {
+            grid-area: img4;
+        }
+
+        &--img5 {
+            grid-area: img5;
+        }
+
+        &:hover {
+            .craftsman__grid-img {
+                transform: scale(1.05);
+            }
+
+            .craftsman__grid-overlay {
+                opacity: 0;
+            }
+        }
+    }
+
+    &__grid-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        transition: transform 0.5s ease;
+    }
+
+    &__grid-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba($cr-dark, 0.20);
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+    }
+
+    // ── Scroll-triggered animations ───────────────────────────────────────────
+    &--visible {
+        .craftsman__left {
+            animation: cr-fade-left 0.8s ease 0.1s forwards;
+        }
+
+        .craftsman__grid {
+            animation: cr-fade-right 0.8s ease 0.25s forwards;
+        }
+
+        .craftsman__badges {
+            animation: cr-fade-up 0.7s ease 0.45s forwards;
+        }
+    }
+
+    // ── Bottom Badges ─────────────────────────────────────────────────────────
+    &__badges {
+        border-top: 1px solid $cr-border;
+        padding: 28px 56px;
+        background-image: radial-gradient(ellipse at 50% 0%,
+                rgba(#c9a84c, 0.04) 0%,
+                transparent 70%);
+        opacity: 0;
+        box-sizing: border-box;
+    }
+
+    &__badges-inner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    &__badge {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 10px;
+
+        &:hover {
+            .craftsman__badge-icon svg {
+                transform: translateY(-3px) scale(1.1);
+                color: $cr-gold-light;
+            }
+
+            .craftsman__badge-label {
+                color: $cr-gold-light;
+            }
+        }
+    }
+
+    &__badge-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $cr-gold;
+
+        svg {
+            width: 26px;
+            height: 26px;
+            transition: transform 0.35s ease, color 0.35s ease;
+        }
+    }
+
+    &__badge-label {
+        font-family: "Cinzel", serif;
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: $cr-gold;
+        text-align: center;
+        margin: 0;
+        line-height: 1.7;
+        transition: color 0.3s ease;
+    }
+
+    &__badge-divider {
+        display: block;
+        width: 1px;
+        height: 40px;
+        background: linear-gradient(to bottom, transparent, rgba($cr-gold, 0.35), transparent);
+        flex-shrink: 0;
+    }
+
+    // ─── Tablet (769px – 1024px) - Same as Mobile view ──────────────────────────────
+    @media (max-width: 1024px) and (min-width: 769px) {
+        &__body {
+            grid-template-columns: 1fr;
+        }
+
+        &__left {
+            padding: 48px 32px 32px;
+            align-items: center;
+            text-align: center;
+            transform: translateY(24px);
+        }
+
+        &__ornament-line {
+            width: 24px;
+        }
+
+        &__heading {
+            font-size: clamp(28px, 5vw, 36px);
+        }
+
+        &__cta {
+            align-self: center;
+        }
+
+        &__grid {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 180px 180px 180px;
+            grid-template-areas:
+                "img1 img2"
+                "img3 img3"
+                "img4 img5";
+            transform: translateY(24px);
+            margin: 15px;
+            width: calc(100% - 30px);
+            height: auto;
+        }
+
+        &__badges {
+            padding: 24px 32px;
+        }
+
+        &__badges-inner {
+            flex-wrap: wrap;
+        }
+
+        &__badge-divider {
+            display: none;
+        }
+
+        &__badge {
+            flex: 0 0 33.333%;
+            max-width: 33.333%;
+            padding: 10px 4px;
+
+            &:nth-child(7),
+            &:nth-child(9) {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+
+        &__badge-label {
+            font-size: 8px;
+            letter-spacing: 0.09em;
+        }
+
+        &__badge-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+    }
+
+    // ─── Mobile (≤ 768px) ─────────────────────────────────────────────────────
+    @media (max-width: 768px) {
+        &__body {
+            grid-template-columns: 1fr;
+        }
+
+        &__left {
+            padding: 48px 24px 32px;
+            align-items: center;
+            text-align: center;
+            transform: translateY(24px);
+        }
+
+        &__ornament-line {
+            width: 24px;
+        }
+
+        &__heading {
+            font-size: clamp(26px, 7vw, 36px);
+        }
+
+        &__cta {
+            align-self: center;
+        }
+
+        &__grid {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 160px 160px 160px;
+            grid-template-areas:
+                "img1 img2"
+                "img3 img3"
+                "img4 img5";
+            transform: translateY(24px);
+            margin: 15px;
+            width: calc(100% - 30px);
+            height: auto;
+        }
+
+        &__badges {
+            padding: 22px 16px;
+        }
+
+        &__badges-inner {
+            flex-wrap: wrap;
+        }
+
+        &__badge-divider {
+            display: none;
+        }
+
+        &__badge {
+            flex: 0 0 33.333%;
+            max-width: 33.333%;
+            padding: 10px 4px;
+
+            &:nth-child(7),
+            &:nth-child(9) {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+
+        &__badge-label {
+            font-size: 8px;
+            letter-spacing: 0.09em;
+        }
+
+        &__badge-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+    }
+
+    // ─── Small Mobile (≤ 380px) ───────────────────────────────────────────────
+    @media (max-width: 380px) {
+        &__left {
+            padding: 40px 16px 28px;
+        }
+
+        &__heading {
+            font-size: 24px;
+        }
+
+        &__grid {
+            grid-template-rows: 130px 130px 130px;
+            margin: 10px;
+            width: calc(100% - 20px);
+        }
+    }
+}

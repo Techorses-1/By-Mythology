@@ -1,0 +1,218 @@
+// ReviewsSlider.scss
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500;600&display=swap");
+
+$gold: #c9a84c;
+$gold-light: #e8c97a;
+$dark-bg: #0a0a0a;
+$dark-card: #111111;
+$dark-surface: #161616;
+$text-primary: #f5f0e8;
+$text-secondary: rgba(245, 240, 232, 0.7);
+$text-muted: rgba(245, 240, 232, 0.5);
+$border-color: rgba(201, 168, 76, 0.3);
+$transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$radius-lg: 14px;
+$radius-xl: 20px;
+
+@mixin responsive($breakpoint) {
+  @if $breakpoint == tablet {
+    @media (max-width: 1024px) { @content; }
+  }
+  @if $breakpoint == mobile {
+    @media (max-width: 768px) { @content; }
+  }
+  @if $breakpoint == small-mobile {
+    @media (max-width: 480px) { @content; }
+  }
+}
+
+.reviews-slider-section {
+  max-width: 1400px;
+  margin: 60px auto;
+  padding: 0 24px;
+  position: relative;
+
+  @include responsive(mobile) {
+    padding: 0 16px;
+    margin: 20px auto 20px;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 48px;
+    position: relative;
+
+    .gold-accent-title {
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: $gold;
+      margin: 0 auto 16px;
+    }
+
+    .section-title {
+      font-family: "Cinzel", serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: $gold-light;
+      letter-spacing: 0.1em;
+      margin: 0;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+
+      @include responsive(mobile) {
+        font-size: 1.2rem;
+        letter-spacing: 0.08em;
+      }
+    }
+  }
+
+  .reviews-slider-wrapper {
+    position: relative;
+    
+    .reviews-card-swiper {
+      width: 100%;
+      overflow: hidden;
+      padding: 16px 8px 60px 8px; // Bottom padding for arrows
+    }
+  }
+
+  // Navigation arrows container - bottom right
+  .slider-nav-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+    padding-right: 8px;
+
+    .slider-nav-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: $dark-surface;
+      border: 1px solid $border-color;
+      color: $gold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: $transition;
+      
+      &:hover {
+        background: $gold;
+        color: $dark-bg;
+        border-color: $gold;
+        transform: scale(1.05);
+      }
+
+      @include responsive(mobile) {
+        width: 38px;
+        height: 38px;
+        
+        svg {
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+  }
+}
+
+.review-card {
+  background: $dark-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-xl;
+  padding: 32px 28px;
+  transition: $transition;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    border-color: $gold;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .quote-icon {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-family: "Cinzel", serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: rgba($gold, 0.5);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .stars-container {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 2;
+
+    .star {
+      font-size: 1.1rem;
+      
+      &.filled {
+        color: $gold;
+      }
+      
+      &.empty {
+        color: rgba($gold, 0.2);
+      }
+    }
+  }
+
+  .review-content {
+    flex: 1;
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 2;
+
+    p {
+      font-family: "Raleway", sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: $text-secondary;
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-style: italic;
+    }
+  }
+
+  .reviewer-info {
+    border-top: 1px solid $border-color;
+    padding-top: 20px;
+    margin-top: auto;
+    position: relative;
+    z-index: 2;
+
+    .reviewer-name {
+      font-family: "Cinzel", serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: $gold-light;
+      margin-bottom: 4px;
+    }
+
+    .reviewer-city {
+      font-family: "Raleway", sans-serif;
+      font-size: 0.75rem;
+      color: $text-muted;
+    }
+  }
+}
+
+.swiper-slide {
+  height: auto;
+}

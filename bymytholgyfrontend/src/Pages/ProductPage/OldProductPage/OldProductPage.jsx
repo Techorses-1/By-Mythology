@@ -1,0 +1,1888 @@
+// import React, { useEffect, useState, useRef } from "react";
+// import { useParams, useNavigate, useLocation } from "react-router-dom";
+// import axios from "axios";
+// import { FaHeart, FaRegHeart } from "react-icons/fa";
+// import { Swiper, SwiperSlide } from "swiper/react";
+// import { Navigation, Autoplay, Thumbs } from "swiper/modules";
+// import gsap from "gsap";
+// import { ScrollTrigger } from "gsap/ScrollTrigger";
+// import "swiper/css";
+// import "swiper/css/navigation";
+// import "swiper/css/thumbs";
+// import "./OldProductPage.scss";
+// import fallback from "../../assets/logo/newlogo.png";
+
+// // Import Sidebars
+// import WishlistSidebar from "../../Pages/Wishlist/Sidebar/WishlistSidebar";
+// import CartSidebar from "../../Pages/Cart/Sidebar/CartSidebar";
+// import RelatedProducts from "./RelatedProducts/RelatedProducts";
+
+// // Register GSAP ScrollTrigger
+// gsap.registerPlugin(ScrollTrigger);
+
+// function OldProductPage() {
+//   const { productName } = useParams();
+//   const location = useLocation();
+//   const productIdFromState = location.state?.productId;
+//   const fragranceFromWishlist = location.state?.fragranceFromWishlist;
+
+//   const selectedFragranceFromState = location.state?.selectedFragrance;
+
+
+//   const token = localStorage.getItem("token");
+//   const navigate = useNavigate();
+
+//   // GSAP ScrollTrigger refs
+//   const sectionRef = useRef(null);
+//   const rightRef = useRef(null);
+//   const leftColumnRef = useRef(null);
+
+//   // Sidebar states
+//   const [showWishlistSidebar, setShowWishlistSidebar] = useState(false);
+//   const [showCartSidebar, setShowCartSidebar] = useState(false);
+
+//   const [product, setProduct] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   // OFFER DATA
+//   const [offers, setOffers] = useState([]);
+//   const [currentOffer, setCurrentOffer] = useState(null);
+
+//   // For simple products (fragrance-based)
+//   const [selectedFragrance, setSelectedFragrance] = useState(null);
+//   const [selectedSize, setSelectedSize] = useState(null);
+
+//   // For variable products
+//   const [selectedModel, setSelectedModel] = useState(null);
+//   const [selectedModelFragrance, setSelectedModelFragrance] = useState(null);
+//   const [selectedModelSize, setSelectedModelSize] = useState(null);
+
+//   // Quantity selector
+//   const [quantity, setQuantity] = useState(1);
+
+//   const [mainImage, setMainImage] = useState("");
+//   const [images, setImages] = useState([]);
+//   const [wishlist, setWishlist] = useState(false);
+//   const [wishlistItem, setWishlistItem] = useState(null);
+
+//   // Inventory State - PER FRAGRANCE
+//   const [fragranceInventory, setFragranceInventory] = useState({});
+//   const [currentFragranceInventory, setCurrentFragranceInventory] = useState({
+//     stock: 0,
+//     threshold: 0,
+//     status: 'checking'
+//   });
+
+//   // Max quantity based on stock
+//   const [maxQuantity, setMaxQuantity] = useState(99);
+
+//   // Reviews states
+//   const [showReviewsModal, setShowReviewsModal] = useState(false);
+//   const [reviews, setReviews] = useState([]);
+//   const [reviewsLoading, setReviewsLoading] = useState(false);
+//   const [reviewsStats, setReviewsStats] = useState({
+//     averageRating: 0,
+//     totalReviews: 0,
+//     ratingDistribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
+//   });
+//   const [reviewsPage, setReviewsPage] = useState(1);
+//   const [reviewsLimit] = useState(5);
+
+//   // Swiper states for mobile
+//   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+
+//   // ===== FIX: Force page to start at top =====
+//   useEffect(() => {
+//     window.scrollTo(0, 0);
+//   }, []);
+
+//   // Initialize GSAP ScrollTrigger
+//   useEffect(() => {
+//     if (window.innerWidth >= 1024 && !loading && product) {
+//       const section = sectionRef.current;
+//       const right = rightRef.current;
+
+//       if (section && right) {
+//         const trigger = ScrollTrigger.create({
+//           trigger: right,
+//           start: "bottom bottom",
+//           endTrigger: section,
+//           end: "bottom bottom",
+//           pin: right,
+//           pinSpacing: true,
+//           markers: false,
+//         });
+
+//         return () => {
+//           trigger.kill();
+//         };
+//       }
+//     }
+//   }, [loading, product]);
+
+//   // Handle window resize
+//   useEffect(() => {
+//     const handleResize = () => {
+//       if (window.innerWidth < 1024) {
+//         ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+//       }
+//     };
+
+//     window.addEventListener('resize', handleResize);
+//     return () => window.removeEventListener('resize', handleResize);
+//   }, []);
+
+//   // ===== FIX: ResizeObserver to refresh ScrollTrigger when left column height changes =====
+//   useEffect(() => {
+//     if (!leftColumnRef.current || window.innerWidth < 1024) return;
+
+//     const leftColumn = leftColumnRef.current;
+//     let timeoutId = null;
+
+//     const observer = new ResizeObserver(entries => {
+//       if (timeoutId) clearTimeout(timeoutId);
+//       timeoutId = setTimeout(() => {
+//         ScrollTrigger.refresh();
+//       }, 200);
+//     });
+
+//     observer.observe(leftColumn);
+
+//     return () => {
+//       if (timeoutId) clearTimeout(timeoutId);
+//       observer.disconnect();
+//     };
+//   }, [images]);
+
+//   // Fetch reviews for the product
+//   const fetchProductReviews = async (page = 1) => {
+//     if (!product?.productId) return;
+//     try {
+//       setReviewsLoading(true);
+//       const response = await axios.get(
+//         `${import.meta.env.VITE_API_URL}/reviews/product/${product.productId}`,
+//         {
+//           params: {
+//             page,
+//             limit: reviewsLimit
+//           }
+//         }
+//       );
+
+//       if (response.data.success) {
+//         if (page === 1) {
+//           setReviews(response.data.reviews);
+//           setReviewsStats(response.data.stats);
+//         } else {
+//           setReviews(prev => [...prev, ...response.data.reviews]);
+//         }
+//       }
+//     } catch (error) {
+//       console.error('Error fetching reviews:', error);
+//     } finally {
+//       setReviewsLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (product?.productId) {
+//       fetchProductReviews();
+//     }
+//   }, [product?.productId]);
+
+//   // Render star rating
+//   const renderRatingStars = (rating, size = 'medium') => {
+//     const numericRating = typeof rating === 'number' ? rating : parseFloat(rating) || 0;
+//     const stars = [];
+//     const starSize = size === 'small' ? '1.2rem' : size === 'large' ? '1.8rem' : '1.5rem';
+
+//     for (let i = 1; i <= 5; i++) {
+//       stars.push(
+//         <span
+//           key={i}
+//           className={`star ${i <= Math.round(numericRating) ? 'filled' : 'empty'}`}
+//           style={{ fontSize: starSize }}
+//         >
+//           {i <= numericRating ? '★' : i <= Math.floor(numericRating) ? '★' : i - numericRating <= 0.5 && i - numericRating > 0 ? '★' : '☆'}
+//         </span>
+//       );
+//     }
+//     return stars;
+//   };
+
+//   // Format date for reviews
+//   const formatReviewDate = (dateString) => {
+//     const date = new Date(dateString);
+//     const now = new Date();
+//     const diffTime = Math.abs(now - date);
+//     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+//     if (diffDays === 0) return 'Today';
+//     if (diffDays === 1) return 'Yesterday';
+//     if (diffDays < 7) return `${diffDays} days ago`;
+//     if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+
+//     return date.toLocaleDateString('en-IN', {
+//       day: 'numeric',
+//       month: 'short',
+//       year: 'numeric'
+//     });
+//   };
+
+//   // Open reviews modal
+//   const handleOpenReviewsModal = () => {
+//     setShowReviewsModal(true);
+//     fetchProductReviews(1);
+//   };
+
+//   // Fetch ALL fragrances inventory
+//   const fetchAllFragrancesInventory = async () => {
+//     if (!product) return;
+
+//     try {
+//       const allFragrances = getAvailableFragrances();
+//       const inventoryMap = {};
+
+//       for (const fragrance of allFragrances) {
+//         const params = new URLSearchParams();
+
+//         const defaultColorId = product.type === "simple"
+//           ? (product.colors?.[0]?.colorId)
+//           : (selectedModel?.colors?.[0]?.colorId);
+
+//         if (defaultColorId) {
+//           params.append('colorId', defaultColorId);
+//         }
+
+//         params.append('fragrance', fragrance);
+
+//         if (product.type === "variable" && selectedModel?._id) {
+//           params.append('modelId', selectedModel._id);
+//         }
+
+//         try {
+//           const response = await axios.get(
+//             `${import.meta.env.VITE_API_URL}/inventory/product/${product.productId}/status?${params.toString()}`
+//           );
+
+//           inventoryMap[fragrance] = {
+//             stock: response.data.stock,
+//             threshold: response.data.threshold,
+//             status: response.data.status
+//           };
+//         } catch (error) {
+//           console.error(`Error fetching inventory for ${fragrance}:`, error);
+//           inventoryMap[fragrance] = {
+//             stock: 0,
+//             threshold: 10,
+//             status: 'error'
+//           };
+//         }
+//       }
+
+//       setFragranceInventory(inventoryMap);
+
+//       const currentFragrance = product.type === "simple" ? selectedFragrance : selectedModelFragrance;
+//       if (currentFragrance && inventoryMap[currentFragrance]) {
+//         setCurrentFragranceInventory(inventoryMap[currentFragrance]);
+//       }
+
+//     } catch (error) {
+//       console.error('Error fetching all fragrances inventory:', error);
+//     }
+//   };
+
+//   // Smart select initial fragrance based on inventory
+//   const smartSelectInitialFragrance = (productData, preSelectedFragrance) => {
+//     const availableFragrances = getAvailableFragrances();
+
+//     if (preSelectedFragrance &&
+//       fragranceInventory[preSelectedFragrance] &&
+//       fragranceInventory[preSelectedFragrance].status !== 'out-of-stock') {
+//       if (productData.type === "simple") {
+//         setSelectedFragrance(preSelectedFragrance);
+//       } else {
+//         setSelectedModelFragrance(preSelectedFragrance);
+//       }
+//       return;
+//     }
+
+//     for (const fragrance of availableFragrances) {
+//       if (fragranceInventory[fragrance] &&
+//         fragranceInventory[fragrance].status !== 'out-of-stock') {
+//         if (productData.type === "simple") {
+//           setSelectedFragrance(fragrance);
+//         } else {
+//           setSelectedModelFragrance(fragrance);
+//         }
+//         return;
+//       }
+//     }
+
+//     if (availableFragrances.length > 0) {
+//       const firstFragrance = availableFragrances[0];
+//       if (productData.type === "simple") {
+//         setSelectedFragrance(firstFragrance);
+//       } else {
+//         setSelectedModelFragrance(firstFragrance);
+//       }
+//     }
+//   };
+
+//   // Function to get pre-selected fragrance with priority
+//   const getPreSelectedFragrance = () => {
+//     // 👇 Priority 1: Fragrance from model click (new!)
+//     if (selectedFragranceFromState) {
+//       console.log("🌸 Fragrance from model click:", selectedFragranceFromState);
+//       return selectedFragranceFromState;
+//     }
+
+//     // Priority 2: Fragrance from wishlist
+//     if (fragranceFromWishlist) {
+//       return fragranceFromWishlist;
+//     }
+
+//     // Priority 3: Fragrance from URL
+//     const urlParams = new URLSearchParams(window.location.search);
+//     const urlFragrance = urlParams.get('fragrance');
+//     if (urlFragrance) {
+//       return urlFragrance;
+//     }
+
+//     return null;
+//   };
+
+//   // ========== UPDATED FETCH LOGIC ==========
+//   // Fetch product by ID (existing logic)
+//   const fetchProductById = async (id) => {
+//     try {
+//       setLoading(true);
+//       setError(null);
+
+//       const preSelectedFragrance = getPreSelectedFragrance();
+
+//       const productRes = await axios.get(
+//         `${import.meta.env.VITE_API_URL}/products/${id}`
+//       );
+
+//       const productData = productRes.data;
+//       setProduct(productData);
+
+//       console.log('Product loaded by ID:', { productId: id, productName, productData });
+
+//       const offersRes = await axios.get(
+//         `${import.meta.env.VITE_API_URL}/productoffers/product-color-offers/${id}`
+//       );
+
+//       const offersData = offersRes.data;
+//       setOffers(offersData);
+
+//       if (productData.type === "simple") {
+//         if (productData.colors && productData.colors.length > 0) {
+//           const defaultColor = productData.colors[0];
+//           const fragrances = defaultColor.fragrances || [];
+
+//           if (preSelectedFragrance && fragrances.includes(preSelectedFragrance)) {
+//             setSelectedFragrance(preSelectedFragrance);
+//             checkAndSetOfferWithData(productData, defaultColor, null, preSelectedFragrance, offersData);
+//           } else if (fragrances.length > 0) {
+//             const firstFragrance = fragrances[0];
+//             setSelectedFragrance(firstFragrance);
+//             checkAndSetOfferWithData(productData, defaultColor, null, firstFragrance, offersData);
+//           }
+
+//           if (defaultColor.images && defaultColor.images.length > 0) {
+//             setMainImage(defaultColor.images[0]);
+//             setImages(defaultColor.images);
+//           } else if (productData.thumbnailImage) {
+//             setMainImage(productData.thumbnailImage);
+//             setImages([productData.thumbnailImage]);
+//           }
+//         } else {
+//           if (productData.thumbnailImage) {
+//             setMainImage(productData.thumbnailImage);
+//             setImages([productData.thumbnailImage]);
+//           }
+//         }
+//       } else if (productData.type === "variable") {
+//         if (productData.models && productData.models.length > 0) {
+//           const firstModel = productData.models[0];
+//           setSelectedModel(firstModel);
+
+//           if (firstModel.colors && firstModel.colors.length > 0) {
+//             const defaultModelColor = firstModel.colors[0];
+//             const modelFragrances = defaultModelColor.fragrances || [];
+
+//             if (preSelectedFragrance && modelFragrances.includes(preSelectedFragrance)) {
+//               setSelectedModelFragrance(preSelectedFragrance);
+//               checkAndSetOfferWithData(productData, defaultModelColor, firstModel, preSelectedFragrance, offersData);
+//             } else if (modelFragrances.length > 0) {
+//               const firstModelFragrance = modelFragrances[0];
+//               setSelectedModelFragrance(firstModelFragrance);
+//               checkAndSetOfferWithData(productData, defaultModelColor, firstModel, firstModelFragrance, offersData);
+//             }
+
+//             if (defaultModelColor.images && defaultModelColor.images.length > 0) {
+//               setMainImage(defaultModelColor.images[0]);
+//               setImages(defaultModelColor.images);
+//             } else if (productData.thumbnailImage) {
+//               setMainImage(productData.thumbnailImage);
+//               setImages([productData.thumbnailImage]);
+//             }
+//           }
+//         }
+//       }
+
+//       setTimeout(() => {
+//         smartSelectInitialFragrance(productData, preSelectedFragrance);
+//       }, 500);
+
+//     } catch (err) {
+//       console.error("Error fetching product:", err);
+//       setError("Product not found or error loading product details.");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // New function to fetch product by name (for direct URL access)
+//   const fetchProductByName = async (name) => {
+//     try {
+//       setLoading(true);
+//       setError(null);
+
+//       const response = await axios.get(
+//         `${import.meta.env.VITE_API_URL}/products/by-name/${name}`
+//       );
+
+//       const productData = response.data.product; // assuming the route returns the product object directly
+//       setProduct(productData);
+
+//       console.log('Product loaded by name:', { productId: productData.productId, productName: name, productData });
+
+//       // Now fetch offers using the obtained productId
+//       const offersRes = await axios.get(
+//         `${import.meta.env.VITE_API_URL}/productoffers/product-color-offers/${productData.productId}`
+//       );
+
+//       const offersData = offersRes.data;
+//       setOffers(offersData);
+
+//       // Set initial selections and images similar to fetchProductById
+//       const preSelectedFragrance = getPreSelectedFragrance();
+
+//       if (productData.type === "simple") {
+//         if (productData.colors && productData.colors.length > 0) {
+//           const defaultColor = productData.colors[0];
+//           const fragrances = defaultColor.fragrances || [];
+
+//           if (preSelectedFragrance && fragrances.includes(preSelectedFragrance)) {
+//             setSelectedFragrance(preSelectedFragrance);
+//             checkAndSetOfferWithData(productData, defaultColor, null, preSelectedFragrance, offersData);
+//           } else if (fragrances.length > 0) {
+//             const firstFragrance = fragrances[0];
+//             setSelectedFragrance(firstFragrance);
+//             checkAndSetOfferWithData(productData, defaultColor, null, firstFragrance, offersData);
+//           }
+
+//           if (defaultColor.images && defaultColor.images.length > 0) {
+//             setMainImage(defaultColor.images[0]);
+//             setImages(defaultColor.images);
+//           } else if (productData.thumbnailImage) {
+//             setMainImage(productData.thumbnailImage);
+//             setImages([productData.thumbnailImage]);
+//           }
+//         } else {
+//           if (productData.thumbnailImage) {
+//             setMainImage(productData.thumbnailImage);
+//             setImages([productData.thumbnailImage]);
+//           }
+//         }
+//       } else if (productData.type === "variable") {
+//         if (productData.models && productData.models.length > 0) {
+//           const firstModel = productData.models[0];
+//           setSelectedModel(firstModel);
+
+//           if (firstModel.colors && firstModel.colors.length > 0) {
+//             const defaultModelColor = firstModel.colors[0];
+//             const modelFragrances = defaultModelColor.fragrances || [];
+
+//             if (preSelectedFragrance && modelFragrances.includes(preSelectedFragrance)) {
+//               setSelectedModelFragrance(preSelectedFragrance);
+//               checkAndSetOfferWithData(productData, defaultModelColor, firstModel, preSelectedFragrance, offersData);
+//             } else if (modelFragrances.length > 0) {
+//               const firstModelFragrance = modelFragrances[0];
+//               setSelectedModelFragrance(firstModelFragrance);
+//               checkAndSetOfferWithData(productData, defaultModelColor, firstModel, firstModelFragrance, offersData);
+//             }
+
+//             if (defaultModelColor.images && defaultModelColor.images.length > 0) {
+//               setMainImage(defaultModelColor.images[0]);
+//               setImages(defaultModelColor.images);
+//             } else if (productData.thumbnailImage) {
+//               setMainImage(productData.thumbnailImage);
+//               setImages([productData.thumbnailImage]);
+//             }
+//           }
+//         }
+//       }
+
+//       setTimeout(() => {
+//         smartSelectInitialFragrance(productData, preSelectedFragrance);
+//       }, 500);
+
+//     } catch (err) {
+//       console.error("Error fetching product by name:", err);
+//       if (err.response?.status === 404) {
+//         setError("Product not found. Please check the URL.");
+//       } else {
+//         setError("Error loading product. Please try again.");
+//       }
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // Main data loading effect – decide which fetch to use
+//   useEffect(() => {
+//     if (productIdFromState) {
+//       // Came from navigation with state
+//       fetchProductById(productIdFromState);
+//     } else if (productName) {
+//       // Direct URL access
+//       fetchProductByName(productName);
+//     } else {
+//       // No identifier – show error
+//       setError("No product identifier provided.");
+//       setLoading(false);
+//     }
+//   }, [productIdFromState, productName]); // Dependencies
+
+//   // Inventory fetching logic
+//   useEffect(() => {
+//     if (product) {
+//       fetchAllFragrancesInventory();
+//     }
+//   }, [product]);
+
+//   // Update current fragrance inventory when selection changes
+//   useEffect(() => {
+//     const currentFragrance = product?.type === "simple"
+//       ? selectedFragrance
+//       : selectedModelFragrance;
+
+//     if (currentFragrance && fragranceInventory[currentFragrance]) {
+//       setCurrentFragranceInventory(fragranceInventory[currentFragrance]);
+//     } else {
+//       setCurrentFragranceInventory({
+//         stock: 0,
+//         threshold: 10,
+//         status: 'checking'
+//       });
+//     }
+//   }, [selectedFragrance, selectedModelFragrance, fragranceInventory, product]);
+
+//   // Update max quantity when current fragrance inventory changes
+//   useEffect(() => {
+//     if (currentFragranceInventory.status === 'in-stock' || currentFragranceInventory.status === 'low-stock') {
+//       setMaxQuantity(currentFragranceInventory.stock);
+//       if (quantity > currentFragranceInventory.stock) {
+//         setQuantity(currentFragranceInventory.stock);
+//       }
+//     } else if (currentFragranceInventory.status === 'out-of-stock') {
+//       setMaxQuantity(0);
+//       setQuantity(0);
+//     }
+//   }, [currentFragranceInventory]);
+
+//   const checkAndSetOfferWithData = (productData, color, model, fragrance, offersArray) => {
+//     if (!color || !color.colorId) {
+//       setCurrentOffer(null);
+//       return;
+//     }
+
+//     const variableModelId = model ? (model._id || model.modelId) : "";
+
+//     const offer = offersArray.find(offer =>
+//       offer.productId === productData.productId &&
+//       offer.colorId === color.colorId &&
+//       (variableModelId ? offer.variableModelId === variableModelId : !offer.variableModelId) &&
+//       offer.isCurrentlyValid
+//     );
+
+//     setCurrentOffer(offer || null);
+//   };
+
+//   const checkAndSetOffer = (productData, color, model, fragrance) => {
+//     checkAndSetOfferWithData(productData, color, model, fragrance, offers);
+//   };
+
+//   // Fetch wishlist status when product loads or changes
+//   useEffect(() => {
+//     const checkWishlistStatus = async () => {
+//       if (product && token) {
+//         try {
+//           const userId = localStorage.getItem("userId");
+//           if (!userId) return;
+
+//           const params = new URLSearchParams();
+//           params.append('userId', userId);
+
+//           const currentFragrance = product.type === "simple" ? selectedFragrance : selectedModelFragrance;
+//           if (currentFragrance) {
+//             params.append('fragrance', currentFragrance);
+//           }
+
+//           const defaultColorId = product.type === "simple"
+//             ? (product.colors?.[0]?.colorId)
+//             : (selectedModel?.colors?.[0]?.colorId);
+
+//           if (defaultColorId) {
+//             params.append('colorId', defaultColorId);
+//           }
+
+//           if (product.type === "variable" && selectedModel && selectedModel._id) {
+//             params.append('modelId', selectedModel._id);
+//           }
+
+//           const currentSize = product.type === "simple" ? selectedSize : selectedModelSize;
+//           if (currentSize) {
+//             params.append('size', currentSize);
+//           }
+
+//           const response = await axios.get(
+//             `${import.meta.env.VITE_API_URL}/wishlist/check/${product.productId}?${params.toString()}`,
+//             {
+//               headers: { Authorization: `Bearer ${token}` }
+//             }
+//           );
+
+//           setWishlist(response.data.isInWishlist);
+//           setWishlistItem(response.data.wishlistItem);
+
+//         } catch (error) {
+//           console.error("Error checking wishlist status:", error);
+//         }
+//       }
+//     };
+
+//     if (product) {
+//       checkWishlistStatus();
+//     }
+//   }, [product, token, selectedFragrance, selectedModel, selectedModelFragrance, selectedSize, selectedModelSize]);
+
+//   // Handle pre-selection from URL parameters
+//   useEffect(() => {
+
+//     if (selectedFragranceFromState) {
+//       return;
+//     }
+
+//     const urlParams = new URLSearchParams(window.location.search);
+
+
+//     if (product) {
+//       const modelId = urlParams.get('model');
+//       if (modelId && product.type === "variable" && product.models) {
+//         const model = product.models.find(m =>
+//           m._id === modelId || m.modelId === modelId
+//         );
+//         if (model) {
+//           setSelectedModel(model);
+
+//           const fragrance = urlParams.get('fragrance');
+//           if (fragrance && model.colors && model.colors.length > 0) {
+//             const modelColor = model.colors[0];
+//             if (modelColor.fragrances && modelColor.fragrances.includes(fragrance)) {
+//               setSelectedModelFragrance(fragrance);
+//               checkAndSetOffer(product, modelColor, model, fragrance);
+//               if (modelColor.images && modelColor.images.length > 0) {
+//                 setMainImage(modelColor.images[0]);
+//                 setImages(modelColor.images);
+//               }
+//             }
+//           }
+//         }
+//       }
+
+//       const fragrance = urlParams.get('fragrance');
+//       if (fragrance && !urlParams.get('model')) {
+//         if (product.type === "simple" && product.colors && product.colors.length > 0) {
+//           const defaultColor = product.colors[0];
+//           if (defaultColor.fragrances && defaultColor.fragrances.includes(fragrance)) {
+//             setSelectedFragrance(fragrance);
+//             checkAndSetOffer(product, defaultColor, null, fragrance);
+//             if (defaultColor.images && defaultColor.images.length > 0) {
+//               setMainImage(defaultColor.images[0]);
+//               setImages(defaultColor.images);
+//             }
+//           }
+//         }
+//       }
+
+//       const size = urlParams.get('size');
+//       if (size) {
+//         if (product.type === "simple") {
+//           setSelectedSize(size);
+//         } else if (product.type === "variable") {
+//           setSelectedModelSize(size);
+//         }
+//       }
+//     }
+//   }, [product, window.location.search, fragranceFromWishlist]);
+
+//   // Clear location state after using it
+//   useEffect(() => {
+//     if (fragranceFromWishlist && location.state) {
+//       navigate(location.pathname + location.search, { replace: true, state: {} });
+//     }
+//   }, [fragranceFromWishlist, location, navigate]);
+
+//   // Handle fragrance selection for simple products
+//   const handleFragranceSelect = (fragrance) => {
+//     setSelectedFragrance(fragrance);
+
+//     const defaultColor = product.colors?.[0];
+//     if (defaultColor) {
+//       checkAndSetOffer(product, defaultColor, null, fragrance);
+//     }
+
+//     if (defaultColor?.sizes && defaultColor.sizes.length > 0) {
+//       setSelectedSize(defaultColor.sizes[0]);
+//     } else {
+//       setSelectedSize(null);
+//     }
+//   };
+
+//   // Handle model selection for variable products
+//   const handleModelSelect = (model) => {
+//     setSelectedModel(model);
+
+//     setSelectedModelFragrance(null);
+//     setSelectedModelSize(null);
+
+//     if (model.colors && model.colors.length > 0) {
+//       const modelColor = model.colors[0];
+//       const fragrances = modelColor.fragrances || [];
+//       if (fragrances.length > 0) {
+//         const firstFragrance = fragrances[0];
+//         setSelectedModelFragrance(firstFragrance);
+
+//         checkAndSetOffer(product, modelColor, model, firstFragrance);
+
+//         if (modelColor.images && modelColor.images.length > 0) {
+//           setMainImage(modelColor.images[0]);
+//           setImages(modelColor.images);
+//         }
+
+//         if (modelColor.sizes && modelColor.sizes.length > 0) {
+//           setSelectedModelSize(modelColor.sizes[0]);
+//         }
+//       }
+//     }
+//   };
+
+//   // Handle model fragrance selection for variable products
+//   const handleModelFragranceSelect = (fragrance) => {
+//     setSelectedModelFragrance(fragrance);
+
+//     const modelColor = selectedModel?.colors?.[0];
+//     if (modelColor) {
+//       checkAndSetOffer(product, modelColor, selectedModel, fragrance);
+//     }
+
+//     if (modelColor?.sizes && modelColor.sizes.length > 0) {
+//       setSelectedModelSize(modelColor.sizes[0]);
+//     } else {
+//       setSelectedModelSize(null);
+//     }
+//   };
+
+//   // Handle quantity change with stock validation
+//   const handleQuantityChange = (change) => {
+//     const newQuantity = quantity + change;
+
+//     if (currentFragranceInventory.status === 'out-of-stock') {
+//       return;
+//     }
+
+//     if (currentFragranceInventory.status === 'low-stock' || currentFragranceInventory.status === 'in-stock') {
+//       if (newQuantity > currentFragranceInventory.stock) {
+//         return;
+//       }
+//     }
+
+//     if (newQuantity >= 1 && newQuantity <= maxQuantity) {
+//       setQuantity(newQuantity);
+//     }
+//   };
+
+//   // Check if product can be purchased
+//   const canPurchaseProduct = () => {
+//     const currentFragrance = product?.type === "simple" ? selectedFragrance : selectedModelFragrance;
+//     if (!currentFragrance) {
+//       return false;
+//     }
+
+//     const fragranceStock = fragranceInventory[currentFragrance];
+
+//     if (!fragranceStock || fragranceStock.status === 'checking' || fragranceStock.status === 'error') {
+//       return true;
+//     }
+
+//     if (fragranceStock.status === 'out-of-stock') {
+//       return false;
+//     }
+
+//     if (fragranceStock.status === 'low-stock' || fragranceStock.status === 'in-stock') {
+//       return quantity <= fragranceStock.stock && quantity > 0;
+//     }
+
+//     return true;
+//   };
+
+//   // Get base price
+//   const getBasePrice = () => {
+//     if (product.type === "simple" && product.colors?.[0]) {
+//       return product.colors[0].currentPrice || product.currentPrice || 0;
+//     } else if (product.type === "variable" && selectedModel?.colors?.[0]) {
+//       return selectedModel.colors[0].currentPrice || product.currentPrice || 0;
+//     }
+//     return product.currentPrice || 0;
+//   };
+
+//   // Get original price
+//   const getOriginalPrice = () => {
+//     if (product.type === "simple" && product.colors?.[0]) {
+//       return product.colors[0].originalPrice || product.originalPrice || 0;
+//     } else if (product.type === "variable" && selectedModel?.colors?.[0]) {
+//       return selectedModel.colors[0].originalPrice || product.originalPrice || 0;
+//     }
+//     return product.originalPrice || 0;
+//   };
+
+//   // Get FINAL discount percentage (after offer)
+//   const getDiscountPercent = () => {
+//     const originalPrice = getOriginalPrice();
+//     const finalPrice = hasOffer ? getOfferPrice() : getBasePrice();
+
+//     if (originalPrice > 0 && originalPrice > finalPrice) {
+//       return Math.round(((originalPrice - finalPrice) / originalPrice) * 100);
+//     }
+//     return 0;
+//   };
+
+//   // Get offer price
+//   const getOfferPrice = () => {
+//     const basePrice = getBasePrice();
+//     if (currentOffer && currentOffer.offerPercentage > 0) {
+//       const discountAmount = (basePrice * currentOffer.offerPercentage) / 100;
+//       return Math.max(0, basePrice - discountAmount);
+//     }
+//     return basePrice;
+//   };
+
+//   // Get total price
+//   const getTotalPrice = () => {
+//     return getOfferPrice() * quantity;
+//   };
+
+//   // Get product description
+//   const getDescription = () => {
+//     if (product.type === "simple") {
+//       return product.description || "No description available.";
+//     } else if (product.type === "variable" && selectedModel) {
+//       return selectedModel.description || product.description || "No description available.";
+//     }
+//     return product.description || "No description available.";
+//   };
+
+//   // Get specifications
+//   const getSpecifications = () => {
+//     const specs = [];
+
+//     if (product.type === "simple") {
+//       if (product.specifications && product.specifications.length > 0) {
+//         product.specifications.forEach(spec => {
+//           specs.push({ key: spec.key, value: spec.value });
+//         });
+//       }
+//     } else if (product.type === "variable") {
+//       if (selectedModel && selectedModel.modelSpecifications && selectedModel.modelSpecifications.length > 0) {
+//         selectedModel.modelSpecifications.forEach(spec => {
+//           specs.push({ key: spec.key, value: spec.value });
+//         });
+//       } else if (product.specifications && product.specifications.length > 0) {
+//         product.specifications.forEach(spec => {
+//           specs.push({ key: spec.key, value: spec.value });
+//         });
+//       }
+//     }
+
+//     return specs;
+//   };
+
+//   // Get available sizes
+//   const getAvailableSizes = () => {
+//     if (product.type === "simple" && product.colors?.[0]) {
+//       return product.colors[0].sizes || [];
+//     } else if (product.type === "variable" && selectedModel?.colors?.[0]) {
+//       return selectedModel.colors[0].sizes || [];
+//     }
+//     return [];
+//   };
+
+//   // Get available fragrances
+//   const getAvailableFragrances = () => {
+//     if (product.type === "simple" && product.colors?.[0]) {
+//       return product.colors[0].fragrances || [];
+//     } else if (product.type === "variable" && selectedModel?.colors?.[0]) {
+//       return selectedModel.colors[0].fragrances || [];
+//     }
+//     return [];
+//   };
+
+//   // Check if out of stock
+//   const isOutOfStock = () => {
+//     const currentFragrance = product?.type === "simple" ? selectedFragrance : selectedModelFragrance;
+//     if (!currentFragrance) return true;
+
+//     return fragranceInventory[currentFragrance]?.status === 'out-of-stock';
+//   };
+
+//   // Check if current selections match wishlist item
+//   const isCurrentSelectionInWishlist = () => {
+//     if (!wishlistItem) return false;
+
+//     const currentFragrance = product.type === "simple" ? selectedFragrance : selectedModelFragrance;
+//     if (currentFragrance && wishlistItem.selectedFragrance && wishlistItem.selectedFragrance !== currentFragrance) {
+//       return false;
+//     }
+
+//     if (product.type === "variable" && selectedModel && wishlistItem.selectedModel) {
+//       const wishlistModelId = wishlistItem.selectedModel.modelId;
+//       const currentModelId = selectedModel._id || selectedModel.modelId;
+//       if (wishlistModelId !== currentModelId) {
+//         return false;
+//       }
+//     }
+
+//     const currentSize = product.type === "simple" ? selectedSize : selectedModelSize;
+//     if (currentSize && wishlistItem.selectedSize && wishlistItem.selectedSize !== currentSize) {
+//       return false;
+//     }
+
+//     return true;
+//   };
+
+//   // Toggle wishlist
+//   const toggleWishlist = async () => {
+//     const token = localStorage.getItem("token");
+//     const userId = localStorage.getItem("userId");
+
+//     if (!token || !userId) {
+//       navigate("/login");
+//       return;
+//     }
+
+//     const isCurrentlyWishlisted = wishlist;
+
+//     const currentFragrance = product.type === "simple"
+//       ? selectedFragrance
+//       : selectedModelFragrance;
+
+//     try {
+//       if (isCurrentlyWishlisted) {
+//         await axios.delete(
+//           `${import.meta.env.VITE_API_URL}/wishlist/remove/${product.productId}?userId=${userId}&fragrance=${currentFragrance}`,
+//           {
+//             headers: {
+//               Authorization: `Bearer ${token}`,
+//               'Content-Type': 'application/json'
+//             }
+//           }
+//         );
+
+//         setWishlist(false);
+//         setWishlistItem(null);
+
+//       } else {
+//         const wishlistData = {
+//           userId,
+//           productId: product.productId,
+//           addedFrom: "product"
+//         };
+
+//         if (product.type === "variable" && selectedModel) {
+//           wishlistData.selectedModel = {
+//             modelId: selectedModel._id || selectedModel.modelId,
+//             modelName: selectedModel.modelName,
+//             SKU: selectedModel.SKU
+//           };
+//         }
+
+//         if (currentFragrance) {
+//           wishlistData.selectedFragrance = currentFragrance;
+//         }
+
+//         const defaultColor = product.type === "simple"
+//           ? product.colors?.[0]
+//           : selectedModel?.colors?.[0];
+
+//         if (defaultColor) {
+//           wishlistData.selectedColor = {
+//             colorId: defaultColor.colorId,
+//             colorName: defaultColor.colorName,
+//             currentPrice: getOfferPrice(),
+//             originalPrice: defaultColor.originalPrice || product.originalPrice || 0
+//           };
+//         }
+
+//         const selectedSizeData = product.type === "simple" ? selectedSize : selectedModelSize;
+//         if (selectedSizeData) {
+//           wishlistData.selectedSize = selectedSizeData;
+//         }
+
+//         const response = await axios.post(
+//           `${import.meta.env.VITE_API_URL}/wishlist/add`,
+//           wishlistData,
+//           {
+//             headers: {
+//               Authorization: `Bearer ${token}`,
+//               'Content-Type': 'application/json'
+//             }
+//           }
+//         );
+
+//         setWishlist(true);
+//         setWishlistItem(response.data.wishlist);
+//       }
+
+//       window.dispatchEvent(new Event('wishlistUpdated'));
+
+//       if (window.innerWidth > 768) {
+//         setShowWishlistSidebar(true);
+//       }
+
+//     } catch (error) {
+//       console.error("Error toggling wishlist:", error);
+//     }
+//   };
+
+//   // Handle add to cart with stock validation
+//   const handleAddToCart = async () => {
+//     if (!selectedFragrance && !selectedModelFragrance) {
+//       return;
+//     }
+
+//     if (!canPurchaseProduct()) {
+//       return;
+//     }
+
+//     const token = localStorage.getItem("token");
+//     const userId = localStorage.getItem("userId");
+
+//     if (!token || !userId) {
+//       navigate("/login");
+//       return;
+//     }
+
+//     const basePrice = getBasePrice();
+//     const offerPrice = getOfferPrice();
+//     const hasOffer = currentOffer && currentOffer.offerPercentage > 0;
+
+//     const defaultColor = product.type === "simple"
+//       ? product.colors?.[0]
+//       : selectedModel?.colors?.[0];
+
+//     const cartData = {
+//       userId,
+//       productId: product.productId,
+//       productName: product.productName,
+//       quantity: quantity,
+//       unitPrice: getOriginalPrice(),
+//       finalPrice: offerPrice,
+//       totalPrice: getTotalPrice(),
+//       selectedColor: defaultColor,
+//       selectedFragrance: product.type === "simple" ? selectedFragrance : selectedModelFragrance,
+//       selectedSize: product.type === "simple" ? selectedSize : selectedModelSize,
+//       hasOffer: hasOffer,
+//       offerDetails: hasOffer ? {
+//         offerId: currentOffer._id,
+//         offerPercentage: currentOffer.offerPercentage,
+//         offerLabel: currentOffer.offerLabel,
+//         originalPrice: basePrice,
+//         offerPrice: offerPrice,
+//         savedAmount: (basePrice - offerPrice) * quantity
+//       } : null
+//     };
+
+//     if (product.type === "variable" && selectedModel) {
+//       cartData.selectedModel = {
+//         modelId: selectedModel._id || selectedModel.modelId,
+//         modelName: selectedModel.modelName,
+//         SKU: selectedModel.SKU
+//       };
+//     }
+
+//     try {
+//       const response = await axios.post(
+//         `${import.meta.env.VITE_API_URL}/cart/add`,
+//         cartData,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             'Content-Type': 'application/json'
+//           }
+//         }
+//       );
+
+//       window.dispatchEvent(new Event('cartUpdated'));
+
+//       if (window.innerWidth > 768) {
+//         setShowCartSidebar(true);
+//       }
+
+//     } catch (error) {
+//       console.error("Error adding to cart:", error);
+//     }
+//   };
+
+//   // Handle buy now
+//   const handleBuyNow = () => {
+//     if (!selectedFragrance && !selectedModelFragrance) {
+//       return;
+//     }
+
+//     if (!canPurchaseProduct()) {
+//       return;
+//     }
+
+//     const token = localStorage.getItem("token");
+//     const userId = localStorage.getItem("userId");
+
+//     if (!token || !userId) {
+//       navigate("/login");
+//       return;
+//     }
+
+//     const basePrice = getBasePrice();
+//     const offerPrice = getOfferPrice();
+//     const hasOffer = currentOffer && currentOffer.offerPercentage > 0;
+//     const originalPrice = getOriginalPrice();
+
+//     const subtotal = offerPrice * quantity;
+//     const shipping = subtotal > 1000 ? 0 : 120;
+//     const tax = subtotal * 0.18;
+//     const total = subtotal + shipping + tax;
+//     const originalSubtotal = originalPrice * quantity;
+//     const totalSavings = originalSubtotal - subtotal;
+
+//     const defaultColor = product.type === "simple"
+//       ? product.colors?.[0]
+//       : selectedModel?.colors?.[0];
+
+//     const selectedFragranceData = product.type === "simple" ? selectedFragrance : selectedModelFragrance;
+//     const selectedSizeData = product.type === "simple" ? selectedSize : selectedModelSize;
+//     const thumbnailImage = defaultColor?.images?.[0] || product.thumbnailImage;
+
+//     const buyNowData = {
+//       userId,
+//       productId: product.productId,
+//       productName: product.productName,
+//       quantity: quantity,
+//       unitPrice: originalPrice,
+//       finalPrice: offerPrice,
+//       totalPrice: subtotal,
+//       selectedColor: defaultColor,
+//       selectedFragrance: selectedFragranceData,
+//       selectedSize: selectedSizeData,
+//       selectedModel: product.type === "variable" ? {
+//         modelId: selectedModel._id || selectedModel.modelId,
+//         modelName: selectedModel.modelName,
+//         SKU: selectedModel.SKU
+//       } : null,
+//       hasOffer: hasOffer,
+//       offerDetails: hasOffer ? {
+//         offerId: currentOffer._id,
+//         offerPercentage: currentOffer.offerPercentage,
+//         offerLabel: currentOffer.offerLabel,
+//         originalPrice: basePrice,
+//         offerPrice: offerPrice,
+//         savedAmount: totalSavings
+//       } : null,
+//       thumbnailImage: thumbnailImage,
+//       summary: {
+//         totalItems: quantity,
+//         subtotal: subtotal,
+//         originalSubtotal: originalSubtotal,
+//         totalSavings: totalSavings,
+//         shipping: shipping,
+//         tax: tax,
+//         total: total
+//       },
+//       grandTotal: total,
+//       productSKU: selectedModel?.SKU || product.SKU || null,
+//       inStock: true
+//     };
+
+//     navigate('/checkout', {
+//       state: {
+//         buyNowMode: true,
+//         productData: buyNowData
+//       }
+//     });
+//   };
+
+//   if (loading) {
+//     return (
+//       <div className="product-page">
+//         <div className="loading-container">
+//           <div className="loading-spinner"></div>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   if (error || !product) {
+//     return (
+//       <div className="product-page">
+//         <div className="error-container">
+//           <h2>{error || "Product not found"}</h2>
+//           <button onClick={() => navigate(-1)}>Go Back</button>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   const basePrice = getBasePrice();
+//   const offerPrice = getOfferPrice();
+//   const totalPrice = getTotalPrice();
+//   const originalPrice = getOriginalPrice();
+//   const hasOffer = currentOffer && currentOffer.offerPercentage > 0;
+//   const discountPercent = getDiscountPercent();
+//   const description = getDescription();
+//   const specifications = getSpecifications();
+//   const availableSizes = getAvailableSizes();
+//   const availableFragrances = getAvailableFragrances();
+
+//   const finalPrice = hasOffer ? offerPrice : basePrice;
+//   const canPurchase = canPurchaseProduct();
+//   const averageRating = typeof reviewsStats.averageRating === 'number'
+//     ? reviewsStats.averageRating
+//     : parseFloat(reviewsStats.averageRating) || 0;
+
+//   return (
+//     <div className="product-page">
+//       <WishlistSidebar
+//         isOpen={showWishlistSidebar}
+//         onClose={() => setShowWishlistSidebar(false)}
+//       />
+//       <CartSidebar
+//         isOpen={showCartSidebar}
+//         onClose={() => setShowCartSidebar(false)}
+//       />
+
+//       <div className="product-page-back-button">
+//         <button
+//           className="styled-back-button"
+//           onClick={() => navigate(-1)}
+//           aria-label="Go back to previous page"
+//         >
+//           <span className="back-arrow">←</span>
+//           <span className="back-text">Back</span>
+//         </button>
+//       </div>
+
+//       <section className="product-scroll-section" ref={sectionRef}>
+//         <div className="columns-wrapper">
+//           {/* LEFT COLUMN with ref attached */}
+//           <div className="product-images-column" ref={leftColumnRef}>
+//             <div className="desktop-images-view">
+//               {images.length > 0 && (
+//                 <div className="thumbnail-strip">
+//                   {images.map((img, index) => (
+//                     <div
+//                       key={index}
+//                       className={`thumbnail-item ${img === mainImage ? 'active' : ''}`}
+//                       onClick={() => setMainImage(img)}
+//                     >
+//                       <img
+//                         src={img}
+//                         alt={`${product.productName} - View ${index + 1}`}
+//                         onError={(e) => {
+//                           e.target.onerror = null;
+//                           e.target.src = fallback;
+//                         }}
+//                       />
+//                     </div>
+//                   ))}
+//                 </div>
+//               )}
+
+//               <div className="main-images-container">
+//                 {images.length > 0 ? (
+//                   images.map((img, index) => (
+//                     <div key={index} className="main-image-item">
+//                       <img
+//                         src={img}
+//                         alt={`${product.productName} - ${index + 1}`}
+//                         onError={(e) => {
+//                           e.target.onerror = null;
+//                           e.target.src = fallback;
+//                         }}
+//                       />
+//                     </div>
+//                   ))
+//                 ) : (
+//                   <div className="no-image-placeholder">
+//                     <div className="no-image-icon">🖼️</div>
+//                     <p>No images available</p>
+//                   </div>
+//                 )}
+//               </div>
+//             </div>
+
+//             <div className="mobile-images-view">
+//               {images && images.length > 0 ? (
+//                 <>
+//                   <Swiper
+//                     key={`main-${images.length}`}
+//                     spaceBetween={10}
+//                     slidesPerView={1}
+//                     navigation={true}
+//                     autoplay={{
+//                       delay: 4000,
+//                       disableOnInteraction: false,
+//                     }}
+//                     thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
+//                     modules={[Navigation, Autoplay, Thumbs]}
+//                     className="main-swiper"
+//                     style={{
+//                       width: '100%',
+//                       height: '350px',
+//                       '--swiper-navigation-color': '#000',
+//                       '--swiper-pagination-color': '#000',
+//                     }}
+//                   >
+//                     {images.map((img, index) => (
+//                       <SwiperSlide key={`slide-${index}`}>
+//                         <div className="swiper-image-container">
+//                           <img
+//                             src={img}
+//                             alt={`${product.productName} - ${index + 1}`}
+//                             onError={(e) => {
+//                               e.target.onerror = null;
+//                               e.target.src = fallback;
+//                             }}
+//                             loading="eager"
+//                             style={{
+//                               width: '100%',
+//                               height: '100%',
+//                               objectFit: 'contain',
+//                               display: 'block'
+//                             }}
+//                           />
+//                         </div>
+//                       </SwiperSlide>
+//                     ))}
+//                   </Swiper>
+
+//                   <Swiper
+//                     key={`thumbs-${images.length}`}
+//                     onSwiper={setThumbsSwiper}
+//                     spaceBetween={10}
+//                     slidesPerView={Math.min(4, images.length)}
+//                     freeMode={true}
+//                     watchSlidesProgress={true}
+//                     modules={[Thumbs]}
+//                     className="thumbnail-swiper"
+//                     style={{
+//                       width: '100%',
+//                       height: '70px',
+//                       marginTop: '10px'
+//                     }}
+//                   >
+//                     {images.map((img, index) => (
+//                       <SwiperSlide key={`thumb-${index}`}>
+//                         <div className="swiper-thumbnail">
+//                           <img
+//                             src={img}
+//                             alt={`Thumbnail ${index + 1}`}
+//                             onError={(e) => {
+//                               e.target.onerror = null;
+//                               e.target.src = fallback;
+//                             }}
+//                             loading="lazy"
+//                             style={{
+//                               width: '100%',
+//                               height: '100%',
+//                               objectFit: 'cover',
+//                               display: 'block'
+//                             }}
+//                           />
+//                         </div>
+//                       </SwiperSlide>
+//                     ))}
+//                   </Swiper>
+//                 </>
+//               ) : (
+//                 <div className="no-image-placeholder">
+//                   <div className="no-image-icon">🖼️</div>
+//                   <p>No images available</p>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+
+//           <div className="product-details-column" ref={rightRef}>
+//             <div className="best-seller-badge">
+//               BEST SELLERS
+//             </div>
+
+//             <div className="product-header-section">
+//               <h1 className="product-title">
+//                 {product.productName}
+//                 <button
+//                   className={`wishlist-icon-btn ${wishlist ? 'active' : ''}`}
+//                   onClick={toggleWishlist}
+//                   title={wishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+//                 >
+//                   {wishlist ? <FaHeart /> : <FaRegHeart />}
+//                 </button>
+//               </h1>
+//             </div>
+
+//             <div className="short-description">
+//               {product.description || "Premium quality product with luxurious fragrance."}
+//             </div>
+
+//             {hasOffer && currentOffer?.offerLabel && (
+//               <div className="offer-badge-after-description">
+//                 {currentOffer.offerLabel}
+//               </div>
+//             )}
+
+//             <div className="simple-price-section">
+//               <div className="price-row">
+//                 <span className="current-price">₹{finalPrice.toLocaleString()}</span>
+
+//                 {originalPrice > finalPrice && (
+//                   <>
+//                     <span className="original-price">₹{originalPrice.toLocaleString()}</span>
+//                     <span className="discount-percent">{getDiscountPercent()}% OFF</span>
+//                   </>
+//                 )}
+//               </div>
+
+//               {selectedFragrance || selectedModelFragrance ? (
+//                 <div className={`stock-status-badge ${currentFragranceInventory.status}`}>
+//                   {currentFragranceInventory.status === 'checking' ? (
+//                     <>Checking stock...</>
+//                   ) : currentFragranceInventory.status === 'error' ? (
+//                     <>Stock check failed</>
+//                   ) : currentFragranceInventory.status === 'out-of-stock' ? (
+//                     <>Out of Stock</>
+//                   ) : currentFragranceInventory.status === 'low-stock' ? (
+//                     <>Low Stock: {currentFragranceInventory.stock} left</>
+//                   ) : (
+//                     <>In Stock: {currentFragranceInventory.stock} available</>
+//                   )}
+//                 </div>
+//               ) : (
+//                 <div className="stock-status-badge no-selection">
+//                   Select a fragrance to see stock
+//                 </div>
+//               )}
+//             </div>
+
+//             <div className="reviews-row" onClick={handleOpenReviewsModal}>
+//               <div className="stars-container">
+//                 {renderRatingStars(averageRating, 'medium')}
+//               </div>
+//               <div className="reviews-count">
+//                 {reviewsStats.totalReviews} Review{reviewsStats.totalReviews !== 1 ? 's' : ''}
+//               </div>
+//             </div>
+
+//             <div className="fragrance-selection-section">
+//               <div className="section-header">
+//                 <h3>Select Fragrance :</h3>
+//                 {(selectedFragrance || selectedModelFragrance) && (
+//                   <span className="selected-indicator">
+//                     {/* Selected: <strong>{selectedFragrance || selectedModelFragrance}</strong> */}
+//                   </span>
+//                 )}
+//               </div>
+
+//               {availableFragrances.length > 0 ? (
+//                 <div className="fragrance-grid">
+//                   {availableFragrances.map((fragrance, index) => {
+//                     const isSelected = product.type === "simple"
+//                       ? selectedFragrance === fragrance
+//                       : selectedModelFragrance === fragrance;
+
+//                     const fragranceStock = fragranceInventory[fragrance];
+//                     const isOutOfStock = fragranceStock?.status === 'out-of-stock';
+//                     const isLowStock = fragranceStock?.status === 'low-stock';
+
+//                     return (
+//                       <div
+//                         key={index}
+//                         className={`fragrance-box ${isSelected ? 'selected' : ''} ${isOutOfStock ? 'out-of-stock' : ''
+//                           } ${isLowStock ? 'low-stock' : ''
+//                           }`}
+//                         onClick={() => {
+//                           if (isOutOfStock) return;
+
+//                           if (product.type === "simple") {
+//                             handleFragranceSelect(fragrance);
+//                           } else {
+//                             handleModelFragranceSelect(fragrance);
+//                           }
+//                         }}
+//                       >
+//                         <div className="fragrance-name">{fragrance}</div>
+//                       </div>
+//                     );
+//                   })}
+//                 </div>
+//               ) : (
+//                 <div className="no-fragrances-message">
+//                   <p>No fragrances available for this product.</p>
+//                 </div>
+//               )}
+
+//               {!selectedFragrance && !selectedModelFragrance && (
+//                 <div className="selection-required-message">
+//                   ⚠️ Please select a fragrance to proceed
+//                 </div>
+//               )}
+//             </div>
+
+//             <div className="quantity-selector-section">
+//               <div className="section-header">
+//                 <h3>Quantity</h3>
+//               </div>
+//               <div className="quantity-controls">
+//                 <button
+//                   className="quantity-btn minus"
+//                   onClick={() => handleQuantityChange(-1)}
+//                   disabled={quantity <= 1 || currentFragranceInventory.status === 'out-of-stock' || !selectedFragrance}
+//                 >
+//                   −
+//                 </button>
+//                 <input
+//                   type="number"
+//                   min="1"
+//                   max={maxQuantity}
+//                   value={quantity}
+//                   onChange={(e) => {
+//                     const value = parseInt(e.target.value) || 1;
+//                     if (currentFragranceInventory.status === 'low-stock' || currentFragranceInventory.status === 'in-stock') {
+//                       if (value > currentFragranceInventory.stock) {
+//                         return;
+//                       }
+//                     }
+//                     if (value >= 1 && value <= maxQuantity) {
+//                       setQuantity(value);
+//                     }
+//                   }}
+//                   className="quantity-input"
+//                   disabled={currentFragranceInventory.status === 'out-of-stock' || !selectedFragrance}
+//                 />
+//                 <button
+//                   className="quantity-btn plus"
+//                   onClick={() => handleQuantityChange(1)}
+//                   disabled={quantity >= maxQuantity || currentFragranceInventory.status === 'out-of-stock' || !selectedFragrance}
+//                 >
+//                   +
+//                 </button>
+//                 <div className="quantity-summary">
+//                   <span className="total-label">Total: </span>
+//                   <span className="total-price">₹{totalPrice.toLocaleString()}</span>
+//                 </div>
+//               </div>
+//             </div>
+
+//             {product.type === "variable" && product.models && product.models.length > 0 && (
+//               <div className="model-selection-section">
+//                 <div className="section-header">
+//                   <h3>Select Model</h3>
+//                   {selectedModel && (
+//                     <span className="selected-indicator">
+//                       Selected: <strong>{selectedModel.modelName}</strong>
+//                     </span>
+//                   )}
+//                 </div>
+//                 <div className="model-options-grid">
+//                   {product.models.map((model, index) => (
+//                     <div
+//                       key={index}
+//                       className={`model-option-card ${selectedModel?.modelName === model.modelName ? 'selected' : ''}`}
+//                       onClick={() => handleModelSelect(model)}
+//                     >
+//                       <div className="model-name">{model.modelName}</div>
+//                       <div className="model-price">
+//                         ₹{(model.colors?.[0]?.currentPrice || product.currentPrice || 0).toLocaleString()}
+//                       </div>
+//                     </div>
+//                   ))}
+//                 </div>
+//               </div>
+//             )}
+
+//             {availableSizes.length > 0 && (
+//               <div className="size-selection-section">
+//                 <div className="section-header">
+//                   <h3>Select Size</h3>
+//                   {(selectedSize || selectedModelSize) && (
+//                     <span className="selected-indicator">
+//                       Selected: <strong>{selectedSize || selectedModelSize}</strong>
+//                     </span>
+//                   )}
+//                 </div>
+//                 <div className="size-options-grid">
+//                   {availableSizes.map((size, index) => {
+//                     const isSelected = product.type === "simple"
+//                       ? selectedSize === size
+//                       : selectedModelSize === size;
+
+//                     return (
+//                       <div
+//                         key={index}
+//                         className={`size-option-box ${isSelected ? 'selected' : ''}`}
+//                         onClick={() => {
+//                           if (product.type === "simple") {
+//                             setSelectedSize(size);
+//                           } else {
+//                             setSelectedModelSize(size);
+//                           }
+//                         }}
+//                       >
+//                         {size}
+//                       </div>
+//                     );
+//                   })}
+//                 </div>
+//               </div>
+//             )}
+
+//             <div className="action-buttons-section">
+//               <button
+//                 className={`add-to-cart-btn ${!canPurchase || !selectedFragrance ? 'disabled' : ''}`}
+//                 onClick={handleAddToCart}
+//                 disabled={!canPurchase || !selectedFragrance}
+//                 title={!selectedFragrance ? 'Please select a fragrance' : (!canPurchase ? (currentFragranceInventory.status === 'out-of-stock' ? 'Out of Stock' : `Only ${currentFragranceInventory.stock} available`) : '')}
+//               >
+//                 {!selectedFragrance && !selectedModelFragrance
+//                   ? 'Select Fragrance First'
+//                   : currentFragranceInventory.status === 'out-of-stock'
+//                     ? 'Out of Stock'
+//                     : `Add to Cart`}
+//               </button>
+
+//               <button
+//                 className={`buy-now-btn ${!canPurchase || !selectedFragrance ? 'disabled' : ''}`}
+//                 onClick={handleBuyNow}
+//                 disabled={!canPurchase || !selectedFragrance}
+//                 title={!selectedFragrance ? 'Please select a fragrance' : (!canPurchase ? (currentFragranceInventory.status === 'out-of-stock' ? 'Out of Stock' : `Only ${currentFragranceInventory.stock} available`) : '')}
+//               >
+//                 {!selectedFragrance && !selectedModelFragrance
+//                   ? 'Select Fragrance First'
+//                   : currentFragranceInventory.status === 'out-of-stock'
+//                     ? 'Out of Stock'
+//                     : `Buy Now`}
+//               </button>
+//             </div>
+
+//             <div className="delivery-info-section">
+//               <div className="delivery-header">
+//                 <h3>Delivery Information</h3>
+//               </div>
+//               <div className="delivery-options">
+//                 <div className="delivery-option">
+//                   <div className="option-line">Standard delivery in 2-4 business days</div>
+//                 </div>
+//                 <div className="delivery-option">
+//                   <div className="option-line">Express delivery in 1-2 business days</div>
+//                 </div>
+//               </div>
+//             </div>
+
+//             <div className="full-description-section">
+//               <div className="section-header">
+//                 <h3>Description</h3>
+//               </div>
+//               <div className="description-content">
+//                 {description.split('\n').map((paragraph, index) => (
+//                   <p key={index}>{paragraph}</p>
+//                 ))}
+//               </div>
+//             </div>
+
+//             {specifications.length > 0 && (
+//               <div className="specifications-section">
+//                 <div className="section-header">
+//                   <h3>Specifications</h3>
+//                 </div>
+//                 <div className="specifications-grid">
+//                   {specifications.map((spec, index) => (
+//                     <div key={index} className="spec-row">
+//                       <div className="spec-key">{spec.key}</div>
+//                       <div className="spec-value">{spec.value}</div>
+//                     </div>
+//                   ))}
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </section>
+
+//       <section className="related-products-section">
+//         <RelatedProducts
+//           productId={product.productId}
+//           currentFragrances={getAvailableFragrances()}
+//           categoryId={product.categoryId}
+//           currentProductType={product.type}
+//           currentModelId={selectedModel?._id}
+//         />
+//       </section>
+
+//       {showReviewsModal && (
+//         <div className="premium-reviews-modal">
+//           <div className="modal-overlay" onClick={() => setShowReviewsModal(false)}></div>
+//           <div className="modal-container">
+//             <div className="modal-header">
+//               <div className="modal-title-section">
+//                 <h2>Customer Reviews</h2>
+//                 <div className="reviews-summary-badge">
+//                   <span className="average-rating">{averageRating.toFixed(1)}</span>
+//                   <span className="total-reviews-count">/5 • {reviewsStats.totalReviews} reviews</span>
+//                 </div>
+//               </div>
+//               <button className="modal-close-btn" onClick={() => setShowReviewsModal(false)}>
+//                 ✕
+//               </button>
+//             </div>
+
+//             <div className="modal-body">
+//               <div className="reviews-stats-sidebar">
+//                 <div className="overall-rating-box">
+//                   <div className="overall-rating-score">{averageRating.toFixed(1)}</div>
+//                   <div className="overall-rating-stars">
+//                     {renderRatingStars(averageRating, 'large')}
+//                   </div>
+//                   <div className="overall-rating-text">
+//                     Based on {reviewsStats.totalReviews} review{reviewsStats.totalReviews !== 1 ? 's' : ''}
+//                   </div>
+//                 </div>
+
+//                 <div className="rating-distribution-chart">
+//                   <h4>Rating Distribution</h4>
+//                   {[5, 4, 3, 2, 1].map(star => {
+//                     const count = reviewsStats.ratingDistribution[star] || 0;
+//                     const percentage = reviewsStats.totalReviews > 0
+//                       ? Math.round((count / reviewsStats.totalReviews) * 100)
+//                       : 0;
+
+//                     return (
+//                       <div key={star} className="distribution-row">
+//                         <span className="star-label">{star} ★</span>
+//                         <div className="distribution-bar-container">
+//                           <div
+//                             className="distribution-bar-fill"
+//                             style={{ width: `${percentage}%` }}
+//                           ></div>
+//                         </div>
+//                         <span className="distribution-count">{count}</span>
+//                       </div>
+//                     );
+//                   })}
+//                 </div>
+//               </div>
+
+//               <div className="reviews-list-container">
+//                 <div className="reviews-filter-bar">
+//                   <div className="filter-options">
+//                     <button className="filter-option active">All Reviews</button>
+//                     <button className="filter-option">5 Star ({reviewsStats.ratingDistribution[5]})</button>
+//                     <button className="filter-option">4 Star ({reviewsStats.ratingDistribution[4]})</button>
+//                     <button className="filter-option">3 Star ({reviewsStats.ratingDistribution[3]})</button>
+//                     <button className="filter-option">2 Star ({reviewsStats.ratingDistribution[2]})</button>
+//                     <button className="filter-option">1 Star ({reviewsStats.ratingDistribution[1]})</button>
+//                   </div>
+//                 </div>
+
+//                 <div className="reviews-list">
+//                   {reviewsLoading && reviews.length === 0 ? (
+//                     <div className="loading-reviews">
+//                       <div className="loading-spinner"></div>
+//                       <p>Loading reviews...</p>
+//                     </div>
+//                   ) : reviews.length > 0 ? (
+//                     <>
+//                       {reviews.map((review, index) => {
+//                         const reviewRating = typeof review.rating === 'number'
+//                           ? review.rating
+//                           : parseFloat(review.rating) || 0;
+
+//                         return (
+//                           <div key={index} className="review-card">
+//                             <div className="review-header">
+//                               <div className="reviewer-details">
+//                                 <div className="reviewer-name">{review.userName}</div>
+//                                 <div className="review-meta">
+//                                   <div className="review-stars">
+//                                     {renderRatingStars(reviewRating, 'small')}
+//                                     <span className="review-rating">{reviewRating}/5</span>
+//                                   </div>
+//                                   <span className="review-date">{formatReviewDate(review.createdAt)}</span>
+//                                   {review.isVerifiedPurchase && (
+//                                     <span className="verified-badge">✅ Verified Purchase</span>
+//                                   )}
+//                                 </div>
+//                               </div>
+//                             </div>
+
+//                             <div className="review-content">
+//                               <p className="review-text">"{review.reviewText || 'No review text provided'}"</p>
+//                             </div>
+//                           </div>
+//                         );
+//                       })}
+
+//                       {reviews.length < reviewsStats.totalReviews && (
+//                         <button
+//                           className="load-more-reviews-btn"
+//                           onClick={() => {
+//                             const nextPage = reviewsPage + 1;
+//                             setReviewsPage(nextPage);
+//                             fetchProductReviews(nextPage);
+//                           }}
+//                           disabled={reviewsLoading}
+//                         >
+//                           {reviewsLoading ? 'Loading...' : 'Load More Reviews'}
+//                         </button>
+//                       )}
+//                     </>
+//                   ) : (
+//                     <div className="no-reviews-message">
+//                       <div className="no-reviews-icon">⭐</div>
+//                       <h3>No reviews yet</h3>
+//                       <p>Be the first to review this product!</p>
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
+// export default OldProductPage;

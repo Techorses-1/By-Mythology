@@ -1,0 +1,277 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@300;400;500;600&display=swap");
+
+/* ========================================= */
+/* VARIABLES */
+/* ========================================= */
+
+$sc-bg: #050505;
+$sc-bg-2: #0a0907;
+$sc-gold: #b98a43;
+$sc-gold-light: #d7b06a;
+$sc-text: #d8d1c7;
+$sc-border: rgba(185, 138, 67, 0.18);
+
+/* ========================================= */
+/* ROOT */
+/* ========================================= */
+
+.sacred-craft-section {
+    width: 100%;
+    background: $sc-bg;
+    border-top: 1px solid $sc-border;
+    border-bottom: 1px solid $sc-border;
+    position: relative;
+    overflow: hidden;
+    padding: 34px 0px;
+
+    background-image:
+        radial-gradient(circle at top left, rgba(185, 138, 67, 0.05), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(185, 138, 67, 0.04), transparent 40%);
+
+    /* ========================================= */
+    /* DESKTOP STATIC ROW */
+    /* ========================================= */
+
+    .sacred-craft-desktop {
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        max-width: 1400px;
+        width: 100%;
+        margin: 0 auto;
+        overflow: visible;
+    }
+
+    /* ========================================= */
+    /* SLIDER VIEWS (tablet + mobile) */
+    /* ========================================= */
+
+    .sacred-craft-slider {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        overflow: visible;
+
+        .swiper {
+            width: 100%;
+            overflow: visible;
+            padding: 0 !important;
+        }
+
+        .swiper-wrapper {
+            overflow: visible;
+        }
+    }
+
+    /* ========================================= */
+    /* CARD */
+    /* ========================================= */
+
+    .sacred-craft-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 0 16px;
+        transition: all 0.35s ease;
+        flex: 1;
+        min-width: 0;
+
+        &:hover {
+            .sacred-craft-icon {
+                transform: translateY(-4px) scale(1.06);
+                color: $sc-gold-light;
+            }
+
+            .sacred-craft-title {
+                color: $sc-gold-light;
+            }
+        }
+
+        .sacred-craft-icon {
+            color: $sc-gold;
+            margin-bottom: 14px;
+            transition: all 0.35s ease;
+
+            svg {
+                width: 32px;
+                height: 32px;
+            }
+        }
+
+        .sacred-craft-title {
+            font-family: "Cinzel", serif;
+            color: $sc-gold;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            transition: color 0.35s ease;
+        }
+
+        .sacred-craft-description {
+            font-family: "Cormorant Garamond", serif;
+            color: $sc-text;
+            font-size: 1rem;
+            line-height: 1.7;
+            font-weight: 400;
+            max-width: 180px;
+            word-break: break-word;
+        }
+    }
+
+    /* ========================================= */
+    /* DIVIDER */
+    /* ========================================= */
+
+    .sacred-craft-divider {
+        width: 1px;
+        min-height: 150px;
+        background: linear-gradient(to bottom, transparent, rgba(185, 138, 67, 0.35), transparent);
+        flex-shrink: 0;
+        align-self: center;
+    }
+
+    /* ========================================= */
+    /* DOTS – force override Swiper defaults */
+    /* ========================================= */
+
+    .sc-dots-tablet,
+    .sc-dots-mobile {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 22px;
+        padding-bottom: 5px;
+
+        .swiper-pagination-bullet {
+            width: 8px !important;
+            height: 8px !important;
+            border-radius: 50%;
+            border: 1px solid #c9a84c !important;
+            background: transparent !important;
+            opacity: 1 !important;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin: 0 !important;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: #c9a84c !important;
+            transform: scale(1.2);
+        }
+
+        .swiper-pagination-bullet:hover {
+            background: rgba(#c9a84c, 0.5) !important;
+        }
+    }
+}
+
+/* ========================================= */
+/* TABLET (1025px and below) */
+/* ========================================= */
+
+@media (max-width: 1024px) {
+    .sacred-craft-section {
+        padding: 36px 0px;
+
+        .sacred-craft-desktop {
+            display: none;
+        }
+
+        .sacred-craft-tablet {
+            display: flex;
+        }
+
+        .sacred-craft-mobile {
+            display: none;
+        }
+
+        .sacred-craft-card {
+            padding: 0 12px;
+
+            .sacred-craft-icon svg {
+                width: 30px;
+                height: 30px;
+            }
+
+            .sacred-craft-title {
+                font-size: 0.75rem;
+            }
+
+            .sacred-craft-description {
+                font-size: 0.9rem;
+                max-width: 100%;
+            }
+        }
+    }
+}
+
+/* ========================================= */
+/* MOBILE (768px and below) */
+/* ========================================= */
+
+@media (max-width: 768px) {
+    .sacred-craft-section {
+        padding: 32px 0px;
+
+        .sacred-craft-desktop {
+            display: none;
+        }
+
+        .sacred-craft-tablet {
+            display: none;
+        }
+
+        .sacred-craft-mobile {
+            display: flex;
+        }
+
+        .sacred-craft-card {
+            padding: 0 10px;
+
+            .sacred-craft-icon {
+                margin-bottom: 12px;
+
+                svg {
+                    width: 28px;
+                    height: 28px;
+                }
+            }
+
+            .sacred-craft-title {
+                font-size: 0.7rem;
+                letter-spacing: 1px;
+                margin-bottom: 10px;
+            }
+
+            .sacred-craft-description {
+                font-size: 0.85rem;
+                line-height: 1.6;
+                max-width: 100%;
+            }
+        }
+    }
+}
+
+/* ========================================= */
+/* SMALL MOBILE (≤ 480px) */
+/* ========================================= */
+
+@media (max-width: 480px) {
+    .sacred-craft-section {
+        padding: 28px 0px;
+
+        .sacred-craft-card {
+            .sacred-craft-title {
+                font-size: 0.65rem;
+            }
+
+            .sacred-craft-description {
+                font-size: 0.8rem;
+            }
+        }
+    }
+}

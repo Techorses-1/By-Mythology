@@ -1,0 +1,325 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Raleway:wght@300;400;500&display=swap");
+
+// ─── Variables ───────────────────────────────────────────────────────────────
+$os-bg: #0a0907;
+$os-gold: #c9a84c;
+$os-gold-light: #e8c97a;
+$os-text: #d8d1c7;
+$os-text-muted: rgba(#d8d1c7, 0.7);
+$os-border: rgba(#c9a84c, 0.2);
+
+// ─── Root ────────────────────────────────────────────────────────────────────
+.our-story-section {
+    width: 100%;
+    background: $os-bg;
+    padding: 90px 0px;
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid $os-border;
+    border-bottom: 1px solid $os-border;
+
+    // Subtle ambient glow — pointer-events none so it never adds layout width
+    &::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: 0;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(201, 168, 76, 0.06) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    // ── Inner Layout ─────────────────────────────────────────────────────
+    .our-story-inner {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 70px;
+        align-items: center;
+        max-width: 1400px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    // ── Image Side ───────────────────────────────────────────────────────
+    .our-story-image-wrap {
+        opacity: 0;
+        transform: translateX(-30px);
+        transition: opacity 0.9s ease, transform 0.9s ease;
+        min-width: 0;
+    }
+
+    .our-story-image-frame {
+        position: relative;
+        line-height: 0;
+        width: 100%;
+        height: 450px; // Add fixed height
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: -10px;
+            border: 1px solid $os-border;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 40px;
+            height: 40px;
+            border-top: 1px solid $os-gold;
+            border-left: 1px solid $os-gold;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        img {
+            width: 100%;
+            height: 100%; // Change from auto to 100%
+            object-fit: cover; // Ensures image covers the area properly
+            display: block;
+            position: relative;
+            z-index: 1;
+            filter: brightness(0.92) contrast(1.04);
+        }
+    }
+
+    // ── Content Side ─────────────────────────────────────────────────────
+    .our-story-content {
+        opacity: 0;
+        transform: translateX(30px);
+        transition: opacity 0.9s ease 0.2s, transform 0.9s ease 0.2s;
+        min-width: 0;
+    }
+
+    // Scroll trigger
+    &.our-story--visible {
+        .our-story-image-wrap {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .our-story-content {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .our-story-label {
+        display: inline-block;
+        font-family: "Cinzel", serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.28em;
+        color: $os-gold;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+
+    .our-story-heading {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 2.6rem;
+        font-weight: 500;
+        line-height: 1.2;
+        color: $os-gold-light;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        margin-bottom: 22px;
+        margin-top: 5px;
+    }
+
+    // ── Ornament ─────────────────────────────────────────────────────────
+    .our-story-ornament {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .our-story-ornament-line {
+        display: block;
+        width: 60px;
+        height: 1px;
+        background: linear-gradient(to right, transparent, $os-gold, transparent); // ← this
+    }
+
+    .our-story-ornament-diamond {
+        width: 14px;
+        height: 7px;
+        flex-shrink: 0;
+        fill: $os-gold;
+    }
+
+    // ── Body Text ────────────────────────────────────────────────────────
+    .our-story-body {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 10px;
+
+        p {
+            font-family: "Raleway", sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            font-weight: 300;
+            color: $os-text-muted;
+            letter-spacing: 0.01em;
+        }
+    }
+
+    // ── Signature ────────────────────────────────────────────────────────
+    .our-story-signature {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.1rem;
+        font-weight: 400;
+        color: $os-gold;
+        letter-spacing: 0.02em;
+
+        em {
+            font-style: italic;
+        }
+    }
+}
+
+// ─── Tablet (769px – 1024px) ──────────────────────────────────────────────────
+@media (max-width: 1024px) {
+    .our-story-section {
+        padding: 70px 0px;
+
+        .our-story-inner {
+            grid-template-columns: 1fr;
+            gap: 50px;
+            max-width: 100%;
+
+        }
+
+        .our-story-image-wrap {
+            max-width: 580px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .our-story-heading {
+            font-size: 2.2rem;
+        }
+
+        .our-story-content {
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .our-story-ornament {
+            justify-content: center;
+        }
+    }
+}
+
+// ─── Mobile (≤ 768px) ─────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+    .our-story-section {
+        padding: 56px 0px;
+
+        .our-story-inner {
+            gap: 40px;
+        }
+
+        .our-story-image-wrap {
+            max-width: 100%;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .our-story-image-frame {
+            height: 350px;
+            width: 90%;
+            margin: 0 auto;
+
+            &::before {
+                inset: -7px;
+            }
+
+            &::after {
+                width: 28px;
+                height: 28px;
+                top: 4px;
+                left: 4px;
+            }
+        }
+
+        .our-story-image-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .our-story-heading {
+            font-size: 1.85rem;
+            margin-bottom: 18px;
+        }
+
+        .our-story-label {
+            font-size: 0.65rem;
+            margin-bottom: 14px;
+        }
+
+        .our-story-body {
+            gap: 14px;
+
+            p {
+                font-size: 0.88rem;
+                line-height: 1.8;
+            }
+        }
+
+        .our-story-signature {
+            font-size: 1rem;
+        }
+
+        .our-story-content {
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .our-story-ornament {
+            justify-content: center;
+        }
+    }
+}
+
+// ─── Small Mobile (≤ 480px) ───────────────────────────────────────────────────
+@media (max-width: 480px) {
+    .our-story-section {
+        padding: 44px 0px;
+
+        .our-story-image-frame {
+            height: 280px;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .our-story-image-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .our-story-heading {
+            font-size: 1.55rem;
+        }
+
+        .our-story-body p {
+            font-size: 0.83rem;
+        }
+
+        .our-story-content {
+            padding: 0 16px;
+        }
+    }
+}

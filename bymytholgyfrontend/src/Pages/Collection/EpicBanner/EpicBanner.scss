@@ -1,0 +1,303 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@300;400;500;600&display=swap");
+
+/* ======================================= */
+/* VARIABLES */
+/* ======================================= */
+
+$eb-bg: #0d0b08;
+$eb-gold: #c9a84c;
+$eb-gold-light: #e8c97a;
+$eb-text: #f5f0e8;
+$eb-border: rgba(#c9a84c, 0.16);
+
+/* ======================================= */
+/* ROOT */
+/* ======================================= */
+
+.epic-banner {
+    width: 100%;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1.1fr 1.2fr 0.7fr; // Left smaller, center wider, right smaller
+    align-items: stretch;
+    background: $eb-bg;
+    border-top: 1px solid $eb-border;
+    border-bottom: 1px solid $eb-border;
+    position: relative;
+
+    background-image:
+        radial-gradient(circle at top left, rgba(#c9a84c, 0.04), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(#c9a84c, 0.04), transparent 35%);
+
+    /* ======================================= */
+    /* LEFT */
+    /* ======================================= */
+
+    &__left {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 26px 30px; // Reduced padding
+        border-right: 1px solid rgba(#c9a84c, 0.08);
+    }
+
+    &__lotus {
+        width: 80px; // Slightly smaller
+        height: 80px;
+        flex-shrink: 0;
+        border: 1px solid rgba(#c9a84c, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $eb-gold-light;
+        font-size: 2rem;
+    }
+
+    &__content {
+        h2 {
+            color: $eb-gold-light;
+            font-family: "Cinzel", serif;
+            font-size: 1.3rem; // Slightly smaller
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: $eb-text;
+            font-family: "Cormorant Garamond", serif;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            max-width: 480px;
+        }
+    }
+
+    /* ======================================= */
+    /* FEATURES - CENTERED VERTICALLY */
+    /* ======================================= */
+
+    &__features {
+        display: flex;
+        align-items: center; // Keep center vertically
+        justify-content: center;
+        gap: 30px;
+        padding: 20px 20px; // More width on center
+        border-right: 1px solid rgba(#c9a84c, 0.08);
+    }
+
+    &__feature {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__icon {
+        color: $eb-gold;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+            width: 30px;
+            height: 30px;
+        }
+    }
+
+    &__feature h4 {
+        color: $eb-gold-light;
+        font-family: "Cinzel", serif;
+        font-size: 0.7rem;
+        line-height: 1.5;
+        letter-spacing: 0.08em;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    /* ======================================= */
+    /* CTA - RIGHT SIDE */
+    /* ======================================= */
+
+    &__cta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 26px 20px; // Reduced padding
+
+        h3 {
+            color: $eb-gold-light;
+            font-family: "Cinzel", serif;
+            font-size: 1.2rem; // Smaller
+            line-height: 1.4;
+            margin-bottom: 18px;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid rgba(#c9a84c, 0.25);
+            color: $eb-gold-light;
+            padding: 10px 20px;
+            font-family: "Cinzel", serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+
+            span {
+                transition: transform 0.3s ease;
+            }
+
+            &:hover {
+                background: rgba(#c9a84c, 0.1);
+
+                span {
+                    transform: translateX(4px);
+                }
+            }
+        }
+    }
+}
+
+/* ======================================= */
+/* TABLET (769px - 1024px) */
+/* ======================================= */
+
+@media (max-width: 1024px) and (min-width: 769px) {
+    .epic-banner {
+        grid-template-columns: 1fr;
+
+        &__left {
+            border-right: none;
+            border-bottom: 1px solid rgba(#c9a84c, 0.08);
+            padding: 30px 40px;
+        }
+
+        &__features {
+            border-right: none;
+            border-bottom: 1px solid rgba(#c9a84c, 0.08);
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 30px 40px;
+        }
+
+        &__cta {
+            padding: 36px 24px;
+        }
+    }
+}
+
+/* ======================================= */
+/* MOBILE (≤ 768px) - 2 COLUMNS */
+/* ======================================= */
+
+@media (max-width: 768px) {
+    .epic-banner {
+
+        grid-template-columns: 1fr;
+        // width: 108.9%;
+
+        &__left {
+            flex-direction: column;
+            text-align: center;
+            padding: 28px 20px;
+        }
+
+        &__lotus {
+            width: 70px;
+            height: 70px;
+            font-size: 1.8rem;
+        }
+
+        &__content {
+            h2 {
+                font-size: 1.1rem;
+                line-height: 1.5;
+            }
+
+            p {
+                font-size: 0.88rem;
+                line-height: 1.7;
+            }
+        }
+
+        &__features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); // 2 columns
+            gap: 24px 20px;
+            padding: 30px 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        &__feature {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        &__icon svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        &__feature h4 {
+            font-size: 0.62rem;
+            line-height: 1.5;
+        }
+
+        &__cta {
+            padding: 30px 20px;
+
+            h3 {
+                font-size: 1rem;
+            }
+
+            button {
+                width: 100%;
+                justify-content: center;
+                font-size: 0.65rem;
+            }
+        }
+    }
+}
+
+/* ======================================= */
+/* SMALL MOBILE (≤ 480px) */
+/* ======================================= */
+
+@media (max-width: 480px) {
+    .epic-banner {
+        &__content {
+            h2 {
+                font-size: 0.95rem;
+            }
+
+            p {
+                font-size: 0.8rem;
+            }
+        }
+
+        &__features {
+            grid-template-columns: repeat(2, 1fr); // Keep 2 columns
+            gap: 20px 16px;
+            padding: 24px 16px;
+        }
+
+        &__icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        &__cta {
+            h3 {
+                font-size: 0.85rem;
+            }
+        }
+    }
+}

@@ -1,0 +1,294 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@300;400;500;600&display=swap");
+
+/* ======================================= */
+/* VARIABLES */
+/* ======================================= */
+
+$cm-bg: #050505;
+$cm-gold: #c9a84c;
+$cm-gold-light: #e8c97a;
+$cm-text: #d8d1c7;
+$cm-border: rgba(#c9a84c, 0.18);
+
+/* ======================================= */
+/* ROOT */
+/* ======================================= */
+
+.candle-making-section {
+    width: 100%;
+    padding: 70px 0px;
+    background: $cm-bg;
+    border-top: 1px solid $cm-border;
+    border-bottom: 1px solid $cm-border;
+    overflow-x: hidden;
+    position: relative;
+
+    background-image:
+        radial-gradient(circle at top left, rgba(184, 138, 70, 0.05), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(184, 138, 70, 0.04), transparent 40%);
+
+    /* ======================================= */
+    /* HEADING */
+    /* ======================================= */
+
+    .candle-making-heading {
+        text-align: center;
+        margin-bottom: 55px;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 20px;
+
+        span {
+            display: block;
+            color: $cm-gold-light;
+            font-family: "Cinzel", serif;
+            font-size: 2.4rem;
+            line-height: 1.4;
+            letter-spacing: 0.1px;
+        }
+
+        .candle-making-ornament {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .candle-making-ornament-line {
+           display: block;
+        width: 60px;
+        height: 1px;
+        background: linear-gradient(to right, transparent, $cm-gold, transparent); // ← this
+    }
+
+        .candle-making-ornament-diamond {
+            width: 14px;
+            height: 7px;
+            flex-shrink: 0;
+            fill: $cm-gold;
+        }
+
+        p {
+            color: $cm-text;
+            font-family: "Cormorant Garamond", serif;
+            font-size: 1.2rem;
+        }
+    }
+
+    /* ======================================= */
+    /* DESKTOP */
+    /* ======================================= */
+
+    .candle-making-desktop {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 18px;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* ======================================= */
+    /* CARD */
+    /* ======================================= */
+
+    .candle-making-card {
+        .candle-making-image {
+            width: 100%;
+            height: 260px;
+            overflow: hidden;
+            margin-bottom: 18px;
+            border: 1px solid $cm-border;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+                filter: brightness(0.75);
+                transition: transform 0.5s ease;
+            }
+        }
+
+        &:hover {
+            .candle-making-image img {
+                transform: scale(1.06);
+            }
+        }
+
+        .candle-making-content {
+            h5 {
+                color: $cm-gold;
+                font-family: "Cinzel", serif;
+                font-size: 0.9rem;
+                margin-bottom: 10px;
+            }
+
+            h3 {
+                color: $cm-gold-light;
+                font-family: "Cinzel", serif;
+                font-size: 1rem;
+                line-height: 1.6;
+                margin-bottom: 12px;
+            }
+
+            p {
+                color: $cm-text;
+                font-family: "Cormorant Garamond", serif;
+                font-size: 1.05rem;
+                line-height: 1.7;
+            }
+        }
+    }
+
+    /* ======================================= */
+    /* SLIDER */
+    /* ======================================= */
+
+    .candle-making-slider-wrapper {
+        display: none;
+        position: relative;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+
+        .candle-making-swiper {
+            width: 100%;
+            overflow: visible;
+        }
+
+        .candle-making-arrows {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 28px;
+            margin-bottom: 0;
+
+            button {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                border: 1px solid $cm-border;
+                background: transparent;
+                color: $cm-gold;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                svg {
+                    font-size: 1.2rem;
+                }
+
+                &:hover {
+                    background: $cm-gold;
+                    color: #000;
+                }
+            }
+        }
+    }
+}
+
+/* ======================================= */
+/* TABLET */
+/* ======================================= */
+
+@media (max-width: 1024px) {
+    .candle-making-section {
+        padding: 60px 0px;
+
+        .candle-making-desktop {
+            display: none;
+        }
+
+        .candle-making-slider-wrapper {
+            display: block;
+        }
+
+        .candle-making-card {
+            .candle-making-image {
+                height: 240px;
+            }
+        }
+    }
+}
+
+/* ======================================= */
+/* MOBILE */
+/* ======================================= */
+
+@media (max-width: 768px) {
+    .candle-making-section {
+        padding: 50px 0px;
+
+        .candle-making-heading {
+            margin-bottom: 40px;
+            padding: 0 16px;
+
+            span {
+                font-size: 1.55rem;
+                line-height: 1.5;
+            }
+
+            .candle-making-ornament-line {
+                width: 40px;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+        }
+
+        .candle-making-slider-wrapper {
+            padding: 0 16px;
+
+            .candle-making-arrows {
+                margin-top: 20px;
+
+                button {
+                    width: 42px;
+                    height: 42px;
+                }
+            }
+        }
+
+        .candle-making-card {
+            .candle-making-image {
+                height: 190px;
+            }
+
+            .candle-making-content {
+                h5 {
+                    font-size: 0.8rem;
+                }
+
+                h3 {
+                    font-size: 0.85rem;
+                    line-height: 1.5;
+                }
+
+                p {
+                    font-size: 0.92rem;
+                    line-height: 1.6;
+                }
+            }
+        }
+    }
+}
+
+/* ======================================= */
+/* SMALL MOBILE */
+/* ======================================= */
+
+@media (max-width: 480px) {
+    .candle-making-section {
+        .candle-making-card {
+            .candle-making-image {
+                height: 170px;
+            }
+        }
+    }
+}

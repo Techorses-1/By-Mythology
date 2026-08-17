@@ -1,0 +1,822 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:wght@300;400;500;600&display=swap");
+
+/* ======================================= */
+/* VARIABLES */
+/* ======================================= */
+
+$cp-bg: #050505;
+$cp-gold: #c9a84c;
+$cp-gold-light: #e8c97a;
+$cp-text: #f5f0e8;
+$cp-border: rgba(#c9a84c, 0.16);
+
+/* ======================================= */
+/* ROOT */
+/* ======================================= */
+
+.collection-products {
+    width: 100%;
+    overflow-x: hidden;
+    padding: 26px 20px 40px;
+    background: $cp-bg;
+    border-top: 1px solid $cp-border;
+    border-bottom: 1px solid $cp-border;
+    position: relative;
+    box-sizing: border-box;
+
+    background-image:
+        radial-gradient(circle at top left, rgba(#c9a84c, 0.04), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(#c9a84c, 0.04), transparent 35%);
+
+    /* ======================================= */
+    /* TOPBAR */
+    /* ======================================= */
+
+    &__topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+    }
+
+    &__filters {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    &__filter-label {
+        color: $cp-gold-light;
+        font-family: "Cinzel", serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+    }
+
+    &__filters button,
+    &__sort button {
+        background: transparent;
+        border: 1px solid rgba(#c9a84c, 0.2);
+        color: $cp-gold-light;
+        padding: 10px 16px;
+        font-family: "Cinzel", serif;
+        font-size: 0.7rem;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: rgba(#c9a84c, 0.08);
+        }
+    }
+
+    &__topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+
+    &__sort {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        span {
+            color: $cp-gold-light;
+            font-family: "Cinzel", serif;
+            font-size: 0.7rem;
+        }
+    }
+
+    /* ======================================= */
+    /* PRODUCTS LIST VIEW - 3 COLUMN GRID */
+    /* ======================================= */
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        width: 100%;
+    }
+
+    &__item {
+        display: grid;
+        grid-template-columns: 350px 1fr 1fr;
+        gap: 50px;
+        background: rgba(0, 0, 0, 0.55);
+        border: 1px solid rgba(#c9a84c, 0.14);
+        transition: all 0.4s ease;
+        cursor: pointer;
+        overflow: hidden;
+        padding: 20px;
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: calc(50% + 200px);
+            height: calc(100% - 40px);
+            width: 1px;
+            background: linear-gradient(to bottom,
+                    transparent 0%,
+                    rgba(#c9a84c, 0.3) 10%,
+                    rgba(#c9a84c, 0.3) 90%,
+                    transparent 100%);
+            display: none;
+        }
+
+        &:hover {
+            transform: translateY(-5px);
+            border-color: rgba(#c9a84c, 0.3);
+
+            .collection-products__item-image img {
+                transform: scale(1.04);
+            }
+        }
+    }
+
+    /* COLUMN 1 - IMAGE */
+    &__col1 {
+        position: relative;
+    }
+
+    &__item-image {
+        position: relative;
+        width: 100%;
+        height: 350px;
+        overflow: hidden;
+        border-radius: 4px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+    }
+
+    /* COLUMN 2 - PRODUCT INFO */
+    &__col2 {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    &__item-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    &__item-title {
+        color: $cp-gold-light;
+        font-family: "Cinzel", serif;
+        font-size: 1.4rem;
+        line-height: 1.4;
+        margin: 0;
+        flex: 1;
+    }
+
+    /* Wishlist Button - Next to Product Name */
+    &__wishlist-btn {
+        background: transparent;
+        border: 1px solid rgba(#c9a84c, 0.22);
+        color: $cp-gold-light;
+        padding: 8px 16px;
+        font-family: "Cinzel", serif;
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+
+        svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        &:hover {
+            background: rgba(#c9a84c, 0.12);
+            transform: scale(1.02);
+        }
+
+        &--active {
+            color: #ff6b6b;
+            border-color: #ff6b6b;
+
+            svg {
+                color: #ff6b6b;
+            }
+        }
+    }
+
+    /* FRAGRANCE SECTION */
+    &__item-fragrance {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    &__item-fragrance-label {
+        color: $cp-gold;
+        font-family: "Cinzel", serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+    }
+
+    &__item-fragrance-value {
+        color: $cp-text;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    /* NOTES SECTION */
+    &__item-notes {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    &__item-notes-label {
+        color: $cp-gold;
+        font-family: "Cinzel", serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+    }
+
+    &__item-notes-list {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    &__item-note {
+        color: rgba($cp-text, 0.7);
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1rem;
+        font-style: italic;
+    }
+
+    /* DESCRIPTION */
+    &__item-description {
+        color: rgba($cp-text, 0.8);
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-top: 4px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    /* COLUMN 3 - NOTES TYPES, PRICING, BUTTON */
+    &__col3 {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    &__item-topnotes,
+    &__item-heartnotes,
+    &__item-basenotes {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    /* PRICING ROW */
+    &__pricing-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    &__final-price {
+        font-family: "Cinzel", serif;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: $cp-gold;
+    }
+
+    &__original-price {
+        font-family: "Raleway", sans-serif;
+        font-size: 1.05rem;
+        color: rgba($cp-text, 0.5);
+        text-decoration: line-through;
+    }
+
+    &__discount-percent {
+        font-family: "Cinzel", serif;
+        font-size: 1rem;
+        color: #ff6b6b;
+        font-weight: 600;
+    }
+
+    /* VIEW DETAILS BUTTON */
+    &__view-details-btn {
+        background: transparent;
+        border: 1px solid rgba(#c9a84c, 0.22);
+        color: $cp-gold-light;
+        padding: 10px 20px;
+        font-family: "Cinzel", serif;
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: fit-content;
+
+        span {
+            transition: transform 0.3s ease;
+        }
+
+        &:hover {
+            background: rgba(#c9a84c, 0.08);
+
+            span {
+                transform: translateX(4px);
+            }
+        }
+    }
+
+    /* ======================================= */
+    /* OFFER BADGE */
+    /* ======================================= */
+
+    &__offer-badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        z-index: 10;
+        background: $cp-gold;
+        color: #0d0b08;
+        font-family: "Cinzel", serif;
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        padding: 5px 10px;
+        text-transform: uppercase;
+    }
+
+    /* ======================================= */
+    /* PAGINATION */
+    /* ======================================= */
+
+    &__pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin-top: 40px;
+        flex-wrap: wrap;
+    }
+
+    &__pagination-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid rgba(#c9a84c, 0.25);
+        background: transparent;
+        color: $cp-gold-light;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        font-family: "Cinzel", serif;
+        font-size: 0.9rem;
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        &:hover:not(:disabled) {
+            background: rgba(#c9a84c, 0.12);
+            transform: scale(1.05);
+        }
+
+        &:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        &--active {
+            background: $cp-gold;
+            color: #0d0b08;
+            border-color: $cp-gold;
+        }
+    }
+
+    /* ======================================= */
+    /* LOADING STATE */
+    /* ======================================= */
+
+    &__loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
+        text-align: center;
+    }
+
+    &__spinner {
+        width: 40px;
+        height: 40px;
+        border: 2px solid rgba(201, 168, 76, 0.2);
+        border-top-color: #c9a84c;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-bottom: 16px;
+    }
+
+    &__wish-spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #c9a84c;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+    }
+}
+
+/* ======================================= */
+/* ANIMATIONS */
+/* ======================================= */
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ======================================= */
+/* DESKTOP ONLY - VERTICAL LINE BETWEEN COL2 AND COL3 */
+/* ======================================= */
+
+@media (min-width: 1025px) {
+    .collection-products__item::after {
+        display: block;
+    }
+}
+
+/* ======================================= */
+/* TABLET (769px - 1024px) */
+/* ======================================= */
+
+/* ======================================= */
+/* TABLET (769px - 1024px) - NOW SINGLE COLUMN LIKE MOBILE */
+/* ======================================= */
+
+@media (max-width: 1024px) and (min-width: 769px) {
+    .collection-products {
+        padding: 26px 20px 34px;
+
+        &__topbar {
+            gap: 16px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        &__topbar-right {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        &__filters {
+            width: 100%;
+            justify-content: flex-start;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            flex-wrap: nowrap;
+
+            &::-webkit-scrollbar {
+                height: 3px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: rgba(#c9a84c, 0.1);
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: $cp-gold;
+            }
+        }
+
+        &__filter-label {
+            font-size: 0.65rem;
+            flex-shrink: 0;
+        }
+
+        &__filters button,
+        &__sort button {
+            padding: 9px 14px;
+            font-size: 0.6rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        &__sort span {
+            font-size: 0.65rem;
+        }
+
+        &__item {
+            grid-template-columns: 1fr;
+            padding: 20px;
+            gap: 20px;
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        &__item-image {
+            height: 350px;
+        }
+
+        &__col2 {
+            order: 2;
+        }
+
+        &__col3 {
+            order: 3;
+        }
+
+        &__item-title {
+            font-size: 1.2rem;
+        }
+
+        &__wishlist-btn {
+            padding: 6px 14px;
+            font-size: 0.65rem;
+
+            svg {
+                width: 15px;
+                height: 15px;
+            }
+        }
+
+        &__item-fragrance-label,
+        &__item-notes-label {
+            font-size: 0.75rem;
+        }
+
+        &__item-fragrance-value {
+            font-size: 1rem;
+        }
+
+        &__item-note {
+            font-size: 0.9rem;
+        }
+
+        &__item-description {
+            font-size: 0.9rem;
+        }
+
+        &__final-price {
+            font-size: 1.15rem;
+        }
+
+        &__original-price {
+            font-size: 0.8rem;
+        }
+
+        &__discount-percent {
+            font-size: 0.75rem;
+        }
+
+        &__view-details-btn {
+            padding: 10px 20px;
+            font-size: 0.7rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        &__offer-badge {
+            font-size: 8px;
+            padding: 4px 8px;
+        }
+
+        &__pagination-btn {
+            width: 38px;
+            height: 38px;
+
+            svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+    }
+}
+
+/* ======================================= */
+/* MOBILE (≤ 768px) */
+/* ======================================= */
+
+@media (max-width: 768px) {
+    .collection-products {
+        padding: 22px 14px 30px;
+
+        &__topbar {
+            gap: 16px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        &__filters {
+            width: 100%;
+            gap: 8px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            justify-content: flex-start;
+
+            &::-webkit-scrollbar {
+                height: 3px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: rgba(#c9a84c, 0.1);
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: $cp-gold;
+                border-radius: 3px;
+            }
+        }
+
+        &__filter-label {
+            font-size: 0.6rem;
+            flex-shrink: 0;
+        }
+
+        &__filters button,
+        &__sort button {
+            padding: 9px 14px;
+            font-size: 0.58rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        &__topbar-right {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        &__sort span {
+            font-size: 0.6rem;
+        }
+
+        /* Mobile: Single column */
+        &__item {
+            grid-template-columns: 1fr;
+            padding: 16px;
+            gap: 16px;
+        }
+
+        &__item-image {
+            height: 320px;
+            // object-fit: cover; 
+
+            
+        }
+
+
+
+        &__col2 {
+            order: 2;
+        }
+
+        &__col3 {
+            order: 3;
+        }
+
+        &__item-title {
+            font-size: 1.1rem;
+        }
+
+        &__wishlist-btn {
+            padding: 6px 12px;
+            font-size: 0.6rem;
+
+            svg {
+                width: 14px;
+                height: 14px;
+            }
+        }
+
+        &__item-fragrance-label,
+        &__item-notes-label {
+            font-size: 0.7rem;
+        }
+
+        &__item-fragrance-value {
+            font-size: 0.9rem;
+        }
+
+        &__item-note {
+            font-size: 0.8rem;
+        }
+
+        &__item-description {
+            font-size: 0.85rem;
+        }
+
+        &__final-price {
+            font-size: 1.2rem;
+        }
+
+        &__original-price {
+            font-size: 0.85rem;
+        }
+
+        &__discount-percent {
+            font-size: 0.8rem;
+        }
+
+        &__view-details-btn {
+            padding: 10px 20px;
+            font-size: 0.65rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        &__offer-badge {
+            font-size: 8px;
+            padding: 4px 8px;
+        }
+
+        &__pagination-btn {
+            width: 36px;
+            height: 36px;
+
+            svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+    }
+}
+
+/* ======================================= */
+/* SMALL MOBILE (≤ 480px) */
+/* ======================================= */
+
+@media (max-width: 480px) {
+    .collection-products {
+
+        &__item-title {
+            font-size: 1rem;
+        }
+
+        &__wishlist-btn {
+            padding: 5px 10px;
+            font-size: 0.55rem;
+        }
+
+        &__item-fragrance-value {
+            font-size: 0.85rem;
+        }
+
+        &__item-note {
+            font-size: 0.75rem;
+        }
+
+        &__item-description {
+            font-size: 0.8rem;
+        }
+
+        &__pagination-btn {
+            width: 32px;
+            height: 32px;
+
+            svg {
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+}
