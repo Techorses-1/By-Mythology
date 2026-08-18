@@ -65,7 +65,7 @@ app.use('/newsletter', newsletterRoutes);
 
 // Test route
 app.get("/", (req, res) => {
-  res.send("Bymyhology new Backend UPDATED Running NEW AND FINALLY DONE...");
+  res.send("Bymythology Backend UPDATED Running NEW AND FINALLY DONE...");
 });
 
 // Error handling middleware
