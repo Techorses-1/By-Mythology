@@ -113,6 +113,7 @@ export default function JourneyPage() {
     const wrapRef = useRef(null);
     const pinRef = useRef(null);
     const trackRef = useRef(null);
+    const hudRef = useRef(null);
 
     useEffect(() => {
         let ctx;
@@ -166,6 +167,12 @@ export default function JourneyPage() {
                         end: () => `+=${track.scrollWidth - window.innerWidth - 82}`,
                         invalidateOnRefresh: true,
                         anticipatePin: 1,
+                        // Show the HUD counter only while the pinned slider is active,
+                        // hide it before (hero) and after (end section) it.
+                        onEnter: () => gsap.to(hudRef.current, { opacity: 1, duration: 0.35, ease: 'power2.out' }),
+                        onLeave: () => gsap.to(hudRef.current, { opacity: 0, duration: 0.35, ease: 'power2.out' }),
+                        onEnterBack: () => gsap.to(hudRef.current, { opacity: 1, duration: 0.35, ease: 'power2.out' }),
+                        onLeaveBack: () => gsap.to(hudRef.current, { opacity: 0, duration: 0.35, ease: 'power2.out' }),
                     },
                 });
 
@@ -286,7 +293,7 @@ export default function JourneyPage() {
 
             <div className="jrny-prog-bar"><div className="jrny-prog-fill" /></div>
 
-            <div className="jrny-hud">
+            <div className="jrny-hud" ref={hudRef}>
                 <span className="jrny-count-cur">01</span>
                 <span className="jrny-count-sep">/</span>
                 <span className="jrny-count-tot">08</span>

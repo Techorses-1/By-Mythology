@@ -55,6 +55,9 @@ $gold-dim: rgba(201, 168, 76, 0.18);
     align-items: baseline;
     gap: 3px;
     pointer-events: none;
+    // Hidden by default (hero section); GSAP toggles opacity to 1 only
+    // while the horizontal pinned slider section is active.
+    opacity: 0;
 
     @media (max-width: 600px) {
         bottom: 18px;
@@ -94,7 +97,7 @@ $gold-dim: rgba(201, 168, 76, 0.18);
 .jrny-ptcl {
     position: absolute;
     font-size: 0.5rem;
-    color: rgba(201, 168, 76, .15);
+    color: rgba(201, 168, 76, 1);
     user-select: none;
 }
 
@@ -110,9 +113,9 @@ $gold-dim: rgba(201, 168, 76, 0.18);
     justify-content: center;
     text-align: center;
     overflow: hidden;
-    padding: 80px 32px; 
+    padding: 80px 32px;
 
-      @media (max-width: 768px) {
+    @media (max-width: 768px) {
         min-height: 70vh;
     }
 
@@ -142,7 +145,7 @@ $gold-dim: rgba(201, 168, 76, 0.18);
     width: 700px;
     height: 700px;
     color: $gold !important;
-    opacity: .2;
+    opacity: .40;
 
     @media (max-width: 768px) {
         width: 420px;
@@ -205,9 +208,9 @@ $gold-dim: rgba(201, 168, 76, 0.18);
     font-weight: 900;
     line-height: .92;
     letter-spacing: -.01em;
-    margin-bottom: 40px; 
+    margin-bottom: 40px;
 
- 
+
 
 
 }
@@ -223,8 +226,8 @@ $gold-dim: rgba(201, 168, 76, 0.18);
     color: $text;
 
 
-     @media (max-width: 768px) {
-       
+    @media (max-width: 768px) {
+
         font-size: 50px !important;
     }
 
@@ -241,6 +244,7 @@ $gold-dim: rgba(201, 168, 76, 0.18);
     background: linear-gradient(90deg, transparent, $gold, transparent);
     margin: 0 auto 28px;
     transform-origin: center;
+    display: none;
 }
 
 .jrny-hero-sub {
@@ -411,8 +415,8 @@ $gold-dim: rgba(201, 168, 76, 0.18);
     align-items: flex-end;
 
 
-     @media (max-width: 768px) {
-         height:70vh;
+    @media (max-width: 768px) {
+        height: 70vh;
     }
 }
 
@@ -653,10 +657,10 @@ $gold-dim: rgba(201, 168, 76, 0.18);
     background: radial-gradient(ellipse at 50% 0%, rgba(201, 168, 76, .04) 0%, transparent 55%);
 
 
-     @media (max-width: 768px) {
-         min-height: 40vh;
-         height: 50vh;
-          padding: 50px 32px !important;
+    @media (max-width: 768px) {
+        min-height: 40vh;
+        height: 50vh;
+        padding: 50px 32px !important;
     }
 }
 
@@ -686,10 +690,10 @@ $gold-dim: rgba(201, 168, 76, 0.18);
     z-index: 1;
     margin-bottom: 28px;
     animation: end-pulse 3.5s ease-in-out infinite;
-    filter: drop-shadow(0 0 20px rgba(201, 168, 76, .2));
+    filter: drop-shadow(0 0 20px rgba(201, 168, 76, .50));
 
-     @media (max-width: 768px) {
-         font-size: 2.5rem;
+    @media (max-width: 768px) {
+        font-size: 2.5rem;
     }
 }
 
@@ -771,6 +775,3 @@ $gold-dim: rgba(201, 168, 76, 0.18);
     letter-spacing: .2em;
     color: $text-3;
 }
-
-
-

@@ -1,4 +1,4 @@
-// ProductPage.jsx - COMPLETE FIXED VERSION
+// ProductPage.jsx - COMPLETE FIXED VERSION (3 Columns in Premium Section)
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -786,35 +786,10 @@ function ProductPage() {
         </div>
       </div>
 
-      {/* PREMIUM SECTION: Fragrance | Notes | Description | Image */}
+      {/* PREMIUM SECTION: Notes | Description | Image (NO FRAGRANCE COLUMN) */}
       <div className="premium-details-section">
         <div className="details-grid">
-          {/* Fragrance Column - BOTTOM SELECTION (Independent, updates notes only) */}
-          <div className="details-col fragrance-col">
-            <div className="col-header">
-              <span className="gold-accent"></span>
-              <h3>Fragrances</h3>
-            </div>
-            <div className="fragrance-sidebar-list">
-              {availableFragrances.map((fragrance, idx) => {
-                const isSelected = selectedFragranceBottom === fragrance;
-                const fragranceStock = fragranceInventory[fragrance];
-                const isOutOfStock = fragranceStock?.status === 'out-of-stock';
-                return (
-                  <div
-                    key={idx}
-                    className={`sidebar-fragrance-item ${isSelected ? 'selected' : ''}`}
-                    onClick={() => handleBottomFragranceSelect(fragrance)}
-                  >
-                    <span className="fragrance-name-sidebar">{fragrance}</span>
-                    {isSelected && <span className="selected-gold-dot"></span>}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Notes Column - Updates based on selected fragrance (from either selection) */}
+          {/* Notes Column - Updates based on selected fragrance */}
           <div className="details-col notes-col">
             <div className="col-header">
               <span className="gold-accent"></span>
@@ -883,12 +858,11 @@ function ProductPage() {
 
           {/* Image Column */}
           <div className="details-col image-col">
-            <div className="col-header">
+            <div className="col-header" style={{ display: 'none' }}>
               <span className="gold-accent"></span>
               <h3>Fragrance Preview</h3>
             </div>
             <div className="premium-image-container">
-              {/* Use coverImage first, fallback to first gallery image */}
               {(product.coverImage || images[0]) ? (
                 <img
                   src={product.coverImage || images[0]}
