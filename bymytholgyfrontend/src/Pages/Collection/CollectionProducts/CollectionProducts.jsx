@@ -200,13 +200,13 @@ const CollectionProducts = () => {
         return description.substring(0, maxLength) + "...";
     };
 
-    // Get first fragrance name
+    // Get first fragrance name - KEPT for wishlist logic only
     const getFirstFragranceName = (product) => {
         const fragrance = product.colors?.[0]?.fragrances?.[0];
         return fragrance?.name || null;
     };
 
-    // Get ALL notes from notes array only
+    // Get ALL notes from notes array only - KEPT but NOT displayed
     const getAllFragranceNotes = (product) => {
         const fragrance = product.colors?.[0]?.fragrances?.[0];
         if (!fragrance) return [];
@@ -216,7 +216,7 @@ const CollectionProducts = () => {
         return [];
     };
 
-    // Get TOP notes
+    // Get TOP notes - KEPT but NOT displayed
     const getTopNotes = (product) => {
         const fragrance = product.colors?.[0]?.fragrances?.[0];
         if (!fragrance) return [];
@@ -226,7 +226,7 @@ const CollectionProducts = () => {
         return [];
     };
 
-    // Get HEART notes
+    // Get HEART notes - KEPT but NOT displayed
     const getHeartNotes = (product) => {
         const fragrance = product.colors?.[0]?.fragrances?.[0];
         if (!fragrance) return [];
@@ -236,7 +236,7 @@ const CollectionProducts = () => {
         return [];
     };
 
-    // Get BASE notes
+    // Get BASE notes - KEPT but NOT displayed
     const getBaseNotes = (product) => {
         const fragrance = product.colors?.[0]?.fragrances?.[0];
         if (!fragrance) return [];
@@ -369,20 +369,20 @@ const CollectionProducts = () => {
                                         ) : (
                                             <FaRegHeart />
                                         )}
-                                        <span>WISHLIST</span> 
+                                        <span>WISHLIST</span>
                                     </button>
                                 </div>
 
-                                {/* FRAGRANCE NAME */}
-                                {firstFragrance && (
+                                {/* FRAGRANCE NAME - HIDDEN */}
+                                {/* {firstFragrance && (
                                     <div className="collection-products__item-fragrance">
                                         <span className="collection-products__item-fragrance-label">FRAGRANCE:</span>
                                         <span className="collection-products__item-fragrance-value">{firstFragrance}</span>
                                     </div>
-                                )}
+                                )} */}
 
-                                {/* NOTES - Only from notes array */}
-                                {allNotes.length > 0 && (
+                                {/* NOTES - HIDDEN */}
+                                {/* {allNotes.length > 0 && (
                                     <div className="collection-products__item-notes">
                                         <span className="collection-products__item-notes-label">NOTES:</span>
                                         <div className="collection-products__item-notes-list">
@@ -394,7 +394,7 @@ const CollectionProducts = () => {
                                             ))}
                                         </div>
                                     </div>
-                                )}
+                                )} */}
 
                                 {/* DESCRIPTION */}
                                 <p className="collection-products__item-description">
@@ -404,8 +404,8 @@ const CollectionProducts = () => {
 
                             {/* COLUMN 3 - TOP NOTES, HEART NOTES, BASE NOTES, PRICING, BUTTON */}
                             <div className="collection-products__col3">
-                                {/* TOP NOTES */}
-                                {topNotes.length > 0 && (
+                                {/* TOP NOTES - HIDDEN */}
+                                {/* {topNotes.length > 0 && (
                                     <div className="collection-products__item-topnotes">
                                         <span className="collection-products__item-notes-label">TOP NOTES:</span>
                                         <div className="collection-products__item-notes-list">
@@ -417,10 +417,10 @@ const CollectionProducts = () => {
                                             ))}
                                         </div>
                                     </div>
-                                )}
+                                )} */}
 
-                                {/* HEART NOTES */}
-                                {heartNotes.length > 0 && (
+                                {/* HEART NOTES - HIDDEN */}
+                                {/* {heartNotes.length > 0 && (
                                     <div className="collection-products__item-heartnotes">
                                         <span className="collection-products__item-notes-label">HEART NOTES:</span>
                                         <div className="collection-products__item-notes-list">
@@ -432,10 +432,10 @@ const CollectionProducts = () => {
                                             ))}
                                         </div>
                                     </div>
-                                )}
+                                )} */}
 
-                                {/* BASE NOTES */}
-                                {baseNotes.length > 0 && (
+                                {/* BASE NOTES - HIDDEN */}
+                                {/* {baseNotes.length > 0 && (
                                     <div className="collection-products__item-basenotes">
                                         <span className="collection-products__item-notes-label">BASE NOTES:</span>
                                         <div className="collection-products__item-notes-list">
@@ -447,7 +447,7 @@ const CollectionProducts = () => {
                                             ))}
                                         </div>
                                     </div>
-                                )}
+                                )} */}
 
                                 {/* PRICING */}
                                 <div className="collection-products__pricing-row">

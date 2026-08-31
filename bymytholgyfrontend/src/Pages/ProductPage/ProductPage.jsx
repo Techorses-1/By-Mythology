@@ -1,4 +1,4 @@
-// ProductPage.jsx - COMPLETE FIXED VERSION (3 Columns in Premium Section)
+// ProductPage.jsx - NO FRAGRANCE SELECTION SHOWN (Auto-select default)
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -33,9 +33,8 @@ function ProductPage() {
   const [offers, setOffers] = useState([]);
   const [currentOffer, setCurrentOffer] = useState(null);
 
-  // Selection states - SEPARATE for top and bottom
-  const [selectedFragranceTop, setSelectedFragranceTop] = useState(null);
-  const [selectedFragranceBottom, setSelectedFragranceBottom] = useState(null);
+  // Selection states - Only need 1 fragrance (auto-selected)
+  const [selectedFragrance, setSelectedFragrance] = useState(null);
   const [selectedFragranceData, setSelectedFragranceData] = useState(null);
   const [selectedModel, setSelectedModel] = useState(null);
   const [selectedModelFragrance, setSelectedModelFragrance] = useState(null);
@@ -101,17 +100,22 @@ function ProductPage() {
         const defaultColor = productData.colors[0];
         const fragrances = defaultColor.fragrances || [];
 
+        // Auto-select first fragrance OR pre-selected one
+        let selectedFrag = null;
+        let fragranceObj = null;
+
         if (preSelectedFragrance && fragrances.some(f => f.name === preSelectedFragrance)) {
-          setSelectedFragranceTop(preSelectedFragrance);
-          setSelectedFragranceBottom(preSelectedFragrance);
-          const fragranceObj = defaultColor.fragrances.find(f => f.name === preSelectedFragrance);
-          setSelectedFragranceData(fragranceObj);
-          checkAndSetOffer(productData, defaultColor, null, preSelectedFragrance, offersRes.data);
+          selectedFrag = preSelectedFragrance;
+          fragranceObj = defaultColor.fragrances.find(f => f.name === preSelectedFragrance);
         } else if (fragrances.length > 0) {
-          setSelectedFragranceTop(fragrances[0].name);
-          setSelectedFragranceBottom(fragrances[0].name);
-          setSelectedFragranceData(fragrances[0]);
-          checkAndSetOffer(productData, defaultColor, null, fragrances[0].name, offersRes.data);
+          selectedFrag = fragrances[0].name;
+          fragranceObj = fragrances[0];
+        }
+
+        if (selectedFrag && fragranceObj) {
+          setSelectedFragrance(selectedFrag);
+          setSelectedFragranceData(fragranceObj);
+          checkAndSetOffer(productData, defaultColor, null, selectedFrag, offersRes.data);
         }
 
         if (defaultColor.images && defaultColor.images.length > 0) {
@@ -148,17 +152,22 @@ function ProductPage() {
         const defaultColor = productData.colors[0];
         const fragrances = defaultColor.fragrances || [];
 
+        // Auto-select first fragrance OR pre-selected one
+        let selectedFrag = null;
+        let fragranceObj = null;
+
         if (preSelectedFragrance && fragrances.some(f => f.name === preSelectedFragrance)) {
-          setSelectedFragranceTop(preSelectedFragrance);
-          setSelectedFragranceBottom(preSelectedFragrance);
-          const fragranceObj = defaultColor.fragrances.find(f => f.name === preSelectedFragrance);
-          setSelectedFragranceData(fragranceObj);
-          checkAndSetOffer(productData, defaultColor, null, preSelectedFragrance, offersRes.data);
+          selectedFrag = preSelectedFragrance;
+          fragranceObj = defaultColor.fragrances.find(f => f.name === preSelectedFragrance);
         } else if (fragrances.length > 0) {
-          setSelectedFragranceTop(fragrances[0].name);
-          setSelectedFragranceBottom(fragrances[0].name);
-          setSelectedFragranceData(fragrances[0]);
-          checkAndSetOffer(productData, defaultColor, null, fragrances[0].name, offersRes.data);
+          selectedFrag = fragrances[0].name;
+          fragranceObj = fragrances[0];
+        }
+
+        if (selectedFrag && fragranceObj) {
+          setSelectedFragrance(selectedFrag);
+          setSelectedFragranceData(fragranceObj);
+          checkAndSetOffer(productData, defaultColor, null, selectedFrag, offersRes.data);
         }
 
         if (defaultColor.images && defaultColor.images.length > 0) {
@@ -248,7 +257,7 @@ function ProductPage() {
 
       setFragranceInventory(inventoryMap);
 
-      const currentFragrance = product.type === "simple" ? selectedFragranceTop : selectedModelFragrance;
+      const currentFragrance = product.type === "simple" ? selectedFragrance : selectedModelFragrance;
       if (currentFragrance && inventoryMap[currentFragrance]) {
         setCurrentFragranceInventory(inventoryMap[currentFragrance]);
       }
@@ -262,11 +271,11 @@ function ProductPage() {
   }, [product]);
 
   useEffect(() => {
-    const currentFragrance = product?.type === "simple" ? selectedFragranceTop : selectedModelFragrance;
+    const currentFragrance = product?.type === "simple" ? selectedFragrance : selectedModelFragrance;
     if (currentFragrance && fragranceInventory[currentFragrance]) {
       setCurrentFragranceInventory(fragranceInventory[currentFragrance]);
     }
-  }, [selectedFragranceTop, selectedModelFragrance, fragranceInventory, product]);
+  }, [selectedFragrance, selectedModelFragrance, fragranceInventory, product]);
 
   useEffect(() => {
     if (currentFragranceInventory.status === 'in-stock' || currentFragranceInventory.status === 'low-stock') {
@@ -314,7 +323,7 @@ function ProductPage() {
 
       if (!token || !userId || !product?.productId) return;
 
-      const currentFragrance = product.type === "simple" ? selectedFragranceTop : selectedModelFragrance;
+      const currentFragrance = product.type === "simple" ? selectedFragrance : selectedModelFragrance;
       if (!currentFragrance) return;
 
       try {
@@ -336,7 +345,7 @@ function ProductPage() {
     };
 
     checkWishlistStatus();
-  }, [product?.productId, selectedFragranceTop, selectedModelFragrance]);
+  }, [product?.productId, selectedFragrance, selectedModelFragrance]);
 
   // ===== HELPER FUNCTIONS =====
   const getAvailableFragrances = () => {
@@ -414,30 +423,8 @@ function ProductPage() {
     return specs;
   };
 
-  // Handle top fragrance selection (affects cart/wishlist/price)
-  const handleTopFragranceSelect = (fragranceName) => {
-    setSelectedFragranceTop(fragranceName);
-    const defaultColor = product.colors?.[0];
-    if (defaultColor) {
-      const fragranceObj = defaultColor.fragrances?.find(f => f.name === fragranceName);
-      setSelectedFragranceData(fragranceObj);
-      checkAndSetOffer(product, defaultColor, null, fragranceName, offers);
-    }
-  };
-
-  // Handle bottom fragrance selection (updates notes only, NO cart/price change)
-  const handleBottomFragranceSelect = (fragranceName) => {
-    setSelectedFragranceBottom(fragranceName);
-    const defaultColor = product.colors?.[0];
-    if (defaultColor) {
-      const fragranceObj = defaultColor.fragrances?.find(f => f.name === fragranceName);
-      setSelectedFragranceData(fragranceObj);
-      // DO NOT update offer or price - only notes
-    }
-  };
-
   const canPurchaseProduct = () => {
-    const currentFragrance = product?.type === "simple" ? selectedFragranceTop : selectedModelFragrance;
+    const currentFragrance = product?.type === "simple" ? selectedFragrance : selectedModelFragrance;
     if (!currentFragrance) return false;
     const fragranceStock = fragranceInventory[currentFragrance];
     if (!fragranceStock || fragranceStock.status === 'checking') return true;
@@ -462,7 +449,7 @@ function ProductPage() {
       return;
     }
 
-    const currentFragrance = product.type === "simple" ? selectedFragranceTop : selectedModelFragrance;
+    const currentFragrance = product.type === "simple" ? selectedFragrance : selectedModelFragrance;
     const defaultColor = product.colors?.[0];
 
     const selectedColorData = defaultColor ? {
@@ -510,7 +497,7 @@ function ProductPage() {
   };
 
   const handleAddToCart = async () => {
-    if (!selectedFragranceTop && !selectedModelFragrance) return;
+    if (!selectedFragrance && !selectedModelFragrance) return;
     if (!canPurchaseProduct()) return;
 
     const token = localStorage.getItem("token");
@@ -526,7 +513,7 @@ function ProductPage() {
       userId, productId: product.productId, productName: product.productName,
       quantity, unitPrice: getOriginalPrice(), finalPrice: offerPrice, totalPrice: getTotalPrice(),
       selectedColor: defaultColor,
-      selectedFragrance: product.type === "simple" ? selectedFragranceTop : selectedModelFragrance,
+      selectedFragrance: product.type === "simple" ? selectedFragrance : selectedModelFragrance,
       hasOffer, offerDetails: hasOffer ? {
         offerId: currentOffer._id, offerPercentage: currentOffer.offerPercentage,
         offerLabel: currentOffer.offerLabel, originalPrice: basePrice, offerPrice, savedAmount: (basePrice - offerPrice) * quantity
@@ -545,7 +532,7 @@ function ProductPage() {
   };
 
   const handleBuyNow = () => {
-    if (!selectedFragranceTop && !selectedModelFragrance) return;
+    if (!selectedFragrance && !selectedModelFragrance) return;
     if (!canPurchaseProduct()) return;
 
     const token = localStorage.getItem("token");
@@ -568,7 +555,7 @@ function ProductPage() {
       userId, productId: product.productId, productName: product.productName,
       quantity, unitPrice: originalPrice, finalPrice: offerPrice, totalPrice: subtotal,
       selectedColor: defaultColor,
-      selectedFragrance: product.type === "simple" ? selectedFragranceTop : selectedModelFragrance,
+      selectedFragrance: product.type === "simple" ? selectedFragrance : selectedModelFragrance,
       hasOffer, offerDetails: hasOffer ? {
         offerId: currentOffer._id, offerPercentage: currentOffer.offerPercentage,
         offerLabel: currentOffer.offerLabel, originalPrice: basePrice, offerPrice, savedAmount: totalSavings
@@ -660,38 +647,17 @@ function ProductPage() {
             <div className="reviews-count">{reviewsStats.totalReviews} Review{reviewsStats.totalReviews !== 1 ? 's' : ''}</div>
           </div>
 
-          {/* TOP FRAGRANCE SELECTION - Affects cart/price/wishlist */}
-          {availableFragrances.length > 0 && (
-            <div className="fragrance-selection-section">
-              <h3>Select Fragrance</h3>
-              <div className="fragrance-grid">
-                {availableFragrances.map((fragrance, index) => {
-                  const isSelected = selectedFragranceTop === fragrance;
-                  const fragranceStock = fragranceInventory[fragrance];
-                  const isOutOfStock = fragranceStock?.status === 'out-of-stock';
-                  return (
-                    <div
-                      key={index}
-                      className={`fragrance-box ${isSelected ? 'selected' : ''} ${isOutOfStock ? 'out-of-stock' : ''}`}
-                      onClick={() => handleTopFragranceSelect(fragrance)}
-                    >
-                      <div className="fragrance-name">{fragrance}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+          {/* NO FRAGRANCE SELECTION SHOWN TO USER - Auto-selected by default */}
 
           <div className="quantity-section">
             <h3>Quantity</h3>
             <div className="quantity-controls">
-              <button className="quantity-btn minus" onClick={() => handleQuantityChange(-1)} disabled={quantity <= 1 || !selectedFragranceTop || currentFragranceInventory.status === 'out-of-stock'}>−</button>
+              <button className="quantity-btn minus" onClick={() => handleQuantityChange(-1)} disabled={quantity <= 1 || !selectedFragrance || currentFragranceInventory.status === 'out-of-stock'}>−</button>
               <input type="number" min="1" max={maxQuantity} value={quantity} onChange={(e) => {
                 const val = parseInt(e.target.value) || 1;
                 if (val >= 1 && val <= maxQuantity && currentFragranceInventory.status !== 'out-of-stock') setQuantity(val);
-              }} className="quantity-input" disabled={!selectedFragranceTop || currentFragranceInventory.status === 'out-of-stock'} />
-              <button className="quantity-btn plus" onClick={() => handleQuantityChange(1)} disabled={quantity >= maxQuantity || !selectedFragranceTop || currentFragranceInventory.status === 'out-of-stock'}>+</button>
+              }} className="quantity-input" disabled={!selectedFragrance || currentFragranceInventory.status === 'out-of-stock'} />
+              <button className="quantity-btn plus" onClick={() => handleQuantityChange(1)} disabled={quantity >= maxQuantity || !selectedFragrance || currentFragranceInventory.status === 'out-of-stock'}>+</button>
               <div className="total-price">
                 <span className="total-label">Total:</span>
                 <span className="total-amount">₹{formatCurrency(getTotalPrice())}</span>
@@ -700,11 +666,11 @@ function ProductPage() {
           </div>
 
           <div className="action-buttons-section">
-            <button className={`add-to-cart-btn ${!canPurchaseProduct() || !selectedFragranceTop ? 'disabled' : ''}`} onClick={handleAddToCart} disabled={!canPurchaseProduct() || !selectedFragranceTop}>
-              {!selectedFragranceTop ? 'Select Fragrance First' : currentFragranceInventory.status === 'out-of-stock' ? 'Out of Stock' : 'Add to Cart'}
+            <button className={`add-to-cart-btn ${!canPurchaseProduct() || !selectedFragrance ? 'disabled' : ''}`} onClick={handleAddToCart} disabled={!canPurchaseProduct() || !selectedFragrance}>
+              {!selectedFragrance ? 'Select Fragrance First' : currentFragranceInventory.status === 'out-of-stock' ? 'Out of Stock' : 'Add to Cart'}
             </button>
-            <button className={`buy-now-btn ${!canPurchaseProduct() || !selectedFragranceTop ? 'disabled' : ''}`} onClick={handleBuyNow} disabled={!canPurchaseProduct() || !selectedFragranceTop}>
-              {!selectedFragranceTop ? 'Select Fragrance First' : currentFragranceInventory.status === 'out-of-stock' ? 'Out of Stock' : 'Buy Now'}
+            <button className={`buy-now-btn ${!canPurchaseProduct() || !selectedFragrance ? 'disabled' : ''}`} onClick={handleBuyNow} disabled={!canPurchaseProduct() || !selectedFragrance}>
+              {!selectedFragrance ? 'Select Fragrance First' : currentFragranceInventory.status === 'out-of-stock' ? 'Out of Stock' : 'Buy Now'}
             </button>
           </div>
         </div>
@@ -882,8 +848,6 @@ function ProductPage() {
       <section className="related-products-section">
         <RelatedProducts productId={product.productId} currentFragrances={getAvailableFragrances()} categoryId={product.categoryId} />
       </section>
-
-
 
       <>
         <ReviewsSlider />

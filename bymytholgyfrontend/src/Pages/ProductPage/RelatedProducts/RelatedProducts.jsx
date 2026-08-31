@@ -232,6 +232,7 @@ const RelatedProducts = ({
     };
   };
 
+  // UPDATED: toggleWishlist with NO sidebar auto-open
   const toggleWishlist = async (product, e) => {
     e.stopPropagation();
 
@@ -292,9 +293,10 @@ const RelatedProducts = ({
         );
         toast.success("Added to wishlist!");
 
-        if (window.innerWidth > 768) {
-          setShowWishlistSidebar(true);
-        }
+        // REMOVED: Sidebar auto-open
+        // if (window.innerWidth > 768) {
+        //   setShowWishlistSidebar(true);
+        // }
       }
 
       setTimeout(() => fetchUserWishlist(), 500);
@@ -375,9 +377,9 @@ const RelatedProducts = ({
 
       <section className="related-products-showcase">
         <div className="section-header">
-         
+
           <h2 className="section-title">You Might Also Like</h2>
-           <div className="section-ornament">
+          <div className="section-ornament">
             <span className="section-ornament-line" />
             <svg className="section-ornament-diamond" viewBox="0 0 20 10">
               <polygon points="10,0 20,5 10,10 0,5" fill="#c9a84c" />

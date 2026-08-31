@@ -982,12 +982,13 @@ const AdminOrders = () => {
                       </div>
 
                       <div className="item-details-section">
-                        {item.fragrance && item.fragrance !== "Default" && (
+                        {/* FRAGRANCE HIDDEN - Commented out */}
+                        {/* {item.fragrance && item.fragrance !== "Default" && (
                           <div className="item-attribute-section">
                             <span className="attribute-label-section">Fragrance:</span>
                             <span className="attribute-value-section">{item.fragrance}</span>
                           </div>
-                        )}
+                        )} */}
                         {item.colorName && item.colorName !== "Default" && (
                           <div className="item-attribute-section">
                             <span className="attribute-label-section">Color:</span>

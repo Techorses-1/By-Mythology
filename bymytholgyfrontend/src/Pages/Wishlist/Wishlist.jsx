@@ -92,11 +92,12 @@ const WishlistProductCard = ({ item, removingItem, removeFromWishlist, handlePro
       <div className="wishlist-product-info">
         <h3 className="wishlist-product-name">{item.productName}</h3>
 
-        {item.selectedFragrance && (
+        {/* FRAGRANCE HIDDEN - Commented out */}
+        {/* {item.selectedFragrance && (
           <p className="wishlist-product-fragrance">
             Fragrance : {item.selectedFragrance}
           </p>
-        )}
+        )} */}
 
         <div className="wishlist-product-prices">
           <span className="wishlist-current-price">
@@ -353,48 +354,68 @@ function Wishlist() {
   };
 
   // LAYOUT LOGIC: 
-// Desktop (>1024px) - Summary in column 5 of first row
-// Tablet & Mobile (≤1024px) - Summary after all products
-const renderProductsWithSummary = () => {
-  const items = [...wishlistItems];
-  const isDesktop = window.innerWidth > 1024;
-  
-  if (isDesktop) {
-    // DESKTOP VIEW: 5 columns grid, Summary in column 5 of first row
-    const firstRowProducts = items.slice(0, 4);
-    const remainingProducts = items.slice(4);
-    const emptySlots = 4 - firstRowProducts.length;
-    
-    return (
-      <>
-        {/* First Row: Products (col 1-4) + Summary (col 5) */}
-        <div className="wishlist-products-grid">
-          {firstRowProducts.map((item) => (
-            <WishlistProductCard
-              key={`${item.wishlistId}-${item.selectedFragrance}`}
-              item={item}
-              removingItem={removingItem}
-              removeFromWishlist={removeFromWishlist}
-              handleProductClick={handleProductClick}
-              productImages={productImages}
-            />
-          ))}
-          
-          {/* Empty placeholders if less than 4 products */}
-          {[...Array(emptySlots)].map((_, idx) => (
-            <div key={`empty-${idx}`} className="wishlist-empty-placeholder"></div>
-          ))}
-          
-          {/* Summary card in column 5 */}
-          <div className="wishlist-summary-col">
-            {renderSummaryCard(summary)}
-          </div>
-        </div>
-        
-        {/* Remaining products in new rows */}
-        {remainingProducts.length > 0 && (
+  // Desktop (>1024px) - Summary in column 5 of first row
+  // Tablet & Mobile (≤1024px) - Summary after all products
+  const renderProductsWithSummary = () => {
+    const items = [...wishlistItems];
+    const isDesktop = window.innerWidth > 1024;
+
+    if (isDesktop) {
+      // DESKTOP VIEW: 5 columns grid, Summary in column 5 of first row
+      const firstRowProducts = items.slice(0, 4);
+      const remainingProducts = items.slice(4);
+      const emptySlots = 4 - firstRowProducts.length;
+
+      return (
+        <>
+          {/* First Row: Products (col 1-4) + Summary (col 5) */}
           <div className="wishlist-products-grid">
-            {remainingProducts.map((item) => (
+            {firstRowProducts.map((item) => (
+              <WishlistProductCard
+                key={`${item.wishlistId}-${item.selectedFragrance}`}
+                item={item}
+                removingItem={removingItem}
+                removeFromWishlist={removeFromWishlist}
+                handleProductClick={handleProductClick}
+                productImages={productImages}
+              />
+            ))}
+
+            {/* Empty placeholders if less than 4 products */}
+            {[...Array(emptySlots)].map((_, idx) => (
+              <div key={`empty-${idx}`} className="wishlist-empty-placeholder"></div>
+            ))}
+
+            {/* Summary card in column 5 */}
+            <div className="wishlist-summary-col">
+              {renderSummaryCard(summary)}
+            </div>
+          </div>
+
+          {/* Remaining products in new rows */}
+          {remainingProducts.length > 0 && (
+            <div className="wishlist-products-grid">
+              {remainingProducts.map((item) => (
+                <WishlistProductCard
+                  key={`${item.wishlistId}-${item.selectedFragrance}`}
+                  item={item}
+                  removingItem={removingItem}
+                  removeFromWishlist={removeFromWishlist}
+                  handleProductClick={handleProductClick}
+                  productImages={productImages}
+                />
+              ))}
+            </div>
+          )}
+        </>
+      );
+    } else {
+      // TABLET & MOBILE VIEW: Summary card after all products (simple stack)
+      return (
+        <>
+          {/* All products in grid */}
+          <div className="wishlist-products-grid">
+            {items.map((item) => (
               <WishlistProductCard
                 key={`${item.wishlistId}-${item.selectedFragrance}`}
                 item={item}
@@ -405,35 +426,15 @@ const renderProductsWithSummary = () => {
               />
             ))}
           </div>
-        )}
-      </>
-    );
-  } else {
-    // TABLET & MOBILE VIEW: Summary card after all products (simple stack)
-    return (
-      <>
-        {/* All products in grid */}
-        <div className="wishlist-products-grid">
-          {items.map((item) => (
-            <WishlistProductCard
-              key={`${item.wishlistId}-${item.selectedFragrance}`}
-              item={item}
-              removingItem={removingItem}
-              removeFromWishlist={removeFromWishlist}
-              handleProductClick={handleProductClick}
-              productImages={productImages}
-            />
-          ))}
-        </div>
-        
-        {/* Summary card after all products */}
-        <div className="wishlist-summary-mobile">
-          {renderSummaryCard(summary)}
-        </div>
-      </>
-    );
-  }
-};
+
+          {/* Summary card after all products */}
+          <div className="wishlist-summary-mobile">
+            {renderSummaryCard(summary)}
+          </div>
+        </>
+      );
+    }
+  };
 
   // Loading State
   if (loading) {

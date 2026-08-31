@@ -250,69 +250,53 @@ const ListProducts = () => {
     setFormData({ ...formData, specifications: updatedSpecs });
   };
 
-  // UPDATED: Add fragrance at the end (user can add one by one)
-  const addFragrance = () => {
+  const initializeFragrance = () => {
     const updatedColors = [...formData.colors];
-    const newFragrance = {
-      name: "",
-      notes: ["", "", ""],        // Only 3 default fields
-      topNotes: ["", "", ""],     // Only 3 default fields
-      heartNotes: ["", "", ""],   // Only 3 default fields
-      baseNotes: ["", "", ""]     // Only 3 default fields
+    const defaultFragrance = {
+      name: "Default",
+      notes: [], // Start empty, user can add
+      topNotes: [],
+      heartNotes: [],
+      baseNotes: []
     };
 
     if (updatedColors.length === 0) {
       updatedColors.push({
         colorId: `temp_${Date.now()}_1`,
         colorName: "Default",
-        fragrances: [newFragrance],
+        fragrances: [defaultFragrance],
         images: [],
         originalPrice: "",
         currentPrice: "",
         colorSpecifications: []
       });
     } else {
-      updatedColors[0].fragrances = [...(updatedColors[0].fragrances || []), newFragrance];
+      updatedColors[0].fragrances = [defaultFragrance];
     }
     setFormData({ ...formData, colors: updatedColors });
   };
 
-  const removeFragrance = (fragranceIndex) => {
-    const updatedColors = [...formData.colors];
-    if (updatedColors.length > 0) {
-      const currentFragrances = updatedColors[0].fragrances || [];
-      if (currentFragrances.length <= 1) {
-        toast.warning("Cannot remove the last fragrance. Product must have at least 1 fragrance.");
-        return;
-      }
-      updatedColors[0].fragrances = currentFragrances.filter((_, i) => i !== fragranceIndex);
-      setFormData({ ...formData, colors: updatedColors });
-    }
-  };
+  // Remove addFragrance function - not needed
 
-  const handleFragranceNameChange = (fragranceIndex, value) => {
-    const updatedColors = [...formData.colors];
-    if (updatedColors.length > 0 && updatedColors[0].fragrances[fragranceIndex]) {
-      updatedColors[0].fragrances[fragranceIndex].name = value;
-      setFormData({ ...formData, colors: updatedColors });
-    }
-  };
+  // Remove removeFragrance function - not needed
 
-  const handleFragranceNoteChange = (fragranceIndex, noteType, noteIndex, value) => {
+  // Remove handleFragranceNameChange - not needed
+
+  const handleFragranceNoteChange = (noteType, noteIndex, value) => {
     const updatedColors = [...formData.colors];
-    if (updatedColors.length > 0 && updatedColors[0].fragrances[fragranceIndex]) {
-      const notesArray = [...(updatedColors[0].fragrances[fragranceIndex][noteType] || [])];
+    if (updatedColors.length > 0 && updatedColors[0].fragrances.length > 0) {
+      const notesArray = [...(updatedColors[0].fragrances[0][noteType] || [])];
       notesArray[noteIndex] = value;
-      updatedColors[0].fragrances[fragranceIndex][noteType] = notesArray;
+      updatedColors[0].fragrances[0][noteType] = notesArray;
       setFormData({ ...formData, colors: updatedColors });
     }
   };
 
-  const addMoreNoteField = (fragranceIndex, noteType) => {
+  const addMoreNoteField = (noteType) => {
     const updatedColors = [...formData.colors];
-    if (updatedColors.length > 0 && updatedColors[0].fragrances[fragranceIndex]) {
-      updatedColors[0].fragrances[fragranceIndex][noteType] = [
-        ...(updatedColors[0].fragrances[fragranceIndex][noteType] || []),
+    if (updatedColors.length > 0 && updatedColors[0].fragrances.length > 0) {
+      updatedColors[0].fragrances[0][noteType] = [
+        ...(updatedColors[0].fragrances[0][noteType] || []),
         ""
       ];
       setFormData({ ...formData, colors: updatedColors });
@@ -325,7 +309,13 @@ const ListProducts = () => {
       updatedColors.push({
         colorId: `temp_${Date.now()}_1`,
         colorName: "Default",
-        fragrances: [],
+        fragrances: [{
+          name: "Default",
+          notes: ["", "", ""],
+          topNotes: ["", "", ""],
+          heartNotes: ["", "", ""],
+          baseNotes: ["", "", ""]
+        }],
         images: [],
         originalPrice: field === "originalPrice" ? value : "",
         currentPrice: field === "currentPrice" ? value : "",
@@ -345,7 +335,13 @@ const ListProducts = () => {
         updatedColors.push({
           colorId: `temp_${Date.now()}_1`,
           colorName: "Default",
-          fragrances: [],
+          fragrances: [{
+            name: "Default",
+            notes: ["", "", ""],
+            topNotes: ["", "", ""],
+            heartNotes: ["", "", ""],
+            baseNotes: ["", "", ""]
+          }],
           images: newFiles,
           originalPrice: "",
           currentPrice: "",
@@ -395,7 +391,13 @@ const ListProducts = () => {
         colors.push({
           colorId: `temp_${Date.now()}_1`,
           colorName: "Default",
-          fragrances: [],
+          fragrances: [{
+            name: "Default",
+            notes: [],
+            topNotes: [],
+            heartNotes: [],
+            baseNotes: []
+          }],
           images: [],
           originalPrice: "",
           currentPrice: "",
@@ -403,20 +405,18 @@ const ListProducts = () => {
         });
       }
 
+      // Get the single fragrance (index 0)
       const fragrances = colors[0]?.fragrances || [];
-      const validFragrances = fragrances.filter(f => f.name?.trim() !== "");
+      const validFragrance = fragrances[0] || { name: "Default" };
 
-      if (validFragrances.length === 0) {
-        toast.warning("At least 1 fragrance is required");
-        return;
-      }
+      // Filter out empty notes
+      validFragrance.notes = (validFragrance.notes || []).filter(n => n && n.trim() !== "");
+      validFragrance.topNotes = (validFragrance.topNotes || []).filter(n => n && n.trim() !== "");
+      validFragrance.heartNotes = (validFragrance.heartNotes || []).filter(n => n && n.trim() !== "");
+      validFragrance.baseNotes = (validFragrance.baseNotes || []).filter(n => n && n.trim() !== "");
 
-      validFragrances.forEach(frag => {
-        frag.notes = (frag.notes || []).filter(n => n && n.trim() !== "");
-        frag.topNotes = (frag.topNotes || []).filter(n => n && n.trim() !== "");
-        frag.heartNotes = (frag.heartNotes || []).filter(n => n && n.trim() !== "");
-        frag.baseNotes = (frag.baseNotes || []).filter(n => n && n.trim() !== "");
-      });
+      // Always set name to "Default"
+      validFragrance.name = "Default";
 
       if (!colors[0].currentPrice || colors[0].currentPrice <= 0) {
         toast.error("Current price is required and must be greater than 0");
@@ -445,13 +445,13 @@ const ListProducts = () => {
           const colorsData = [{
             colorId: colors[0].colorId || `temp_${Date.now()}_1`,
             colorName: "Default",
-            fragrances: validFragrances.map(frag => ({
-              name: frag.name,
-              notes: frag.notes || [],
-              topNotes: frag.topNotes || [],
-              heartNotes: frag.heartNotes || [],
-              baseNotes: frag.baseNotes || []
-            })),
+            fragrances: [{
+              name: "Default",
+              notes: validFragrance.notes || [],
+              topNotes: validFragrance.topNotes || [],
+              heartNotes: validFragrance.heartNotes || [],
+              baseNotes: validFragrance.baseNotes || []
+            }],
             images: [],
             originalPrice: colors[0].originalPrice || 0,
             currentPrice: colors[0].currentPrice || 0,
@@ -523,19 +523,16 @@ const ListProducts = () => {
 
       const productColors = formData.colors || [];
       const fragrances = productColors.length > 0 ? (productColors[0]?.fragrances || []) : [];
-      const validFragrances = fragrances.filter(f => f.name?.trim() !== "");
+      const validFragrance = fragrances[0] || { name: "Default" };
 
-      if (validFragrances.length === 0) {
-        toast.warning("At least 1 fragrance is required");
-        return;
-      }
+      // Filter out empty notes
+      validFragrance.notes = (validFragrance.notes || []).filter(n => n && n.trim() !== "");
+      validFragrance.topNotes = (validFragrance.topNotes || []).filter(n => n && n.trim() !== "");
+      validFragrance.heartNotes = (validFragrance.heartNotes || []).filter(n => n && n.trim() !== "");
+      validFragrance.baseNotes = (validFragrance.baseNotes || []).filter(n => n && n.trim() !== "");
 
-      validFragrances.forEach(frag => {
-        frag.notes = (frag.notes || []).filter(n => n && n.trim() !== "");
-        frag.topNotes = (frag.topNotes || []).filter(n => n && n.trim() !== "");
-        frag.heartNotes = (frag.heartNotes || []).filter(n => n && n.trim() !== "");
-        frag.baseNotes = (frag.baseNotes || []).filter(n => n && n.trim() !== "");
-      });
+      // Always set name to "Default"
+      validFragrance.name = "Default";
 
       setIsLoading(true);
       setError("");
@@ -552,13 +549,13 @@ const ListProducts = () => {
           const colorsData = [{
             colorId: productColors[0]?.colorId || "",
             colorName: "Default",
-            fragrances: validFragrances.map(frag => ({
-              name: frag.name,
-              notes: frag.notes || [],
-              topNotes: frag.topNotes || [],
-              heartNotes: frag.heartNotes || [],
-              baseNotes: frag.baseNotes || []
-            })),
+            fragrances: [{
+              name: "Default",
+              notes: validFragrance.notes || [],
+              topNotes: validFragrance.topNotes || [],
+              heartNotes: validFragrance.heartNotes || [],
+              baseNotes: validFragrance.baseNotes || []
+            }],
             images: productColors[0]?.images ? productColors[0].images.filter(img => typeof img === 'string') : [],
             originalPrice: productColors[0]?.originalPrice || 0,
             currentPrice: productColors[0]?.currentPrice || 0,
@@ -659,13 +656,18 @@ const ListProducts = () => {
     const colorsWithNotes = (product.colors || []).map(color => ({
       ...color,
       fragrances: (color.fragrances || []).map(frag => ({
-        name: frag.name || frag,
+        name: "Default", // Always "Default" on update
         notes: frag.notes && frag.notes.length > 0 ? [...frag.notes, "", "", ""].slice(0, 3) : ["", "", ""],
         topNotes: frag.topNotes && frag.topNotes.length > 0 ? [...frag.topNotes, "", "", ""].slice(0, 3) : ["", "", ""],
         heartNotes: frag.heartNotes && frag.heartNotes.length > 0 ? [...frag.heartNotes, "", "", ""].slice(0, 3) : ["", "", ""],
         baseNotes: frag.baseNotes && frag.baseNotes.length > 0 ? [...frag.baseNotes, "", "", ""].slice(0, 3) : ["", "", ""]
       }))
     }));
+
+    // Ensure only 1 fragrance
+    if (colorsWithNotes.length > 0 && colorsWithNotes[0].fragrances.length > 1) {
+      colorsWithNotes[0].fragrances = [colorsWithNotes[0].fragrances[0]];
+    }
 
     const preparedData = {
       ...product,
@@ -857,6 +859,10 @@ const ListProducts = () => {
                 onClick={() => {
                   setFormMode("add");
                   resetForm();
+                  // Initialize single fragrance with "Default" name
+                  setTimeout(() => {
+                    initializeFragrance();
+                  }, 50);
                   setShowProductForm(true);
                 }}
                 disabled={isLoading}
@@ -1033,86 +1039,135 @@ const ListProducts = () => {
                   </div>
                 </div>
 
-                {/* Product Specifications */}
-                {/* <div className="modal-section-item">
-                  <div className="section-header-section"><h3 className="section-title-item"><FiTag />Product Specifications</h3><button type="button" onClick={addSpecField} className="add-field-btn-section" disabled={isLoading}><FiPlus />Add Field</button></div>
-                  <div className="specifications-container-section">
-                    {formData.specifications.map((spec, index) => (<div key={index} className="spec-row-section"><input placeholder="Key" value={spec.key} onChange={(e) => handleSpecChange(index, 'key', e.target.value)} disabled={isLoading} className="spec-input-section key-input" /><input placeholder="Value" value={spec.value} onChange={(e) => handleSpecChange(index, 'value', e.target.value)} disabled={isLoading} className="spec-input-section value-input" /><button type="button" className="remove-spec-btn-section" onClick={() => removeSpecField(index)} disabled={formData.specifications.length <= 2 || isLoading}><FiX /></button></div>))}
-                  </div>
-                </div> */}
-
-                {/* Fragrances Section - ADD BUTTON AT BOTTOM */}
+                {/* Fragrances Section - ONLY 1 FRAGRANCE with "Default" name (HIDDEN) */}
                 <div className="modal-section-item">
-                  <h3 className="section-title-item"><FiPackage />Fragrances *</h3>
-                  <p className="section-hint-section">Add fragrance options with their notes. Click "Add Fragrance" below after completing each fragrance.</p>
+                  <h3 className="section-title-item"><FiPackage />Fragrance Notes</h3>
+                  <p className="section-hint-section">Add fragrance notes. All fields are optional.</p>
 
                   <div className="fragrances-container-section">
                     {formData.colors[0]?.fragrances?.length === 0 ? (
-                      <div className="no-items-section">No fragrances added yet. Add at least one fragrance.</div>
+                      <div className="no-items-section">No fragrance notes added yet. Add notes below.</div>
                     ) : (
-                      formData.colors[0]?.fragrances?.map((fragrance, fragranceIndex) => (
-                        <div key={fragranceIndex} className="fragrance-card-section">
-                          <div className="fragrance-card-header">
-                            <div className="fragrance-name-input-wrapper">
-                              <input placeholder="Enter fragrance name (e.g., Rose, Lavender)" value={fragrance.name || ""} onChange={(e) => handleFragranceNameChange(fragranceIndex, e.target.value)} disabled={isLoading} className="fragrance-name-input-section" />
-                            </div>
-                            <button type="button" className="remove-fragrance-btn-section" onClick={() => removeFragrance(fragranceIndex)} disabled={isLoading || (formData.colors[0]?.fragrances?.length || 0) <= 1}><FiX /></button>
-                          </div>
+                      // Only 1 fragrance - show notes directly
+                      <div className="fragrance-card-section">
+                        {/* NO FRAGRANCE NAME INPUT - Hidden */}
 
-                          {/* NOTES - 3 inputs inline with add button */}
-                          <div className="fragrance-notes-group">
-                            <div className="notes-header"><FiMusic className="notes-icon" /><label className="notes-label">NOTES</label></div>
-                            <div className="notes-inputs-wrapper">
-                              <div className="notes-inputs-grid">
-                                {(fragrance.notes || ["", "", ""]).slice(0, 3).map((note, noteIndex) => (<input key={noteIndex} type="text" placeholder={`Note ${noteIndex + 1}`} value={note || ""} onChange={(e) => handleFragranceNoteChange(fragranceIndex, 'notes', noteIndex, e.target.value)} disabled={isLoading} className="note-input-field" />))}
-                              </div>
-                              <button type="button" onClick={() => addMoreNoteField(fragranceIndex, 'notes')} className="add-more-btn-inline" disabled={isLoading}><FiPlus /> Add</button>
+                        {/* NOTES - Show ALL fields with add button */}
+                        <div className="fragrance-notes-group">
+                          <div className="notes-header"><FiMusic className="notes-icon" /><label className="notes-label">NOTES</label></div>
+                          <div className="notes-inputs-wrapper">
+                            <div className="notes-inputs-grid">
+                              {(formData.colors[0]?.fragrances[0]?.notes || []).map((note, noteIndex) => (
+                                <input
+                                  key={noteIndex}
+                                  type="text"
+                                  placeholder={`Note ${noteIndex + 1}`}
+                                  value={note || ""}
+                                  onChange={(e) => handleFragranceNoteChange('notes', noteIndex, e.target.value)}
+                                  disabled={isLoading}
+                                  className="note-input-field"
+                                />
+                              ))}
                             </div>
-                          </div>
-
-                          {/* TOP NOTES - 3 inputs inline with add button */}
-                          <div className="fragrance-notes-group">
-                            <div className="notes-header"><FiFeather className="notes-icon" /><label className="notes-label">TOP NOTES</label></div>
-                            <div className="notes-inputs-wrapper">
-                              <div className="notes-inputs-grid">
-                                {(fragrance.topNotes || ["", "", ""]).slice(0, 3).map((note, noteIndex) => (<input key={noteIndex} type="text" placeholder={`Top Note ${noteIndex + 1}`} value={note || ""} onChange={(e) => handleFragranceNoteChange(fragranceIndex, 'topNotes', noteIndex, e.target.value)} disabled={isLoading} className="note-input-field" />))}
-                              </div>
-                              <button type="button" onClick={() => addMoreNoteField(fragranceIndex, 'topNotes')} className="add-more-btn-inline" disabled={isLoading}><FiPlus /> Add</button>
-                            </div>
-                          </div>
-
-                          {/* HEART NOTES - 3 inputs inline with add button */}
-                          <div className="fragrance-notes-group">
-                            <div className="notes-header"><FiHeart className="notes-icon" /><label className="notes-label">HEART NOTES</label></div>
-                            <div className="notes-inputs-wrapper">
-                              <div className="notes-inputs-grid">
-                                {(fragrance.heartNotes || ["", "", ""]).slice(0, 3).map((note, noteIndex) => (<input key={noteIndex} type="text" placeholder={`Heart Note ${noteIndex + 1}`} value={note || ""} onChange={(e) => handleFragranceNoteChange(fragranceIndex, 'heartNotes', noteIndex, e.target.value)} disabled={isLoading} className="note-input-field" />))}
-                              </div>
-                              <button type="button" onClick={() => addMoreNoteField(fragranceIndex, 'heartNotes')} className="add-more-btn-inline" disabled={isLoading}><FiPlus /> Add</button>
-                            </div>
-                          </div>
-
-                          {/* BASE NOTES - 3 inputs inline with add button */}
-                          <div className="fragrance-notes-group">
-                            <div className="notes-header"><FiAnchor className="notes-icon" /><label className="notes-label">BASE NOTES</label></div>
-                            <div className="notes-inputs-wrapper">
-                              <div className="notes-inputs-grid">
-                                {(fragrance.baseNotes || ["", "", ""]).slice(0, 3).map((note, noteIndex) => (<input key={noteIndex} type="text" placeholder={`Base Note ${noteIndex + 1}`} value={note || ""} onChange={(e) => handleFragranceNoteChange(fragranceIndex, 'baseNotes', noteIndex, e.target.value)} disabled={isLoading} className="note-input-field" />))}
-                              </div>
-                              <button type="button" onClick={() => addMoreNoteField(fragranceIndex, 'baseNotes')} className="add-more-btn-inline" disabled={isLoading}><FiPlus /> Add</button>
-                            </div>
+                            <button
+                              type="button"
+                              onClick={() => addMoreNoteField('notes')}
+                              className="add-more-btn-inline"
+                              disabled={isLoading}
+                            >
+                              <FiPlus /> Add
+                            </button>
                           </div>
                         </div>
-                      ))
+
+                        {/* TOP NOTES - Show ALL fields with add button */}
+                        <div className="fragrance-notes-group">
+                          <div className="notes-header"><FiFeather className="notes-icon" /><label className="notes-label">TOP NOTES</label></div>
+                          <div className="notes-inputs-wrapper">
+                            <div className="notes-inputs-grid">
+                              {(formData.colors[0]?.fragrances[0]?.topNotes || []).map((note, noteIndex) => (
+                                <input
+                                  key={noteIndex}
+                                  type="text"
+                                  placeholder={`Top Note ${noteIndex + 1}`}
+                                  value={note || ""}
+                                  onChange={(e) => handleFragranceNoteChange('topNotes', noteIndex, e.target.value)}
+                                  disabled={isLoading}
+                                  className="note-input-field"
+                                />
+                              ))}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => addMoreNoteField('topNotes')}
+                              className="add-more-btn-inline"
+                              disabled={isLoading}
+                            >
+                              <FiPlus /> Add
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* HEART NOTES - Show ALL fields with add button */}
+                        <div className="fragrance-notes-group">
+                          <div className="notes-header"><FiHeart className="notes-icon" /><label className="notes-label">HEART NOTES</label></div>
+                          <div className="notes-inputs-wrapper">
+                            <div className="notes-inputs-grid">
+                              {(formData.colors[0]?.fragrances[0]?.heartNotes || []).map((note, noteIndex) => (
+                                <input
+                                  key={noteIndex}
+                                  type="text"
+                                  placeholder={`Heart Note ${noteIndex + 1}`}
+                                  value={note || ""}
+                                  onChange={(e) => handleFragranceNoteChange('heartNotes', noteIndex, e.target.value)}
+                                  disabled={isLoading}
+                                  className="note-input-field"
+                                />
+                              ))}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => addMoreNoteField('heartNotes')}
+                              className="add-more-btn-inline"
+                              disabled={isLoading}
+                            >
+                              <FiPlus /> Add
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* BASE NOTES - Show ALL fields with add button */}
+                        <div className="fragrance-notes-group">
+                          <div className="notes-header"><FiAnchor className="notes-icon" /><label className="notes-label">BASE NOTES</label></div>
+                          <div className="notes-inputs-wrapper">
+                            <div className="notes-inputs-grid">
+                              {(formData.colors[0]?.fragrances[0]?.baseNotes || []).map((note, noteIndex) => (
+                                <input
+                                  key={noteIndex}
+                                  type="text"
+                                  placeholder={`Base Note ${noteIndex + 1}`}
+                                  value={note || ""}
+                                  onChange={(e) => handleFragranceNoteChange('baseNotes', noteIndex, e.target.value)}
+                                  disabled={isLoading}
+                                  className="note-input-field"
+                                />
+                              ))}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => addMoreNoteField('baseNotes')}
+                              className="add-more-btn-inline"
+                              disabled={isLoading}
+                            >
+                              <FiPlus /> Add
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </div>
 
-                  {/* ADD FRAGRANCE BUTTON AT THE BOTTOM */}
-                  <div className="add-fragrance-bottom-container">
-                    <button type="button" onClick={addFragrance} className="add-fragrance-bottom-btn" disabled={isLoading}>
-                      <FiPlus /> Add Another Fragrance
-                    </button>
-                  </div>
+                  {/* NO "Add Fragrance" button - Only 1 fragrance allowed */}
                 </div>
               </div>
 

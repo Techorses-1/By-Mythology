@@ -276,9 +276,10 @@ const Cart = () => {
         </div>
         <div className="cart-item-info">
           <h3>{item.productName}</h3>
-          {item.selectedFragrance && (
+          {/* FRAGRANCE HIDDEN - Commented out */}
+          {/* {item.selectedFragrance && (
             <p className="cart-item-fragrance">Fragrance : {item.selectedFragrance}</p>
-          )}
+          )} */}
 
           {/* Stock warning if low */}
           {inventory?.status === 'low-stock' && (

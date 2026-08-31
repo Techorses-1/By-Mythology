@@ -627,12 +627,13 @@ const UserOrders = () => {
                             <div className="item-info-grid">
                                 <h4 className="item-name-grid">{item.productName}</h4>
                                 <div className="item-variants-grid">
-                                    {item.fragrance && item.fragrance !== "Default" && (
+                                    {/* FRAGRANCE HIDDEN - Commented out */}
+                                    {/* {item.fragrance && item.fragrance !== "Default" && (
                                         <span className="variant-tag">
                                             <FiTag className="variant-icon" />
                                             {item.fragrance}
                                         </span>
-                                    )}
+                                    )} */}
                                     {item.modelName !== "Default" && (
                                         <span className="variant-tag">
                                             <FiShoppingBag className="variant-icon" />
@@ -826,9 +827,10 @@ const UserOrders = () => {
                                             </div>
                                             <div className="item-details">
                                                 <div className="variants">
-                                                    {item.fragrance && item.fragrance !== "Default" && (
+                                                    {/* FRAGRANCE HIDDEN - Commented out */}
+                                                    {/* {item.fragrance && item.fragrance !== "Default" && (
                                                         <span className="variant">{item.fragrance}</span>
-                                                    )}
+                                                    )} */}
                                                     {item.modelName !== "Default" && (
                                                         <span className="variant">{item.modelName}</span>
                                                     )}
@@ -1004,9 +1006,10 @@ const UserOrders = () => {
                         <h3>{selectedProduct?.productName}</h3>
                         <div className="product-meta">
                             <span>Order #{selectedOrder?.orderId}</span>
-                            {selectedProduct?.fragrance && selectedProduct.fragrance !== "Default" && (
+                            {/* FRAGRANCE HIDDEN - Commented out */}
+                            {/* {selectedProduct?.fragrance && selectedProduct.fragrance !== "Default" && (
                                 <span>Fragrance: {selectedProduct.fragrance}</span>
-                            )}
+                            )} */}
                             <span>Delivered on {formatDate(selectedOrder?.createdAt)}</span>
                         </div>
                     </div>

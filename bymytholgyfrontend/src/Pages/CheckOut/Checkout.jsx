@@ -580,7 +580,7 @@ const Checkout = () => {
 
   // ==================== RENDER FUNCTIONS ====================
 
-  // Render Product Review Step - UPDATED WITH QUANTITY CONTROLS
+  // Render Product Review Step - UPDATED WITH QUANTITY CONTROLS (FRAGRANCE HIDDEN)
   const renderReviewStep = () => (
     <div className="checkout-step" ref={stepRef}>
       <div className="step-header">
@@ -607,21 +607,12 @@ const Checkout = () => {
               <h4 className="item-name">{item.productName}</h4>
 
               <div className="item-variants">
-                {/* {item.selectedModel && (
-                  <span className="variant-chip">
-                    <FiShoppingBag size={12} /> {item.selectedModel.modelName}
-                  </span>
-                )}
-                {item.selectedColor && (
-                  <span className="variant-chip">
-                    <FiTag size={12} /> {item.selectedColor.colorName}
-                  </span>
-                )} */}
-                {item.selectedFragrance && (
+                {/* FRAGRANCE HIDDEN - Commented out */}
+                {/* {item.selectedFragrance && (
                   <span className="variant-chip fragrance">
                     Fragrance : {item.selectedFragrance}
                   </span>
-                )}
+                )} */}
                 {item.selectedSize && (
                   <span className="variant-chip">Size: {item.selectedSize}</span>
                 )}
@@ -1164,10 +1155,6 @@ const Checkout = () => {
           showRegisterLink={true}
         />
       )}
-
-
-
-
     </div>
   );
 };

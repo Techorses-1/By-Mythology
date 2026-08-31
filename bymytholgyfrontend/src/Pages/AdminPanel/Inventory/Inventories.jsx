@@ -197,7 +197,7 @@ const Inventories = () => {
 
       if (err.response?.status === 401) {
         toast.error("Authentication failed. Token is invalid or expired.");
-        
+
       } else if (err.response?.status === 403) {
         toast.error("Access denied. Admin role required.");
       } else {
@@ -377,12 +377,11 @@ const Inventories = () => {
       return;
     }
 
-    const headers = ["Product Name", "Fragrance", "Stock", "Threshold", "Status"];
+    const headers = ["Product Name", "Stock", "Threshold", "Status"];
     const csvData = filteredInventory.map(item => {
       const status = getStockStatus(item.stock, item.threshold || 10);
       return [
         `"${item.productName}"`,
-        `"${item.fragrance}"`,
         item.stock,
         item.threshold || 10,
         status.text
@@ -509,7 +508,7 @@ const Inventories = () => {
             <FiSearch className="inventory-search-icon" />
             <input
               type="text"
-              placeholder="Search by Product Name or Fragrance..."
+              placeholder="Search by Product Name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               disabled={loading}
@@ -567,7 +566,6 @@ const Inventories = () => {
             <thead>
               <tr>
                 <th>Product</th>
-                <th>Fragrance</th>
                 <th>Stock</th>
                 <th>Threshold</th>
                 <th>Status</th>
@@ -577,7 +575,7 @@ const Inventories = () => {
             <tbody>
               {filteredInventory.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="inventory-no-data">
+                  <td colSpan="5" className="inventory-no-data">
                     <div className="inventory-empty-state">
                       <MdOutlineInventory2 />
                       <p>No inventory items found</p>
@@ -623,13 +621,7 @@ const Inventories = () => {
                         </div>
                       </td>
 
-                      <td>
-                        <div className="fragrance-info-cell">
-                          <div className="fragrance-name-cell">
-                            {item.fragrance}
-                          </div>
-                        </div>
-                      </td>
+                      {/* FRAGRANCE COLUMN REMOVED */}
 
                       <td>
                         <div className="stock-info-cell">
@@ -764,10 +756,11 @@ const Inventories = () => {
                     <span className="info-label-section">Product Name</span>
                     <span className="info-value-section">{selectedItem.productName}</span>
                   </div>
-                  <div className="info-item-section">
+                  {/* FRAGRANCE HIDDEN - Commented out */}
+                  {/* <div className="info-item-section">
                     <span className="info-label-section">Fragrance</span>
                     <span className="info-value-section">{selectedItem.fragrance}</span>
-                  </div>
+                  </div> */}
                   <div className="info-item-section">
                     <span className="info-label-section">Current Stock</span>
                     <span className="info-value-section">{selectedItem.stock}</span>
@@ -900,10 +893,11 @@ const Inventories = () => {
                     <span className="info-label-section">Product Name</span>
                     <span className="info-value-section">{selectedItem.productName}</span>
                   </div>
-                  <div className="info-item-section">
+                  {/* FRAGRANCE HIDDEN - Commented out */}
+                  {/* <div className="info-item-section">
                     <span className="info-label-section">Fragrance</span>
                     <span className="info-value-section">{selectedItem.fragrance}</span>
-                  </div>
+                  </div> */}
                   <div className="info-item-section">
                     <span className="info-label-section">Current Stock</span>
                     <span className="info-value-section">{selectedItem.stock}</span>
@@ -1035,10 +1029,11 @@ const Inventories = () => {
                     <span className="info-label-section">Product Name</span>
                     <span className="info-value-section">{selectedItem.productName}</span>
                   </div>
-                  <div className="info-item-section">
+                  {/* FRAGRANCE HIDDEN - Commented out */}
+                  {/* <div className="info-item-section">
                     <span className="info-label-section">Fragrance</span>
                     <span className="info-value-section">{selectedItem.fragrance}</span>
-                  </div>
+                  </div> */}
                   <div className="info-item-section">
                     <span className="info-label-section">Current Stock</span>
                     <span className="info-value-section">{selectedItem.stock}</span>
