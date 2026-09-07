@@ -1,36 +1,37 @@
 import React, { useEffect, useRef } from "react";
-import { PiFlowerLotus } from "react-icons/pi";
-import { TbPackage } from "react-icons/tb";
-import { LuTruck } from "react-icons/lu";
-import { BsGift } from "react-icons/bs";
-import { TbShieldHeart } from "react-icons/tb";
 import "./FeatureBadges.scss";
+
+import icon1 from "../../../assets/images/home/morethancandle-icon1.png";
+import icon2 from "../../../assets/images/home/morethancandle-icon2.png";
+import icon3 from "../../../assets/images/home/morethancandle-icon3.png";
+import icon4 from "../../../assets/images/home/morethancandle-icon4.png";
+import icon5 from "../../../assets/images/home/morethancandle-icon5.png";
 
 const BADGES = [
     {
         id: 1,
-        icon: <PiFlowerLotus />,
-        label: "Premium\nQuality",
+        icon: icon1,
+        label: "Made With\nSoy Wax",
     },
     {
         id: 2,
-        icon: <TbPackage />,
-        label: "Secure\nPackaging",
+        icon: icon2,
+        label: "Better For\nHealth",
     },
     {
         id: 3,
-        icon: <LuTruck />,
-        label: "Pan India\nShipping",
+        icon: icon3,
+        label: "Vegan\nLead-Free",
     },
     {
         id: 4,
-        icon: <BsGift />,
-        label: "Perfect For\nGifting",
+        icon: icon4,
+        label: "Unbleached\nCotton",
     },
     {
         id: 5,
-        icon: <TbShieldHeart />,
-        label: "Made With\nLove",
+        icon: icon5,
+        label: "Crafted with\nIntegrity",
     },
 ];
 
@@ -106,7 +107,9 @@ const FeatureBadges = () => {
                 {BADGES.map((badge, index) => (
                     <React.Fragment key={badge.id}>
                         <div className="feature-badges__item">
-                            <span className="feature-badges__icon">{badge.icon}</span>
+                            <span className="feature-badges__icon">
+                                <img src={badge.icon} alt={badge.label.replace("\n", " ")} />
+                            </span>
                             <p className="feature-badges__label">
                                 {badge.label.split("\n").map((line, i) => (
                                     <React.Fragment key={i}>
@@ -128,7 +131,9 @@ const FeatureBadges = () => {
                 <div className="feature-badges__marquee-track">
                     {BADGES.map((badge, index) => (
                         <div className="feature-badges__marquee-item" key={badge.id}>
-                            <span className="feature-badges__marquee-icon">{badge.icon}</span>
+                            <span className="feature-badges__marquee-icon">
+                                <img src={badge.icon} alt={badge.label.replace("\n", " ")} />
+                            </span>
                             <p className="feature-badges__marquee-label">
                                 {badge.label.split("\n").map((line, i) => (
                                     <React.Fragment key={i}>

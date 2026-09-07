@@ -145,7 +145,7 @@ const CraftsmanSection = () => {
                 </div>
             </div> */}
             <div>
-                <FeatureBadges />
+                {/* <FeatureBadges /> */}
             </div>
         </section>
     );

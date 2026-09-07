@@ -13,15 +13,15 @@ const features = [
     },
     {
         icon: icon2,
-        title: "WOODEN\nCRACKLING WICK",
+        title: "Better For\nHealth",
     },
     {
         icon: icon3,
-        title: "HAND POURED\nIN SMALL BATCHES",
+        title: "Vegan\nLead-Free",
     },
     {
         icon: icon4,
-        title: "ORIGINAL ARTWORK\nBY INDIAN ARTISTS",
+        title: "Unbleached\nCotton",
     },
 ];
 

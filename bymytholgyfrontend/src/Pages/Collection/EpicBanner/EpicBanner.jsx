@@ -1,32 +1,27 @@
 import React from "react";
-
-import {
-    TbLeaf,
-    TbHandStop,
-    TbGift,
-    TbHeart,
-} from "react-icons/tb";
-
 import "./EpicBanner.scss";
+
+import mainicon from "../../../assets/images/collection/main-icon.png";
+import icon1 from "../../../assets/images/collection/icon1.png";
+import icon2 from "../../../assets/images/collection/icon2.png";
+import icon3 from "../../../assets/images/collection/icon3.png";
+import icon4 from "../../../assets/images/collection/icon4.png";
 
 const bannerFeatures = [
     {
-        icon: <TbLeaf />,
+        icon: icon1,
         title: "NATURAL\nINGREDIENTS",
     },
-
     {
-        icon: <TbHandStop />,
+        icon: icon2,
         title: "HAND POURED\nIN SMALL BATCHES",
     },
-
     {
-        icon: <TbGift />,
+        icon: icon3,
         title: "LUXURY\nPACKAGING",
     },
-
     {
-        icon: <TbHeart />,
+        icon: icon4,
         title: "MADE\nWITH LOVE",
     },
 ];
@@ -35,15 +30,14 @@ const EpicBanner = () => {
     return (
         <section className="epic-banner">
             {/* LEFT CONTENT */}
-
             <div className="epic-banner__left">
                 <div className="epic-banner__lotus">
-                    ✦
+                    <img src={mainicon} alt="Main Icon" />
                 </div>
 
                 <div className="epic-banner__content">
                     <h2>
-                        MORE THAN A CANDLE. IT’S A CHAPTER OF THE EPIC.
+                        MORE THAN A CANDLE. IT'S A CHAPTER OF THE EPIC.
                     </h2>
 
                     <p>
@@ -55,12 +49,11 @@ const EpicBanner = () => {
             </div>
 
             {/* CENTER FEATURES */}
-
             <div className="epic-banner__features">
                 {bannerFeatures.map((item, index) => (
                     <div className="epic-banner__feature" key={index}>
                         <div className="epic-banner__icon">
-                            {item.icon}
+                            <img src={item.icon} alt={item.title.replace("\n", " ")} />
                         </div>
 
                         <h4>
@@ -76,7 +69,6 @@ const EpicBanner = () => {
             </div>
 
             {/* RIGHT CTA */}
-
             <div className="epic-banner__cta">
                 <h3>
                     A PERFECT GIFT FOR

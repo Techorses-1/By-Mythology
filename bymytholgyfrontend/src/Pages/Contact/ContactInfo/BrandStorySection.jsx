@@ -1,6 +1,6 @@
 import React from 'react';
 import './BrandStorySection.scss';
-import img from "../../../assets/images/contact/contact-info.png";
+import img from "../../../assets/images/contact/contact.jpg";
 
 const BrandStorySection = () => {
     const sacredImage = img;
