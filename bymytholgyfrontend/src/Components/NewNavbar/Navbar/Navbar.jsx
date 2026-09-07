@@ -6,7 +6,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { IoCloseOutline } from "react-icons/io5";
 import axios from "axios";
 import "./Navbar.scss";
-import logo from "../../../assets/images/logo/logo.png";
+import logo from "../../../assets/logo/logo.png";
 import SearchModal from "../../SearchModel/SearchModal";
 
 const NAV_LINKS = [

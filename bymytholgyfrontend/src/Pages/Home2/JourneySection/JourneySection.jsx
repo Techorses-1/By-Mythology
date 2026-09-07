@@ -7,8 +7,8 @@ import "swiper/css/effect-fade";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./JourneySection.scss";
-import ctaImage from "../../../assets/images/home/cta.png";
-import ctaImage2 from "../../../assets/images/home/cta2.png";
+import ctaImage from "../../../assets/images/home/slide1.jpg";
+import ctaImage2 from "../../../assets/images/home/slide2.jpg";
 
 const SLIDES = [
     {

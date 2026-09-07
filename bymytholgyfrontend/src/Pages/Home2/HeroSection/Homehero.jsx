@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import "./HomeHero.scss";
-import hero from "../../../assets/images/home/newhero.jpeg";
+import hero from "../../../assets/images/home/newhero.jpg";
 import { IoArrowForwardOutline } from "react-icons/io5";
 
 const HomeHero = () => {

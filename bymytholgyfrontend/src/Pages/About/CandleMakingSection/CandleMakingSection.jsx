@@ -7,6 +7,12 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
+import making1 from "../../../assets/images/about/making1.jpg";
+import making2 from "../../../assets/images/about/making2.jpg";
+import making3 from "../../../assets/images/about/making3.jpg";
+import making4 from "../../../assets/images/about/making4.jpg";
+import making5 from "../../../assets/images/about/making5.jpg";
+import making6 from "../../../assets/images/about/making6.jpg";
 import { IoArrowBack, IoArrowForward } from "react-icons/io5";
 
 const candleSteps = [
@@ -15,48 +21,42 @@ const candleSteps = [
         title: "CLEAN INGREDIENTS",
         description:
             "We use natural soy wax, clean fragrance oils and essential oils.",
-        image:
-            "https://images.unsplash.com/photo-1603006905003-be475563bc59?q=80&w=1200&auto=format&fit=crop",
+        image: making1,
     },
     {
         id: "02",
         title: "HAND POURED",
         description:
             "Poured in small batches to ensure the highest quality and care.",
-        image:
-            "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=1200&auto=format&fit=crop",
+        image: making2,
     },
     {
         id: "03",
         title: "WOODEN WICK",
         description:
             "Crackling wooden wick for a warm, comforting ambience.",
-        image:
-            "https://images.unsplash.com/photo-1603006905003-be475563bc59?q=80&w=1200&auto=format&fit=crop",
+        image: making3,
     },
     {
         id: "04",
         title: "ORIGINAL ARTWORK",
         description:
             "Each label features original paintings by Indian artists.",
-        image:
-            "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=1200&auto=format&fit=crop",
+        image: making4,
     },
     {
         id: "05",
         title: "LUXURY FINISH",
         description:
             "Gold embossed lids and premium packaging for a luxurious experience.",
-        image:
-            "https://images.unsplash.com/photo-1603006905003-be475563bc59?q=80&w=1200&auto=format&fit=crop",
+        image: making5,
     },
     {
         id: "06",
         title: "PERFECTLY PACKAGED",
         description:
             "Carefully packed to be a perfect gift for every occasion.",
-        image:
-            "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=1200&auto=format&fit=crop",
+        image: making6,
     },
 ];
 

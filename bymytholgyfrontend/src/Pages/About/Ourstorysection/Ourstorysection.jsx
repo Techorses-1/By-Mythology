@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import "./OurStorySection.scss";
-import storyImage from "../../../assets/images/home/hero.jpeg"; // update path as needed
+import storyImage from "../../../assets/images/about/ourstory.jpg"; // update path as needed
 
 const OurStorySection = () => {
     const sectionRef = useRef(null);

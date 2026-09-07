@@ -1,6 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import './JourneyPage.scss';
-import img from '../../../assets/images/home/newhero.jpeg';
+import img from '../../../assets/images/home/newhero.jpg';
+
+import journey1 from "../../../assets/images/journey/journey1.jpg";
+import journey2 from "../../../assets/images/journey/journey2.jpg";
+import journey3 from "../../../assets/images/journey/journey3.jpg";
+import journey4 from "../../../assets/images/journey/journey4.jpg";
+import journey5 from "../../../assets/images/journey/journey5.jpg";
+import journey6 from "../../../assets/images/journey/journey6.jpg";
+import journey7 from "../../../assets/images/journey/journey7.jpg";
+import journey8 from "../../../assets/images/journey/journey8.jpg";
+
 
 const journeyPoints = [
     {
@@ -9,6 +19,7 @@ const journeyPoints = [
         subtitle: 'The Eternal Abode of Lord Shri Ram',
         hindi: 'अयोध्या',
         chapter: 'I',
+        image: journey1,
         shortDesc: 'Ayodhya, the sacred birthplace of Lord Shri Ram, stands as the heart of devotion and righteousness. Blessed by the divine presence of Maryada Purushottam Shri Ram, this holy city resonates with the eternal chants of "Jai Shri Ram." Nestled on the banks of the sacred Sarayu River, Ayodhya symbolizes purity, dharma, and the triumph of good over evil.',
         quote: 'जय श्री राम',
         quoteEng: 'Victory to Lord Ram',
@@ -22,6 +33,7 @@ const journeyPoints = [
         subtitle: 'The Sacred Land of Maa Janaki',
         hindi: 'मिथिला',
         chapter: 'II',
+        image: journey2,
         shortDesc: 'Mithila is the divine birthplace of Maa Sita, lovingly worshipped as Janaki and Vaidehi. Born to King Janak, she is revered as an incarnation of Goddess Lakshmi and the eternal embodiment of purity, devotion, and sacrifice. The sacred soil of Mithila witnessed the divine union of Shri Ram and Maa Sita, a union that symbolizes the perfect balance of dharma and devotion.',
         quote: 'सीता राम',
         quoteEng: 'Sita and Ram — divine union',
@@ -35,6 +47,7 @@ const journeyPoints = [
         subtitle: 'The Forest Where Dharma Was Tested',
         hindi: 'दण्डकारण्य',
         chapter: 'III',
+        image: journey3,
         shortDesc: 'Dandakaranya was far more than a wilderness—it was the sacred ground where Lord Shri Ram\'s divine mission unfolded during exile. Through dense forests and dangerous terrain, Shri Ram, Maa Sita, and Lakshman journeyed with unwavering faith and courage. Every step taken by Shri Ram sanctified the land and transformed hardship into a timeless lesson of perseverance and righteousness.',
         quote: 'वनवास की तपस्या',
         quoteEng: 'The penance of exile',
@@ -48,6 +61,7 @@ const journeyPoints = [
         subtitle: 'The Birthplace of Divine Friendship and Devotion',
         hindi: 'किष्किन्धा',
         chapter: 'IV',
+        image: journey4,
         shortDesc: 'Kishkindha marks one of the most powerful turning points in the Ramayana. It was here that Lord Shri Ram met Lord Hanuman, creating an eternal bond between the Divine and His greatest devotee. The kingdom witnessed the fall of Bali, the rise of Sugriva, and the formation of the mighty Vanara Sena. Kishkindha became the foundation from which the battle against evil would begin.',
         quote: 'हनुमान प्रणाम',
         quoteEng: 'The devotion of Hanuman',
@@ -61,6 +75,7 @@ const journeyPoints = [
         subtitle: 'The Garden of Unbreakable Faith',
         hindi: 'अशोक वाटिका',
         chapter: 'V',
+        image: journey5,
         shortDesc: 'Ashok Vatika stands as a sacred symbol of devotion amidst suffering. Though held captive by Ravana, Maa Sita remained steadfast in her faith and unwavering in her devotion to Shri Ram. Beneath the Ashoka trees, she endured hardship with dignity and spiritual strength. It was here that Lord Hanuman delivered Shri Ram\'s message and ring, bringing hope to Maa Sita and marking the beginning of Lanka\'s downfall.',
         quote: 'सीता की अटल भक्ति',
         quoteEng: 'The unshakable faith of Sita',
@@ -74,6 +89,7 @@ const journeyPoints = [
         subtitle: 'Where Faith Built a Bridge to Victory',
         hindi: 'रामेश्वरम्',
         chapter: 'VI',
+        image: journey6,
         shortDesc: 'Rameswaram is the sacred land where Lord Shri Ram worshipped Lord Shiva before embarking on the final battle against Ravana. Standing before the vast ocean, Shri Ram demonstrated humility, devotion, and determination in his quest to restore dharma. It was from this holy land that the legendary Ram Setu was constructed by the Vanara Sena, creating a bridge of destiny to Lanka.',
         quote: 'राम सेतु',
         quoteEng: 'The bridge built on faith',
@@ -87,6 +103,7 @@ const journeyPoints = [
         subtitle: 'The Mountain of Miraculous Hope',
         hindi: 'संजीवनी पर्वत',
         chapter: 'VII',
+        image: journey7,
         shortDesc: 'The story of Sanjeevani represents one of the greatest acts of devotion in the Ramayana. When Lakshman was gravely wounded during the war in Lanka, Lord Hanuman undertook an extraordinary journey to bring the life-saving Sanjeevani herb. Unable to identify the exact plant, he lifted the entire mountain and carried it.',
         quote: 'हनुमान की भक्ति',
         quoteEng: 'The devotion of Hanuman',
@@ -100,6 +117,7 @@ const journeyPoints = [
         subtitle: 'The Battlefield of Dharma and Adharma',
         hindi: 'लङ्का',
         chapter: 'VIII',
+        image: journey8,
         shortDesc: 'Lanka was the magnificent kingdom ruled by Ravana, where the final chapter of the Ramayana unfolded. It was here that the greatest battle between righteousness and evil took place. The war witnessed unparalleled acts of courage, sacrifice, and devotion from Shri Ram, Lakshman, Hanuman, and the Vanara Sena. With the defeat of Ravana, dharma triumphed over adharma, restoring balance to the world.',
         quote: 'रावण वध',
         quoteEng: 'The victory of light over darkness',
@@ -167,8 +185,6 @@ export default function JourneyPage() {
                         end: () => `+=${track.scrollWidth - window.innerWidth - 82}`,
                         invalidateOnRefresh: true,
                         anticipatePin: 1,
-                        // Show the HUD counter only while the pinned slider is active,
-                        // hide it before (hero) and after (end section) it.
                         onEnter: () => gsap.to(hudRef.current, { opacity: 1, duration: 0.35, ease: 'power2.out' }),
                         onLeave: () => gsap.to(hudRef.current, { opacity: 0, duration: 0.35, ease: 'power2.out' }),
                         onEnterBack: () => gsap.to(hudRef.current, { opacity: 1, duration: 0.35, ease: 'power2.out' }),
@@ -377,7 +393,8 @@ export default function JourneyPage() {
                             style={{ '--pa': pt.accent, '--par': pt.accentRgb }}>
 
                             <div className="jslide-media">
-                                <div className="jslide-img" style={{ backgroundImage: `url(${img})` }} />
+                                {/* FIXED: Use pt.image instead of img */}
+                                <div className="jslide-img" style={{ backgroundImage: `url(${pt.image})` }} />
                                 <div className="jslide-media-scrim" />
                                 <div className="jslide-media-glow" />
                             </div>

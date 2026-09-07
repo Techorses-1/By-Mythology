@@ -1,25 +1,26 @@
 import React, { useEffect, useRef } from "react";
-import { PiFlowerLotus, PiHandsClapping, PiPaintBrush } from "react-icons/pi";
-import { GiBowenKnot, GiCandleFlame, GiWoodCabin } from "react-icons/gi";
-import { TbToolsKitchen2, TbStars } from "react-icons/tb";
-import { BsDroplet } from "react-icons/bs";
 import "./CraftedSection.scss";
+import candle from "../../../assets/images/home/more-the-candle.jpg";
+import icon1 from "../../../assets/images/home/morethancandle-icon1.png";
+import icon2 from "../../../assets/images/home/morethancandle-icon2.png";
+import icon3 from "../../../assets/images/home/morethancandle-icon3.png";
+import icon4 from "../../../assets/images/home/morethancandle-icon4.png";
 
 const features = [
     {
-        icon: <PiFlowerLotus />,
+        icon: icon1,
         title: "NATURAL\nSOY WAX",
     },
     {
-        icon: <GiCandleFlame />,
+        icon: icon2,
         title: "WOODEN\nCRACKLING WICK",
     },
     {
-        icon: <TbToolsKitchen2 />,
+        icon: icon3,
         title: "HAND POURED\nIN SMALL BATCHES",
     },
     {
-        icon: <PiPaintBrush />,
+        icon: icon4,
         title: "ORIGINAL ARTWORK\nBY INDIAN ARTISTS",
     },
 ];
@@ -48,7 +49,7 @@ const CraftedSection = () => {
             {/* LEFT IMAGE */}
             <div className="crafted-left">
                 <img
-                    src="https://images.unsplash.com/photo-1603006905003-be475563bc59?q=80&w=1974&auto=format&fit=crop"
+                    src={candle}
                     alt="Handcrafted Candle"
                 />
                 <div className="crafted-left-overlay"></div>
@@ -68,22 +69,22 @@ const CraftedSection = () => {
                 </div>
 
                 <h2>
-                    More Than 
-                    
+                    More Than
+
                     A Candle
                 </h2>
 
                 <p>
                     The Ramayan Collection is not just a fragrance experience - it is a spiritual journey.
-Every candle is crafted to bring peace, devotion, and timeless storytelling into your home while honoring the sacred legacy of
-the Ramayan.
+                    Every candle is crafted to bring peace, devotion, and timeless storytelling into your home while honoring the sacred legacy of
+                    the Ramayan.
                 </p>
 
                 <div className="crafted-features">
                     {features.map((item, index) => (
                         <div className="crafted-feature" key={index}>
                             <div className="crafted-icon">
-                                {item.icon}
+                                <img src={item.icon} alt={item.title.replace("\n", " ")} />
                             </div>
                             <h4>
                                 {item.title.split("\n").map((line, i) => (

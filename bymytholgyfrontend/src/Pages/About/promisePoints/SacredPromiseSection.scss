@@ -142,10 +142,10 @@ $sp-border: rgba(#c9a84c, 0.18);
 
         .sacred-promise-ornament-line {
             display: block;
-        width: 60px;
-        height: 1px;
-        background: linear-gradient(to right, transparent, $sp-gold, transparent); // ← this
-    }
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, $sp-gold, transparent);
+        }
 
         .sacred-promise-ornament-diamond {
             width: 12px;
@@ -185,10 +185,36 @@ $sp-border: rgba(#c9a84c, 0.18);
             .sacred-promise-icon {
                 color: $sp-gold;
                 flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
 
+                /* ─── PNG IMAGE STYLES ─── */
+                img {
+                    width: 50px;
+                    height: 50px;
+                    object-fit: contain;
+                    display: block;
+                    transition: all 0.3s ease;
+                    filter: brightness(0.9) sepia(0.3) saturate(1.2);
+                }
+
+                /* Hover effect for PNG icons */
+                &:hover img {
+                    transform: scale(1.1);
+                    filter: brightness(1.1) sepia(0.1) saturate(1.4) drop-shadow(0 0 8px rgba($sp-gold, 0.4));
+                }
+
+                /* ─── SVG ICON STYLES (fallback) ─── */
                 svg {
                     width: 28px;
                     height: 28px;
+                    transition: all 0.3s ease;
+                }
+
+                &:hover svg {
+                    transform: scale(1.1);
+                    filter: drop-shadow(0 0 8px rgba($sp-gold, 0.4));
                 }
             }
 
@@ -247,6 +273,15 @@ $sp-border: rgba(#c9a84c, 0.18);
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 28px;
+
+            .sacred-promise-point {
+                .sacred-promise-icon {
+                    img {
+                        width: 50px;
+                        height: 50px;
+                    }
+                }
+            }
         }
     }
 }
@@ -294,9 +329,11 @@ $sp-border: rgba(#c9a84c, 0.18);
             .sacred-promise-point {
                 gap: 14px;
 
-                .sacred-promise-icon svg {
-                    width: 28px;
-                    height: 28px;
+                .sacred-promise-icon {
+                    img {
+                        width: 40px !important;
+                        height: 40px !important;
+                    }
                 }
 
                 p {
@@ -334,8 +371,17 @@ $sp-border: rgba(#c9a84c, 0.18);
             padding: 28px 20px;
             gap: 18px;
 
-            .sacred-promise-point p {
-                font-size: 0.8rem;
+            .sacred-promise-point {
+                .sacred-promise-icon {
+                    img {
+                        width: 24px;
+                        height: 24px;
+                    }
+                }
+
+                p {
+                    font-size: 0.8rem;
+                }
             }
         }
     }

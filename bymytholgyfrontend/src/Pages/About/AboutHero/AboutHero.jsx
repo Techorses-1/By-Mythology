@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import "./AboutHero.scss";
-import aboutHero from "../../../assets/images/home/hero.jpeg"; // Using same image for now
+import aboutHero from "../../../assets/images/home/about-hero.jpg"; // Using same image for now
 
 const AboutHero = () => {
     const heroRef = useRef(null);

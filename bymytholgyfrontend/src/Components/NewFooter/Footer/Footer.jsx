@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { FaInstagram, FaFacebookF, FaPinterestP } from "react-icons/fa";
 import { FiArrowRight } from "react-icons/fi";
 import "./Footer.scss";
-import logo from "../../../assets/images/logo/footer-logo.png";
+import logo from "../../../assets/logo/logo.png";
 
 const SOCIAL_LINKS = [
     { icon: <FaInstagram />, href: "https://instagram.com", label: "Instagram" },

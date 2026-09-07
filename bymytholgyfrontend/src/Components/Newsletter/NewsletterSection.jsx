@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./NewsletterSection.scss";
-import newsletterBg from "../../assets/images/home/newsletter.png";
+import newsletterBg from "../../assets/images/home/newsletter.jpg";
 
 const NewsletterSection = () => {
     const sectionRef = useRef(null);

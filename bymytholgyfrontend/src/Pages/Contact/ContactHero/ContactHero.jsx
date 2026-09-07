@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ContactHero.scss";
-import hero from "../../../assets/images/home/newhero.jpeg";
+import hero from "../../../assets/images/home/contact-hero.jpg";
 import { IoArrowForwardOutline } from "react-icons/io5";
 
 const ContactHero = () => {

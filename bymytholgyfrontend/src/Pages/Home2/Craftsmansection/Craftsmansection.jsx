@@ -6,6 +6,13 @@ import { BsBrush } from "react-icons/bs";
 import "./CraftsmanSection.scss";
 import FeatureBadges from "../Featurebadges/Featurebadges";
 
+import whychoose1 from "../../../assets/images/home/whychooseus/whychoose1.jpg";
+import whychoose2 from "../../../assets/images/home/whychooseus/whychoose2.jpg";
+import whychoose3 from "../../../assets/images/home/whychooseus/whychoose3.jpg";
+import whychoose4 from "../../../assets/images/home/whychooseus/whychoose4.jpg";
+import whychoose5 from "../../../assets/images/home/whychooseus/whychoose5.jpg";
+
+
 const CRAFT_BADGES = [
     { id: 1, icon: <PiFlowerLotus />, label: "Premium\nNatural Wax" },
     { id: 2, icon: <TbFlame />, label: "Wooden\nCrackling Wick" },
@@ -14,35 +21,34 @@ const CRAFT_BADGES = [
     { id: 5, icon: <TbShieldHeart />, label: "Collectible\nLuxury Quality" },
 ];
 
-// Unsplash images — dark, candle/art themed
 const GRID_IMAGES = [
     {
         id: 1,
-        src: "https://images.unsplash.com/photo-1602028915047-37269d1a73f7?w=600&q=85&fit=crop&crop=center",
+        src: whychoose1,
         alt: "Wax being poured",
         gridArea: "img1",
     },
     {
         id: 2,
-        src: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&q=85&fit=crop&crop=center",
+        src: whychoose2,
         alt: "Candle in glass",
         gridArea: "img2",
     },
     {
         id: 3,
-        src: "https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=600&q=85&fit=crop&crop=center",
+        src: whychoose3,
         alt: "Indian artwork",
         gridArea: "img3",
     },
     {
         id: 4,
-        src: "https://images.unsplash.com/photo-1524638431109-93d95c968f03?w=800&q=85&fit=crop&crop=center",
+        src: whychoose4,
         alt: "Candle lid",
         gridArea: "img4",
     },
     {
         id: 5,
-        src: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&q=85&fit=crop&crop=center",
+        src: whychoose5,
         alt: "Artist painting",
         gridArea: "img5",
     },

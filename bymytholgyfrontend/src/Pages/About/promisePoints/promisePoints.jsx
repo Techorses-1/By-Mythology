@@ -1,29 +1,28 @@
 import React, { useEffect, useRef } from "react";
-import {
-    TbHandStop,
-    TbFlame,
-    TbCube,
-} from "react-icons/tb";
-import {
-    GiLotus,
-} from "react-icons/gi";
-import "./SacredPromiseSection.scss";
+import "./SacredPromiseSection.scss"; 
+
+import ourpromiseImage from "../../../assets/images/about/ourpromise.jpg";
+
+import icon1 from "../../../assets/images/about/ourpromise-icon1.png";
+import icon2 from "../../../assets/images/about/ourpromise-icon2.png";
+import icon3 from "../../../assets/images/about/ourpromise-icon3.png";
+import icon4 from "../../../assets/images/about/ourpromise-icon4.png";
 
 const promisePoints = [
     {
-        icon: <TbHandStop />,
+        icon: icon1,
         text: "Rooted in Indian heritage",
     },
     {
-        icon: <GiLotus />,
+        icon: icon2,
         text: "Crafted with integrity",
     },
     {
-        icon: <TbFlame />,
+        icon: icon3,
         text: "Elevated everyday rituals",
     },
     {
-        icon: <TbCube />,
+        icon: icon4,
         text: "Made for you and the planet",
     },
 ];
@@ -50,7 +49,7 @@ const SacredPromiseSection = () => {
             {/* IMAGE */}
             <div className="sacred-promise-image">
                 <img
-                    src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=1600&auto=format&fit=crop"
+                    src={ourpromiseImage}
                     alt="Meditation"
                 />
             </div>
@@ -87,7 +86,7 @@ const SacredPromiseSection = () => {
                 {promisePoints.map((item, index) => (
                     <div className="sacred-promise-point" key={index}>
                         <div className="sacred-promise-icon">
-                            {item.icon}
+                            <img src={item.icon} alt={item.text} />
                         </div>
                         <p>{item.text}</p>
                     </div>
