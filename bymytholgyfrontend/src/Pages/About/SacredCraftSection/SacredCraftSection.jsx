@@ -4,47 +4,42 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
-import { PiFlowerLotus } from "react-icons/pi";
-import { GiLeafSwirl, GiAbstract050 } from "react-icons/gi";
-import { TbHandClick } from "react-icons/tb";
-import { HiOutlineGlobeAlt } from "react-icons/hi";
-
-import icon1 from "../../../assets/images/about/topicon1.jpg"
-import icon2 from "../../../assets/images/about/topicon2.jpg"
-import icon3 from "../../../assets/images/about/topicon3.jpg"
-import icon4 from "../../../assets/images/about/topicon4.jpg"
-import icon5 from "../../../assets/images/about/topicon5.jpg"
+import icon1 from "../../../assets/images/about/topicon1.png";
+import icon2 from "../../../assets/images/about/topicon2.png";
+import icon3 from "../../../assets/images/about/topicon3.png";
+import icon4 from "../../../assets/images/about/topicon4.png";
+import icon5 from "../../../assets/images/about/topicon5.png";
 
 import "./SacredCraftSection.scss";
 
 const SACRED_ITEMS = [
     {
         id: 1,
-        icon: <PiFlowerLotus />,
+        image: icon1,
         title: "INSPIRED BY THE EPIC",
         description: "Each candle is inspired by a sacred chapter of the Ramayana.",
     },
     {
         id: 2,
-        icon: <GiLeafSwirl />,
+        image: icon2,
         title: "NATURAL & CLEAN",
         description: "Made with natural soy wax, clean fragrance oils and essential oils.",
     },
     {
         id: 3,
-        icon: <TbHandClick />,
+        image: icon3,
         title: "HANDCRAFTED",
         description: "Hand poured in small batches with love, intention and precision.",
     },
     {
         id: 4,
-        icon: <GiAbstract050 />,
+        image: icon4,
         title: "ARTISANAL ARTWORK",
         description: "Original artwork by Indian artists that bring each story to life.",
     },
     {
         id: 5,
-        icon: <HiOutlineGlobeAlt />,
+        image: icon5,
         title: "CONSCIOUS CHOICE",
         description: "Sustainable materials and eco-friendly packaging for a better planet.",
     },
@@ -59,7 +54,13 @@ const SacredCraftSection = () => {
                 {SACRED_ITEMS.map((item, index) => (
                     <React.Fragment key={item.id}>
                         <div className="sacred-craft-card">
-                            <div className="sacred-craft-icon">{item.icon}</div>
+                            <div className="sacred-craft-icon">
+                                <img
+                                    src={item.image}
+                                    alt={item.title}
+                                    className="sacred-craft-image"
+                                />
+                            </div>
                             <h3 className="sacred-craft-title">{item.title}</h3>
                             <p className="sacred-craft-description">{item.description}</p>
                         </div>
@@ -85,7 +86,13 @@ const SacredCraftSection = () => {
                     {SACRED_ITEMS.map((item) => (
                         <SwiperSlide key={item.id}>
                             <div className="sacred-craft-card">
-                                <div className="sacred-craft-icon">{item.icon}</div>
+                                <div className="sacred-craft-icon">
+                                    <img
+                                        src={item.image}
+                                        alt={item.title}
+                                        className="sacred-craft-image"
+                                    />
+                                </div>
                                 <h3 className="sacred-craft-title">{item.title}</h3>
                                 <p className="sacred-craft-description">{item.description}</p>
                             </div>
@@ -110,7 +117,13 @@ const SacredCraftSection = () => {
                     {SACRED_ITEMS.map((item) => (
                         <SwiperSlide key={item.id}>
                             <div className="sacred-craft-card">
-                                <div className="sacred-craft-icon">{item.icon}</div>
+                                <div className="sacred-craft-icon">
+                                    <img
+                                        src={item.image}
+                                        alt={item.title}
+                                        className="sacred-craft-image"
+                                    />
+                                </div>
                                 <h3 className="sacred-craft-title">{item.title}</h3>
                                 <p className="sacred-craft-description">{item.description}</p>
                             </div>

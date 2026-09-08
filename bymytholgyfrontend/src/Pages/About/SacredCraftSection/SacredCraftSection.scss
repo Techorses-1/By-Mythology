@@ -81,23 +81,31 @@ $sc-border: rgba(185, 138, 67, 0.18);
         &:hover {
             .sacred-craft-icon {
                 transform: translateY(-4px) scale(1.06);
-                color: $sc-gold-light;
             }
 
             .sacred-craft-title {
                 color: $sc-gold-light;
             }
+
+            .sacred-craft-image {
+                filter: brightness(1.2) drop-shadow(0 0 8px rgba(185, 138, 67, 0.3));
+            }
         }
 
         .sacred-craft-icon {
-            color: $sc-gold;
             margin-bottom: 14px;
             transition: all 0.35s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-            svg {
-                width: 32px;
-                height: 32px;
-            }
+        .sacred-craft-image {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            transition: all 0.35s ease;
+            filter: brightness(0.8);
         }
 
         .sacred-craft-title {
@@ -192,7 +200,7 @@ $sc-border: rgba(185, 138, 67, 0.18);
         .sacred-craft-card {
             padding: 0 12px;
 
-            .sacred-craft-icon svg {
+            .sacred-craft-image {
                 width: 30px;
                 height: 30px;
             }
@@ -234,11 +242,11 @@ $sc-border: rgba(185, 138, 67, 0.18);
 
             .sacred-craft-icon {
                 margin-bottom: 12px;
+            }
 
-                svg {
-                    width: 28px;
-                    height: 28px;
-                }
+            .sacred-craft-image {
+                width: 28px;
+                height: 28px;
             }
 
             .sacred-craft-title {
@@ -271,6 +279,11 @@ $sc-border: rgba(185, 138, 67, 0.18);
 
             .sacred-craft-description {
                 font-size: 0.8rem;
+            }
+
+            .sacred-craft-image {
+                width: 24px;
+                height: 24px;
             }
         }
     }

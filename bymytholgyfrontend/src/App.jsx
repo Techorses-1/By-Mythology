@@ -25,7 +25,6 @@ import Footer from "./Components/NewFooter/Footer/Footer";
 import ScrollToTop from "./Components/GoToTop/ScrollToTop";
 import Cart from "./Pages/Cart/Cart";
 import AdminAuth from "./Pages/AdminAuth/AdminAuth";
-import RamayanNavbar from "./Components/SeriesNavbar/RamayanNav/RamayanNavbar";
 import Dummy from "./Pages/Dummy/Dummy";
 import Home2 from "./Pages/Home2/Home2";
 import Collection from "./Pages/Collection/Collection";
