@@ -132,8 +132,8 @@ const CollectionSection = () => {
         const userId = localStorage.getItem("userId");
 
         if (!token || !userId) {
-            setShowLoginModal(true);
-            toast.info("Please login to add items to wishlist");
+            // Redirect to login page instead of showing modal
+            navigate("/login");
             return;
         }
 
@@ -189,7 +189,6 @@ const CollectionSection = () => {
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 toast.success("Added to wishlist!");
-                // REMOVED: navigate("/wishlist"); - Don't navigate away
             }
             setUpdatingProductId(null);
             window.dispatchEvent(new Event("wishlistUpdated"));

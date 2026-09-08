@@ -171,7 +171,7 @@ const AuthPage = () => {
                             />
                             <div className="auth-image-overlay">
                                 <div className="auth-image-content">
-                                    <h2 className="auth-image-title">The Ramayana</h2>
+                                    <h2 className="auth-image-title">By Mythology</h2>
                                     <p className="auth-image-subtitle">Scented Candles</p>
                                     <div className="auth-image-divider"></div>
                                     <p className="auth-image-text">

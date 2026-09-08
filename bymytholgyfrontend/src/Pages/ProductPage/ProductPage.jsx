@@ -45,6 +45,7 @@ function ProductPage() {
   // Images
   const [images, setImages] = useState([]);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const mainSwiperRef = useRef(null); // ADDED: ref to main swiper instance (replaces document.querySelector)
 
   // Wishlist
   const [wishlist, setWishlist] = useState(false);
@@ -196,6 +197,12 @@ function ProductPage() {
   };
 
   useEffect(() => {
+    // ADDED: reset gallery/thumbs state whenever we navigate to a different
+    // product while ProductPage stays mounted (e.g. from RelatedProducts).
+    // Prevents the stale-thumbsSwiper crash in swiper's thumbs.mjs.
+    setThumbsSwiper(null);
+    setImages([]);
+
     if (productIdFromState) {
       fetchProductById(productIdFromState);
     } else if (productName) {
@@ -681,6 +688,7 @@ function ProductPage() {
             {images.length > 0 ? (
               <>
                 <Swiper
+                  key={`main-${product.productId}`}
                   modules={[Navigation, Autoplay, Thumbs]}
                   spaceBetween={0}
                   slidesPerView={1}
@@ -688,7 +696,8 @@ function ProductPage() {
                   autoplay={{ delay: 5000, disableOnInteraction: false }}
                   loop={true}
                   speed={800}
-                  thumbs={{ swiper: thumbsSwiper }}
+                  thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
+                  onSwiper={(s) => (mainSwiperRef.current = s)}
                   className="product-main-swiper"
                 >
                   {images.map((img, index) => (
@@ -703,20 +712,14 @@ function ProductPage() {
                 <div className="custom-swiper-nav">
                   <button
                     className="custom-nav-btn custom-prev"
-                    onClick={() => {
-                      const swiper = document.querySelector('.product-main-swiper')?.swiper;
-                      if (swiper) swiper.slidePrev();
-                    }}
+                    onClick={() => mainSwiperRef.current?.slidePrev()}
                     aria-label="Previous image"
                   >
                     <IoIosArrowRoundBack size={28} />
                   </button>
                   <button
                     className="custom-nav-btn custom-next"
-                    onClick={() => {
-                      const swiper = document.querySelector('.product-main-swiper')?.swiper;
-                      if (swiper) swiper.slideNext();
-                    }}
+                    onClick={() => mainSwiperRef.current?.slideNext()}
                     aria-label="Next image"
                   >
                     <IoIosArrowRoundForward size={28} />
@@ -731,6 +734,7 @@ function ProductPage() {
           {images.length > 1 && (
             <div className="thumbnail-strip-horizontal">
               <Swiper
+                key={`thumbs-${product.productId}`}
                 onSwiper={setThumbsSwiper}
                 spaceBetween={10}
                 slidesPerView={Math.min(5, images.length)}

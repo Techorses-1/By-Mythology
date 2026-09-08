@@ -7,7 +7,6 @@ import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import WishlistSidebar from "../../Wishlist/Sidebar/WishlistSidebar";
-import LoginModal from "../../../Components/Login/LoginModel/LoginModal";
 import "swiper/css";
 import "swiper/css/navigation";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,14 +22,12 @@ const RelatedProducts = ({
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [wishlist, setWishlist] = useState({});
   const [showWishlistSidebar, setShowWishlistSidebar] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [updatingProductId, setUpdatingProductId] = useState(null);
 
-  // Refs for navigation buttons
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-  const [swiperReady, setSwiperReady] = useState(false);
+  const swiperRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -107,7 +104,6 @@ const RelatedProducts = ({
       await fetchByCategory();
     } finally {
       setLoading(false);
-      setSwiperReady(true);
     }
   };
 
@@ -173,9 +169,11 @@ const RelatedProducts = ({
       });
 
       relatedProducts.forEach(product => {
-        const firstFragrance = product.colors?.[0]?.fragrances?.[0]?.name || null;
-        const key = firstFragrance ? `${product.productId}_${firstFragrance}` : product.productId;
-        wishlistStatus[product.productId] = wishlistMap.get(key) || false;
+        if (product && product.productId) {
+          const firstFragrance = product.colors?.[0]?.fragrances?.[0]?.name || null;
+          const key = firstFragrance ? `${product.productId}_${firstFragrance}` : product.productId;
+          wishlistStatus[product.productId] = wishlistMap.get(key) || false;
+        }
       });
 
       setWishlist(prev => ({ ...prev, ...wishlistStatus }));
@@ -232,7 +230,6 @@ const RelatedProducts = ({
     };
   };
 
-  // UPDATED: toggleWishlist with NO sidebar auto-open
   const toggleWishlist = async (product, e) => {
     e.stopPropagation();
 
@@ -240,12 +237,17 @@ const RelatedProducts = ({
     const userId = localStorage.getItem("userId");
 
     if (!token || !userId) {
-      setShowLoginModal(true);
-      toast.info("Please login to add items to wishlist");
+      navigate("/login");
       return;
     }
 
-    const isCurrentlyWishlisted = wishlist[product.productId];
+    if (!product || !product.productId) {
+      console.error("Invalid product:", product);
+      toast.error("Product not found");
+      return;
+    }
+
+    const isCurrentlyWishlisted = wishlist[product.productId] || false;
     const productIdToUpdate = product.productId;
     const firstFragrance = product.colors?.[0]?.fragrances?.[0]?.name || null;
 
@@ -270,19 +272,19 @@ const RelatedProducts = ({
         const wishlistData = {
           userId,
           productId: productIdToUpdate,
-          productName: product.productName,
-          categoryId: product.categoryId,
-          categoryName: product.categoryName,
+          productName: product.productName || "Unknown Product",
+          categoryId: product.categoryId || "",
+          categoryName: product.categoryName || "",
           productType: product.type || "simple",
           addedFrom: "related-products",
           selectedFragrance: firstFragrance,
           selectedModel: null,
           selectedSize: null,
           selectedColor: color ? {
-            colorId: color.colorId,
-            colorName: color.colorName,
-            currentPrice: priceInfo.finalPrice,
-            originalPrice: priceInfo.originalPrice
+            colorId: color.colorId || "",
+            colorName: color.colorName || "",
+            currentPrice: priceInfo.finalPrice || 0,
+            originalPrice: priceInfo.originalPrice || 0
           } : null
         };
 
@@ -292,14 +294,10 @@ const RelatedProducts = ({
           { headers: { Authorization: `Bearer ${token}` } }
         );
         toast.success("Added to wishlist!");
-
-        // REMOVED: Sidebar auto-open
-        // if (window.innerWidth > 768) {
-        //   setShowWishlistSidebar(true);
-        // }
       }
 
       setTimeout(() => fetchUserWishlist(), 500);
+      setUpdatingProductId(null);
     } catch (error) {
       console.error("Error toggling wishlist:", error);
       setWishlist(prev => ({ ...prev, [productIdToUpdate]: isCurrentlyWishlisted }));
@@ -322,13 +320,13 @@ const RelatedProducts = ({
   };
 
   const createProductSlug = (productName) => {
+    if (!productName) return "";
     return productName
       .toLowerCase()
       .replace(/[^\w\s]/g, '')
       .replace(/\s+/g, '-');
   };
 
-  // Check if we should show arrows based on product count
   const getSlidesPerView = () => {
     if (relatedProducts.length <= 2) return relatedProducts.length;
     if (window.innerWidth >= 1200) return Math.min(5, relatedProducts.length);
@@ -352,7 +350,7 @@ const RelatedProducts = ({
     );
   }
 
-  if (relatedProducts.length === 0) {
+  if (!relatedProducts || relatedProducts.length === 0) {
     return null;
   }
 
@@ -365,19 +363,8 @@ const RelatedProducts = ({
         onClose={() => setShowWishlistSidebar(false)}
       />
 
-      {showLoginModal && (
-        <LoginModal
-          onClose={() => {
-            setShowLoginModal(false);
-            fetchUserWishlist();
-          }}
-          showRegisterLink={true}
-        />
-      )}
-
       <section className="related-products-showcase">
         <div className="section-header">
-
           <h2 className="section-title">You Might Also Like</h2>
           <div className="section-ornament">
             <span className="section-ornament-line" />
@@ -386,13 +373,13 @@ const RelatedProducts = ({
             </svg>
             <span className="section-ornament-line" />
           </div>
-          {/* <p className="section-subtitle">Products with similar fragrances</p> */}
         </div>
 
         <div className="related-products-slider-container">
           <Swiper
+            ref={swiperRef}
             modules={[Navigation]}
-            slidesPerView={getSlidesPerView()}
+            slidesPerView="auto"
             spaceBetween={24}
             navigation={shouldShowArrows() ? {
               prevEl: prevRef.current,
@@ -421,6 +408,11 @@ const RelatedProducts = ({
             className="related-swiper"
           >
             {relatedProducts.map((product) => {
+              if (!product || !product.productId) {
+                console.warn("Invalid product in map:", product);
+                return null;
+              }
+
               const color = product.colors?.[0];
               const image = product.thumbnailImage || color?.images?.[0];
               const isWishlisted = wishlist[product.productId] || false;
@@ -462,7 +454,7 @@ const RelatedProducts = ({
                       {image ? (
                         <img
                           src={image}
-                          alt={product.productName}
+                          alt={product.productName || "Product"}
                           loading="lazy"
                           onError={(e) => {
                             e.target.onerror = null;
@@ -476,7 +468,7 @@ const RelatedProducts = ({
                       )}
                     </div>
 
-                    <h3 className="product-name">{product.productName}</h3>
+                    <h3 className="product-name">{product.productName || "Unknown Product"}</h3>
 
                     <div className="related-price-row">
                       <span className="price">₹{formatCurrency(priceInfo.finalPrice)}</span>
