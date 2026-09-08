@@ -1,9 +1,11 @@
 import React from 'react';
 import './BrandStorySection.scss';
-import img from "../../../assets/images/contact/contact.jpg";
+import img1 from "../../../assets/images/contact/contact1.jpg";
+import img2 from "../../../assets/images/contact/contact2.jpg";
+import img3 from "../../../assets/images/contact/contact3.jpg";
 
 const BrandStorySection = () => {
-    const sacredImage = img;
+    
 
     return (
         <div className="brand-story-section">
@@ -15,7 +17,7 @@ const BrandStorySection = () => {
                     <div className="image-column luxury-card">
                         <div className="image-container">
                             <img
-                                src={sacredImage}
+                                src={img1}
                                 alt="Sacred Artwork"
                                 className="sacred-image"
                             />
@@ -26,7 +28,7 @@ const BrandStorySection = () => {
                     <div className="image-column luxury-card">
                         <div className="image-container">
                             <img
-                                src={sacredImage}
+                                src={img2}
                                 alt="Sacred Artwork"
                                 className="sacred-image"
                             />
@@ -37,7 +39,7 @@ const BrandStorySection = () => {
                     <div className="image-column luxury-card">
                         <div className="image-container">
                             <img
-                                src={sacredImage}
+                                src={img3}
                                 alt="Sacred Artwork"
                                 className="sacred-image"
                             />

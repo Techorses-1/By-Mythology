@@ -560,7 +560,7 @@ router.delete("/delete/:productId", adminAuth, async (req, res) => {
 router.get("/all", async (req, res) => {
   try {
     const products = await Product.find({ isActive: true })
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: 1 });
     res.json(products);
   } catch (err) {
     console.error(err);
@@ -618,7 +618,7 @@ router.post("/related-by-fragrances", async (req, res) => {
         type: "simple"
       })
         .limit(limit)
-        .sort({ createdAt: -1 })
+        .sort({ createdAt: 1 })
         .lean();
 
       console.log(`✅ Found ${categoryProducts.length} products in same category`);
@@ -637,7 +637,7 @@ router.post("/related-by-fragrances", async (req, res) => {
       "colors.fragrances.name": { $in: fragrances }
     })
       .limit(limit)
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .lean();
 
     console.log(`✅ Found ${relatedProducts.length} products with same fragrances`);
@@ -661,7 +661,7 @@ router.post("/related-by-fragrances", async (req, res) => {
       type: "simple"
     })
       .limit(limit - relatedProducts.length)
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .lean();
 
     const allProducts = [...relatedProducts, ...additionalProducts];
@@ -700,7 +700,7 @@ router.get("/category/:categoryId/exclude/:productId", async (req, res) => {
       type: "simple"
     })
       .limit(limit)
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: 1 });
 
     console.log(`✅ Found ${products.length} products`);
 

@@ -40,7 +40,7 @@ router.get("/products-with-color-offers", adminAuth, async (req, res) => {
   try {
     // Get all active products
     const products = await Product.find({ isActive: true })
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .lean();
 
     // Get all active offers
@@ -398,7 +398,7 @@ router.get("/color-offer/:productId/:colorId", adminAuth, async (req, res) => {
 router.get("/active-color-offers", async (req, res) => {
   try {
     const offers = await ProductOffer.find({ isActive: true })
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: 1 });
 
     // Add validity check to each offer
     const offersWithValidity = offers.map(offer => ({
@@ -422,7 +422,7 @@ router.get("/public-products-with-offers", async (req, res) => {
     // 1. Get ACTIVE products
     const products = await Product.find({ isActive: true })
       .select('productId productName description thumbnailImage type colors categoryId categoryName')
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .lean();
 
     // 2. Get ACTIVE offers WITH ALL NEEDED FIELDS

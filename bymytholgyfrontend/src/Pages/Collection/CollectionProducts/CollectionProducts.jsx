@@ -20,8 +20,6 @@ const CollectionProducts = () => {
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [updatingProductId, setUpdatingProductId] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const productsPerPage = 6;
 
     // Fetch products from API
     const fetchProducts = async () => {
@@ -246,14 +244,6 @@ const CollectionProducts = () => {
         return [];
     };
 
-    // Pagination logic
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-    const totalPages = Math.ceil(products.length / productsPerPage);
-
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
     if (isLoading) {
         return (
             <section className="collection-products">
@@ -299,9 +289,9 @@ const CollectionProducts = () => {
                 </div>
             </div>
 
-            {/* PRODUCTS LIST VIEW - 3 COLUMN GRID */}
+            {/* PRODUCTS LIST VIEW - 3 COLUMN GRID - ALL PRODUCTS SHOWN */}
             <div className="collection-products__list">
-                {currentProducts.map((product) => {
+                {products.map((product) => {
                     const color = product.colors?.[0];
                     const image = product.thumbnailImage || color?.images?.[0];
                     const firstFragrance = getFirstFragranceName(product);
@@ -373,82 +363,14 @@ const CollectionProducts = () => {
                                     </button>
                                 </div>
 
-                                {/* FRAGRANCE NAME - HIDDEN */}
-                                {/* {firstFragrance && (
-                                    <div className="collection-products__item-fragrance">
-                                        <span className="collection-products__item-fragrance-label">FRAGRANCE:</span>
-                                        <span className="collection-products__item-fragrance-value">{firstFragrance}</span>
-                                    </div>
-                                )} */}
-
-                                {/* NOTES - HIDDEN */}
-                                {/* {allNotes.length > 0 && (
-                                    <div className="collection-products__item-notes">
-                                        <span className="collection-products__item-notes-label">NOTES:</span>
-                                        <div className="collection-products__item-notes-list">
-                                            {allNotes.map((note, index) => (
-                                                <span key={index} className="collection-products__item-note">
-                                                    {note}
-                                                    {index < allNotes.length - 1 && ","}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )} */}
-
                                 {/* DESCRIPTION */}
                                 <p className="collection-products__item-description">
                                     {truncateDescription(description, 250)}
                                 </p>
                             </div>
 
-                            {/* COLUMN 3 - TOP NOTES, HEART NOTES, BASE NOTES, PRICING, BUTTON */}
+                            {/* COLUMN 3 - PRICING, BUTTON */}
                             <div className="collection-products__col3">
-                                {/* TOP NOTES - HIDDEN */}
-                                {/* {topNotes.length > 0 && (
-                                    <div className="collection-products__item-topnotes">
-                                        <span className="collection-products__item-notes-label">TOP NOTES:</span>
-                                        <div className="collection-products__item-notes-list">
-                                            {topNotes.map((note, index) => (
-                                                <span key={index} className="collection-products__item-note">
-                                                    {note}
-                                                    {index < topNotes.length - 1 && ","}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )} */}
-
-                                {/* HEART NOTES - HIDDEN */}
-                                {/* {heartNotes.length > 0 && (
-                                    <div className="collection-products__item-heartnotes">
-                                        <span className="collection-products__item-notes-label">HEART NOTES:</span>
-                                        <div className="collection-products__item-notes-list">
-                                            {heartNotes.map((note, index) => (
-                                                <span key={index} className="collection-products__item-note">
-                                                    {note}
-                                                    {index < heartNotes.length - 1 && ","}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )} */}
-
-                                {/* BASE NOTES - HIDDEN */}
-                                {/* {baseNotes.length > 0 && (
-                                    <div className="collection-products__item-basenotes">
-                                        <span className="collection-products__item-notes-label">BASE NOTES:</span>
-                                        <div className="collection-products__item-notes-list">
-                                            {baseNotes.map((note, index) => (
-                                                <span key={index} className="collection-products__item-note">
-                                                    {note}
-                                                    {index < baseNotes.length - 1 && ","}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )} */}
-
                                 {/* PRICING */}
                                 <div className="collection-products__pricing-row">
                                     <span className="collection-products__final-price">
@@ -478,36 +400,6 @@ const CollectionProducts = () => {
                     );
                 })}
             </div>
-
-            {/* PAGINATION */}
-            {totalPages > 1 && (
-                <div className="collection-products__pagination">
-                    <button
-                        onClick={() => paginate(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="collection-products__pagination-btn"
-                    >
-                        <IoArrowBackOutline />
-                    </button>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
-                        <button
-                            key={number}
-                            onClick={() => paginate(number)}
-                            className={`collection-products__pagination-btn ${currentPage === number ? "collection-products__pagination-btn--active" : ""
-                                }`}
-                        >
-                            {number}
-                        </button>
-                    ))}
-                    <button
-                        onClick={() => paginate(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="collection-products__pagination-btn"
-                    >
-                        <IoArrowForwardOutline />
-                    </button>
-                </div>
-            )}
         </section>
     );
 };

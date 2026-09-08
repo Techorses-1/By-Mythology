@@ -9,6 +9,12 @@ import { GiLeafSwirl, GiAbstract050 } from "react-icons/gi";
 import { TbHandClick } from "react-icons/tb";
 import { HiOutlineGlobeAlt } from "react-icons/hi";
 
+import icon1 from "../../../assets/images/about/topicon1.jpg"
+import icon2 from "../../../assets/images/about/topicon2.jpg"
+import icon3 from "../../../assets/images/about/topicon3.jpg"
+import icon4 from "../../../assets/images/about/topicon4.jpg"
+import icon5 from "../../../assets/images/about/topicon5.jpg"
+
 import "./SacredCraftSection.scss";
 
 const SACRED_ITEMS = [

@@ -4,7 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './ContactNewsletter.scss';
 import { FiArrowRight } from 'react-icons/fi';
-import newsletterImg from "../../../assets/images/contact/news-contact.png";
+import newsletterImg from "../../../assets/images/contact/stay.jpg";
 
 const ContactNewsletter = () => {
   const [email, setEmail] = useState('');

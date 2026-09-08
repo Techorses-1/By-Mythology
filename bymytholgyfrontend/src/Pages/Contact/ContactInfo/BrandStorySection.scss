@@ -67,7 +67,7 @@ $transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 // Luxury Card Base Styles
 .luxury-card {
     background: $dark-card;
-    // border: 1px solid $border-gold;
+    border: 2px solid $border-gold;
     transition: $transition;
     overflow: hidden;
 
